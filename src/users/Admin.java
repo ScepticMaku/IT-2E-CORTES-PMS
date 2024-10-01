@@ -1,14 +1,13 @@
 package users;
 
-import main.*;
-import authentication.*;
+import ui.*;
 import java.util.Scanner;
 
-public class Admin extends config {
+public class Admin {
     Scanner sc = new Scanner(System.in);
+    project proj = new project();
     
-    int choice, select, selectp;
-    boolean goBack = true;
+    int select;
             
     public void displayInterface(){
         System.out.print("\nSuccessfully Registered as an admin!");
@@ -18,39 +17,16 @@ public class Admin extends config {
                     + "2. Tasks\n"
                     + "3. Users\n"
                     + "4. Back\n"
+                    + "5. Logout\n"
                     + "Enter selection: ");
             select = sc.nextInt();
             
             switch(select){
                 case 1:
-                    while(goBack){
-                        System.out.println("\nOptions:\n"
-                            + "1. Add Project\n"
-                            + "2. Edit Project\n"
-                            + "3. View Projects\n"
-                            + "4. Delete Project\n"
-                            + "5. Back");
-                        System.out.print("Enter selection: ");
-                        selectp = sc.nextInt();
-
-                        switch(selectp){
-                            case 1:
-                                addProject();
-                                break;
-                            case 3:
-                                viewProject();
-                                System.out.print("\n1. Projects Menu: "
-                                        + "\n2. Main menu "
-                                        + "\nEnter choice: ");
-                                choice = sc.nextInt();
-                                break;
-                        }
-                        
-                        if(choice == 2 || selectp == 5){
-                            goBack = false;
-                        }
-                    }
+                    proj.projectInterface();
                     break;
+                case 5:
+                    System.exit(0);
             }
         } while(select != 4);
         
