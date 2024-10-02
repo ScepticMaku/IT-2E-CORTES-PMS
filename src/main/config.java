@@ -1,10 +1,12 @@
 package main;
 
 import java.sql.*;
-import java.util.*;
+import password.securePassword;
 
 public class config {
-    Scanner sc = new Scanner(System.in);
+    securePassword passw = new securePassword();
+    
+    int id;
     
     public Connection connectDB(){
         Connection connect = null;
@@ -19,8 +21,7 @@ public class config {
     
     public void addRecord(String sql, Object... values) {
     try {
-        Connection conn = this.connectDB(); // Use the connectDB method
-         PreparedStatement pstmt = conn.prepareStatement(sql); 
+        PreparedStatement pstmt = connectDB().prepareStatement(sql); 
 
         // Loop through the values and set them in the prepared statement dynamically
         for (int i = 0; i < values.length; i++) {
@@ -96,5 +97,22 @@ public class config {
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
         }
+    }
+    
+    public int getUID(String username, String password){
+        try{
+            PreparedStatement state = connectDB().prepareStatement("SELECT user_id, username, password_hash, role FROM user");
+            ResultSet result = state.executeQuery();
+            
+            if(passw.passwordHashing(password).equals(result.getString("password_hash")) && username.equals(result.getString("username"))){
+                id = result.getInt("user_id");
+            } else{
+                System.out.println("UID not found.\n");
+            }
+        } catch(SQLException e){
+            System.out.println("Error: "+e.getMessage());
+        }
+        
+        return id;
     }
 }

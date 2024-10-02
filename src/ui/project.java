@@ -3,15 +3,15 @@ package ui;
 import main.config;
 import java.util.*;
 
+
 public class project extends config {
     Scanner sc = new Scanner(System.in);
     
-    String name, desc;
-    
+    String name, desc, sql, status;
     boolean goBack = true;
-    int select, choice;
+    int select, choice, id;
     
-    public void projectInterface(){
+    public void projectInterface(int uid){
         while(goBack){
                         System.out.println("\nOptions:\n"
                             + "1. Add Project\n"
@@ -31,9 +31,11 @@ public class project extends config {
                                 System.out.println("Enter description: ");
                                 desc = sc.nextLine();
                                 
-                                String sql = "INSERT INTO project (project_name, description) VALUES (?, ?)";
-                                addRecord(sql, name, desc);
+                                id = uid;
+                                status = "Planned";
                                 
+                                sql = "INSERT INTO project (project_name, description, project_manager_id, status) VALUES (?, ?, ?, ?)";
+                                addRecord(sql, name, desc, id, status);
                                 break;
                             case 3:
                                 String projectQuery = "SELECT * FROM project";

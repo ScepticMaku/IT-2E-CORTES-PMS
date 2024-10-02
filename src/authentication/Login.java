@@ -5,14 +5,16 @@ import java.util.*;
 import users.*;
 import java.sql.*;
 import password.securePassword;
+import ui.project;
 
 public class Login extends config {
     Scanner sc = new Scanner(System.in);
     Admin admin = new Admin();
     securePassword passw = new securePassword();
     
-    String user;
-    String pass;
+    int id;
+    String user, pass, role;
+    String locatedUser, locatedPass, locatedRole;
     
     public void loginCredentials(){
         
@@ -28,14 +30,21 @@ public class Login extends config {
     
     public void locateUser(String username, String password){
         try{
-            PreparedStatement state = connectDB().prepareStatement("SELECT username, password_hash, role FROM user");
+            PreparedStatement state = connectDB().prepareStatement("SELECT user_id, username, password_hash, role FROM user");
             ResultSet result = state.executeQuery();
             
-            if(passw.passwordHashing(password).equals(result.getString("password_hash")) && username.equals(result.getString("username"))){
-                if(result.getString("role").equals("admin")){
+            locatedUser = result.getString("username");
+            locatedPass = result.getString("password_hash");
+            locatedRole = result.getString("role");
+            id = result.getInt("user_id");
+            
+            result.close();
+            
+            if(passw.passwordHashing(password).equals(locatedPass) && username.equals(locatedUser)){
+                if(locatedRole.equals("admin")){
                     
-                    
-                    admin.displayInterface();
+                    role = "admin";
+                    admin.displayInterface(id, role);
                 }
             } else{
                 System.out.println("Invalid Credentials.\n");
@@ -43,21 +52,5 @@ public class Login extends config {
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
         }
-    }
-    
-    public void setUser(String newUser){
-        this.user = newUser;
-    }
-    
-    public void setPass(String getPass){
-        
-    }
-    
-    public String getUser(){
-        return this.user;
-    }
-    
-    public String getPass(){
-        return this.pass;
     }
 }

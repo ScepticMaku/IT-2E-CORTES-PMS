@@ -9,8 +9,8 @@ public class Admin {
     
     int select;
             
-    public void displayInterface(){
-        System.out.print("\nSuccessfully Registered as an admin!");
+    public void displayInterface(int uid, String user_role){
+        System.out.print("\nSuccessfully Registered as: "+user_role);
         
         do{
             System.out.print("\n1. Projects\n"
@@ -23,12 +23,11 @@ public class Admin {
             
             switch(select){
                 case 1:
-                    proj.projectInterface();
+                    proj.projectInterface(uid);
                     break;
                 case 5:
                     System.exit(0);
             }
         } while(select != 4);
-        
     }
 }
