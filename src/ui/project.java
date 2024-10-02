@@ -6,6 +6,8 @@ import java.util.*;
 public class project extends config {
     Scanner sc = new Scanner(System.in);
     
+    String name, desc;
+    
     boolean goBack = true;
     int select, choice;
     
@@ -22,10 +24,23 @@ public class project extends config {
 
                         switch(select){
                             case 1:
-                                addProject();
+                                System.out.print("\nEnter project name: ");
+                                sc.nextLine();
+                                name = sc.nextLine();
+
+                                System.out.println("Enter description: ");
+                                desc = sc.nextLine();
+                                
+                                String sql = "INSERT INTO project (project_name, description) VALUES (?, ?)";
+                                addRecord(sql, name, desc);
+                                
                                 break;
                             case 3:
-                                viewProject();
+                                String projectQuery = "SELECT * FROM project";
+                                String[] projectHeaders = {"ID", "Name", "Description", "Status"};
+                                String[] projectColumns = {"project_id", "project_name", "description", "status"};
+                                
+                                viewRecords(projectQuery, projectHeaders, projectColumns);
                                 break;
                         }
                         
