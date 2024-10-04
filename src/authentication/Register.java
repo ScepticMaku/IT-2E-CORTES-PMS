@@ -33,7 +33,7 @@ public class Register extends config{
         System.out.print("Confirm password: ");
         confirmPass = sc.next();
         
-        while(confirmPass != password){
+        while(!confirmPass.equals(password)){
             System.out.print("Passwords don't match, try again: ");
             confirmPass = sc.next();
         }

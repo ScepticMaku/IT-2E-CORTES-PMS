@@ -9,9 +9,8 @@ public class Admin {
     
     int select;
             
-    public void displayInterface(int uid, String user_role){
-        System.out.print("\nSuccessfully Registered as: "+user_role);
-        
+    public void displayInterface(int uid, String user_role, String name){
+        System.out.printf("\nSuccessfully Logged in as: %s, welcome %s!\n", user_role, name.substring(0, 4));
         do{
             System.out.print("\n1. Projects\n"
                     + "2. Tasks\n"

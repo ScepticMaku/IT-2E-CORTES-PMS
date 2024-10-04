@@ -1,12 +1,8 @@
 package main;
 
 import java.sql.*;
-import password.securePassword;
 
 public class config {
-    securePassword passw = new securePassword();
-    
-    int id;
     
     public Connection connectDB(){
         Connection connect = null;
@@ -21,7 +17,8 @@ public class config {
     
     public void addRecord(String sql, Object... values) {
     try {
-        PreparedStatement pstmt = connectDB().prepareStatement(sql); 
+        Connection conn = this.connectDB(); // Use the connectDB method
+         PreparedStatement pstmt = conn.prepareStatement(sql); 
 
         // Loop through the values and set them in the prepared statement dynamically
         for (int i = 0; i < values.length; i++) {
@@ -57,8 +54,40 @@ public class config {
         
     }
     
-    public void deleteProject(){
-        
+    public void deleteRecord(String sqlQuery, String getID, String getUpdate, String sequenceQuery, int pid, String columnName){
+        try{
+            PreparedStatement delete = connectDB().prepareStatement(sqlQuery);
+            PreparedStatement update = connectDB().prepareStatement(getUpdate);
+            PreparedStatement fetch = connectDB().prepareStatement(getID);
+            PreparedStatement sequence = connectDB().prepareStatement(sequenceQuery);
+            
+            // Deletes the row from the selected id
+            delete.setInt(1, pid);
+            delete.executeUpdate();
+            
+            // Sorts the table after deletion
+            int newID = 1;
+            
+            ResultSet getMax = fetch.executeQuery();
+            while(getMax.next()){
+                int currID = getMax.getInt(columnName);
+                getMax.close();
+                
+                if(currID != newID){
+                    update.setInt(1, newID);
+                    update.setInt(2, currID); 
+                    update.executeUpdate();
+                }
+                newID++;
+            }
+
+            // Updates the auto increment sequence (from the primary key)
+            sequence.executeUpdate();
+            
+            System.out.println("Deletion successful.");
+        } catch (SQLException e){
+            System.out.print("Error: "+e.getMessage());
+        }
     }
     
     public void viewRecords (String sqlQuery, String[] columnHeaders, String[] columnNames){
@@ -82,11 +111,11 @@ public class config {
             }
             headerLine.append("\n");    
             
-            System.out.println(headerLine.toString());
+            System.out.print(headerLine.toString());
                     
             // Print the rows dynamically based on the provided column names
             while(result.next()){
-                StringBuilder row = new StringBuilder("| ");
+                StringBuilder row = new StringBuilder();
                 for(String colName : columnNames){
                     String value = result.getString(colName);
                     row.append(String.format("%-20s ", value != null ? value : "")); //Adjust formatting
@@ -97,22 +126,5 @@ public class config {
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
         }
-    }
-    
-    public int getUID(String username, String password){
-        try{
-            PreparedStatement state = connectDB().prepareStatement("SELECT user_id, username, password_hash, role FROM user");
-            ResultSet result = state.executeQuery();
-            
-            if(passw.passwordHashing(password).equals(result.getString("password_hash")) && username.equals(result.getString("username"))){
-                id = result.getInt("user_id");
-            } else{
-                System.out.println("UID not found.\n");
-            }
-        } catch(SQLException e){
-            System.out.println("Error: "+e.getMessage());
-        }
-        
-        return id;
     }
 }

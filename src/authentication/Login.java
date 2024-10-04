@@ -13,7 +13,7 @@ public class Login extends config {
     securePassword passw = new securePassword();
     
     int id;
-    String user, pass, role;
+    String user, pass, role, fname;
     String locatedUser, locatedPass, locatedRole;
     
     public void loginCredentials(){
@@ -30,12 +30,13 @@ public class Login extends config {
     
     public void locateUser(String username, String password){
         try{
-            PreparedStatement state = connectDB().prepareStatement("SELECT user_id, username, password_hash, role FROM user");
+            PreparedStatement state = connectDB().prepareStatement("SELECT user_id, first_name, username, password_hash, role FROM user");
             ResultSet result = state.executeQuery();
             
             locatedUser = result.getString("username");
             locatedPass = result.getString("password_hash");
             locatedRole = result.getString("role");
+            fname = result.getString("first_name");
             id = result.getInt("user_id");
             
             result.close();
@@ -44,7 +45,7 @@ public class Login extends config {
                 if(locatedRole.equals("admin")){
                     
                     role = "admin";
-                    admin.displayInterface(id, role);
+                    admin.displayInterface(id, role, fname);
                 }
             } else{
                 System.out.println("Invalid Credentials.\n");
