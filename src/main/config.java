@@ -50,8 +50,18 @@ public class config {
     }
 }
     
-    public void updateProject(){
-        
+    public void updateRecord(String sqlQuery, int id, String newValue){
+        try{
+            PreparedStatement edit = connectDB().prepareStatement(sqlQuery);
+            
+            edit.setString(1, newValue);
+            edit.setInt(2, id);
+            edit.executeUpdate();
+            
+            System.out.println("Info successfully changed.");
+        } catch(SQLException e){
+            System.out.println("Error: "+e.getMessage());
+        }
     }
     
     public void deleteRecord(String sqlQuery, String getID, String getUpdate, String sequenceQuery, int pid, String columnName){
@@ -104,7 +114,7 @@ public class config {
             
             // Print the headers dynamically
             StringBuilder headerLine = new StringBuilder();
-            System.out.println("\nList of Projects: ");
+            System.out.println("List of Projects: ");
             headerLine.append("--------------------------------------------------------------------------------\n");
             for(String header : columnHeaders){
                 headerLine.append(String.format("%-20s ",header)); // Adjust format as needed

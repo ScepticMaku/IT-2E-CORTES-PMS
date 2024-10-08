@@ -24,7 +24,7 @@ public class Login extends config {
 
             System.out.print("Enter password: ");
             pass = sc.next();
-            
+            System.out.print("--------------------------------------------------------------------------------");
             locateUser(user, pass);
     }
     
@@ -48,7 +48,7 @@ public class Login extends config {
                     admin.displayInterface(id, role, fname);
                 }
             } else{
-                System.out.println("Invalid Credentials.\n");
+                System.out.println("\nInvalid Credentials.\n");
             }
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());

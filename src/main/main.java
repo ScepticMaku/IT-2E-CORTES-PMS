@@ -10,13 +10,14 @@ public class main {
         Register register = new Register();
         
         while(true){
-            System.out.println("Project Management System\n");
+            System.out.println("Project Management System");
             System.out.print("1. Login\n"
                     + "2. Register\n"
                     + "3. Close\n"
                     + "Enter choice: ");
             int choice = sc.nextInt();
-
+            
+            System.out.print("--------------------------------------------------------------------------------");
             switch(choice){
                 case 1:
                     login.loginCredentials();
@@ -28,7 +29,7 @@ public class main {
                     System.exit(0);
                     break;
                 default:
-                    System.out.println("Invalid selection.");
+                    System.out.println("\nInvalid selection.");
                     System.exit(0);
             }
         }
