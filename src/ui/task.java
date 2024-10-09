@@ -92,8 +92,6 @@ public class task extends config {
     }
     
     private void viewTaskList(int id, String taskQuery){
-        String[] taskHeaders = {"ID", "Name", "Description", "Status"};
-        String[] taskColumns = {"task_id", "task_name", "description","status"};
         try{
             PreparedStatement findRow = connectDB().prepareStatement(taskQuery);
             findRow.setInt(1, id);
@@ -130,7 +128,7 @@ public class task extends config {
                 String newName = sc.nextLine();
                 
                 sql = "UPDATE task SET task_name = ? WHERE task_id = ?";
-                updateRecord(sql, t_id, newName);
+                updateRecord(sql, newName, t_id);
                 break;
             case 2:
                 System.out.println("\nEnter new task description: ");
@@ -138,7 +136,7 @@ public class task extends config {
                 String newDesc = sc.nextLine();
                 
                 sql = "UPDATE task SET description = ? WHERE task_id = ?";
-                updateRecord(sql, t_id, newDesc);
+                updateRecord(sql, newDesc, t_id);
                 break;
             case 3:
                 System.out.print("\nEnter new status[Not Started/In Progress/Completed");
@@ -146,7 +144,7 @@ public class task extends config {
                 String newStatus = sc.nextLine();
                 
                 sql = "UPDATE task SET status = ? WHERE task_id = ?";
-                updateRecord(sql, t_id, newStatus);
+                updateRecord(sql, newStatus, t_id);
                 break;
             case 4:
                 break;
@@ -161,7 +159,7 @@ public class task extends config {
             
             search.setInt(1, id);
             ResultSet result = search.executeQuery();
-            System.out.println("Selected task: "+result.getString("task_name"));
+            System.out.println("\nSelected task: "+result.getString("task_name"));
             result.close();
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());

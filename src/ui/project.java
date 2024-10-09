@@ -73,7 +73,7 @@ public class project extends config {
             
             search.setInt(1, pid);
             ResultSet result = search.executeQuery();
-            System.out.println("Selected project: "+result.getString("project_name"));
+            System.out.println("\nSelected project: "+result.getString("project_name"));
             result.close();
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
@@ -81,7 +81,7 @@ public class project extends config {
     }
     
     private void selectProject(){
-        System.out.print("\nEnter ID: ");
+        System.out.print("Enter ID: ");
         id = sc.nextInt();
 
         searchID(id);
@@ -120,12 +120,12 @@ public class project extends config {
 
         switch(selectEdit){
             case 1:
+                sql = "UPDATE project SET project_name = ? WHERE project_id = ?";
+                
                 System.out.print("\nEnter new project name: ");
                 sc.nextLine();
                 String newName = sc.nextLine();
-
-                sql = "UPDATE project SET project_name = ? WHERE project_id = ?";
-                updateRecord(sql, id, newName);
+                updateRecord(sql, newName, id);
                 break;
             case 2:
                 System.out.print("\nEnter new project description: ");
@@ -133,7 +133,7 @@ public class project extends config {
                 String newDesc = sc.nextLine();
 
                 sql = "UPDATE project SET description = ? WHERE project_id = ?";
-                updateRecord(sql, id, newDesc);
+                updateRecord(sql, newDesc, id);
                 break;
             case 3:
                 System.out.print("\nEnter new status[Planned/In-Progress/Completed]: ");
@@ -141,7 +141,7 @@ public class project extends config {
                 String newStatus = sc.nextLine();
 
                 sql = "UPDATE project SET status = ? WHERE project_id = ?";
-                updateRecord(sql, id, newStatus);
+                updateRecord(sql, newStatus, id);
                 break;
             case 4:
                 break;
@@ -156,11 +156,8 @@ public class project extends config {
 
         if(confirm.equals("y")){
             sql = "DELETE FROM project WHERE project_id = ?";
-            String updateID = "UPDATE project SET project_id = ? WHERE project_id = ?";
-            String fetchID = "SELECT project_id FROM project ORDER BY project_id";
-            String updateSequence = "UPDATE sqlite_sequence SET seq = (SELECT MAX(project_id) FROM project) WHERE name = \"project\";";
 
-            deleteRecord(sql, fetchID, updateID, updateSequence, id, "project_id");
+            deleteRecord(sql, id);
         } else{
             System.out.println("Deletion Cancelled.");
         }
