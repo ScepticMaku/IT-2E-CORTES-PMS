@@ -8,87 +8,65 @@ public class task extends config {
     Scanner sc = new Scanner(System.in);
     
     String Tname, desc, status, sql;
-    int tid;
-    
-    int t_ID;
-    String taskName, taskDescription, taskStatus;
+    int tid, choice, selectEdit;
+    boolean isSelected = false;
     
     public void taskInterface(int pid){
-        System.out.println("--------------------------------------------------------------------------------");
-        
-        String sqlQuery = "SELECT * FROM task WHERE project_id = ?";
-        try{
-            PreparedStatement findRow = connectDB().prepareStatement(sqlQuery);
-            findRow.setInt(1, pid);
-            ResultSet checkTable = findRow.executeQuery();
-            
-            if(!checkTable.next()){
-                System.out.println("Task Empty.");
-            } else{
-                viewTaskList(pid, sqlQuery);
+        do{
+            System.out.println("--------------------------------------------------------------------------------");
+            String sqlQuery = "SELECT * FROM task WHERE project_id = ?";
+            try{
+                PreparedStatement findRow = connectDB().prepareStatement(sqlQuery);
+                findRow.setInt(1, pid);
+                ResultSet checkTable = findRow.executeQuery();
+
+                if(!checkTable.next()){
+                    System.out.println("Task Empty.");
+                } else{
+                    System.out.println("List of Tasks: ");
+                    System.out.println("--------------------------------------------------------------------------------");
+                    viewTaskList(pid, sqlQuery);
+                }
+                checkTable.close();
+            } catch(SQLException e){
+                System.out.println("Error: "+e.getMessage());
             }
-            checkTable.close();
-        } catch(SQLException e){
-            System.out.println("Error: "+e.getMessage());
-        }
-        
-        System.out.print("\n1. Add Task"
-                + "\n2. Select Task"
-                + "\n3. Back"
-                + "\nEnter selection: ");
-        int select = sc.nextInt();
-        
-        switch(select){
-            case 1:
-                System.out.print("Enter task name: ");
-                sc.nextLine();
-                Tname = sc.nextLine();
-                
-                System.out.println("Enter task description: ");
-                desc = sc.nextLine();
-                
-                tid = pid;
-                status = "Not Started";
-                sql = "INSERT INTO task (task_name, description, project_id, status) VALUES (?, ?, ?, ?)";
-                
-                addRecord(sql, Tname, desc, tid, status);
-                break;
-            case 2:
-                selectTask();
-                break;
-            case 3:
-                break;
-            default:
-                System.out.println("Error: Invalid selection.");
-        }
-    }
-    
-    private void selectTask(){
-        System.out.print("\nEnter ID: ");
-        int taskID = sc.nextInt();
-        
-        searchID(taskID);
-        System.out.print("Choose what you want to do: "
-                + "\n1. Edit Task"
-                + "\n2. Delete Task"
-                + "\n3. "
-                + "\n4. Back"
-                + "\nEnter selection: ");
-        int taskSelection = sc.nextInt();
-        
-        switch(taskSelection){
-            case 1:
-                editTask(taskID);
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-            default:
-                System.out.println("Error: Invalid selection.");
-        }
+
+            System.out.print("\n1. Add Task"
+                    + "\n2. Edit Task"
+                    + "\n3. Delete Task"
+                    + "\n4. Back"
+                    + "\nEnter selection: ");
+            choice = sc.nextInt();
+
+            switch(choice){
+                case 1:
+                    System.out.print("Enter task name: ");
+                    sc.nextLine();
+                    Tname = sc.nextLine();
+
+                    System.out.println("Enter task description: ");
+                    desc = sc.nextLine();
+
+                    tid = pid;
+                    status = "Not Started";
+                    sql = "INSERT INTO task (task_name, description, project_id, status) VALUES (?, ?, ?, ?)";
+
+                    addRecord(sql, Tname, desc, tid, status);
+                    break;
+                case 2:
+                    editTask();
+                    break;
+                case 3:
+                    deleteTask();
+                    break;
+                case 4:
+                    isSelected = true;
+                    break;
+                default:
+                    System.out.println("Error: Invalid selection.");
+            }
+        } while (!isSelected);
     }
     
     private void viewTaskList(int id, String taskQuery){
@@ -113,43 +91,66 @@ public class task extends config {
         }
     }
     
-    private void editTask(int t_id){
-        System.out.print("\n1. Change task name"
-                + "\n2. Change task description"
-                + "\n3. Change status"
-                + "\n4. Back"
-                + "\nEnter selection: ");
-        int selectEdit = sc.nextInt();
+    private void editTask(){
+        System.out.print("\nEnter ID: ");
+        int taskID = sc.nextInt();
         
-        switch(selectEdit){
-            case 1:
-                System.out.print("\nEnter new task name: ");
-                sc.nextLine();
-                String newName = sc.nextLine();
-                
-                sql = "UPDATE task SET task_name = ? WHERE task_id = ?";
-                updateRecord(sql, newName, t_id);
-                break;
-            case 2:
-                System.out.println("\nEnter new task description: ");
-                sc.nextLine();
-                String newDesc = sc.nextLine();
-                
-                sql = "UPDATE task SET description = ? WHERE task_id = ?";
-                updateRecord(sql, newDesc, t_id);
-                break;
-            case 3:
-                System.out.print("\nEnter new status[Not Started/In Progress/Completed");
-                sc.nextLine();
-                String newStatus = sc.nextLine();
-                
-                sql = "UPDATE task SET status = ? WHERE task_id = ?";
-                updateRecord(sql, newStatus, t_id);
-                break;
-            case 4:
-                break;
-            default:
-                System.out.println("Error: Invalid selection.");
+        System.out.println("--------------------------------------------------------------------------------");
+        searchID(taskID);
+        
+        do{
+            System.out.print("\n1. Change task name"
+                    + "\n2. Change task description"
+                    + "\n3. Change status"
+                    + "\n4. Back"
+                    + "\nEnter selection: ");
+            selectEdit = sc.nextInt();
+
+            switch(selectEdit){
+                case 1:
+                    System.out.print("\nEnter new task name: ");
+                    sc.nextLine();
+                    String newName = sc.nextLine();
+
+                    sql = "UPDATE task SET task_name = ? WHERE task_id = ?";
+                    updateRecord(sql, newName, taskID);
+                    break;
+                case 2:
+                    System.out.println("\nEnter new task description: ");
+                    sc.nextLine();
+                    String newDesc = sc.nextLine();
+
+                    sql = "UPDATE task SET description = ? WHERE task_id = ?";
+                    updateRecord(sql, newDesc, taskID);
+                    break;
+                case 3:
+                    System.out.print("\nEnter new status[Not Started/In Progress/Completed");
+                    sc.nextLine();
+                    String newStatus = sc.nextLine();
+
+                    sql = "UPDATE task SET status = ? WHERE task_id = ?";
+                    updateRecord(sql, newStatus, taskID);
+                    break;
+                case 4:
+                    break;
+                default:
+                    System.out.println("Error: Invalid selection.");
+            }
+        } while(selectEdit != 4);
+    }
+    
+    private void deleteTask(){
+        System.out.print("\nEnter ID: ");
+        int taskID = sc.nextInt();
+        
+        System.out.println("--------------------------------------------------------------------------------");
+        searchID(taskID);
+        System.out.print("Confirm delelte? [y/n]: ");
+        String confirm = sc.next();
+        
+        if(confirm.equals("y")){
+            sql = "DELETE FROM task WHERE task_id = ?";
+            deleteRecord(sql, taskID);
         }
     }
     
@@ -159,7 +160,7 @@ public class task extends config {
             
             search.setInt(1, id);
             ResultSet result = search.executeQuery();
-            System.out.println("\nSelected task: "+result.getString("task_name"));
+            System.out.println("Selected task: "+result.getString("task_name"));
             result.close();
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());

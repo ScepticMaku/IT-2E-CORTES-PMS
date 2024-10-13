@@ -7,19 +7,24 @@ import java.sql.*;
 
 public class project extends config {
     Scanner sc = new Scanner(System.in);
-    task t = new task();
+    task ts = new task();
+    team tm = new team();
     
     String name, desc, sql, status, confirm;
     int  choice, id, selectEdit, projectID;
+    boolean isSelected = false;
     
     public void projectInterface(int uid){
         do{
             System.out.println("--------------------------------------------------------------------------------");
+            System.out.println("List of Projects: ");
             viewProjectList();
             
             System.out.print("\n1. Add Project"
-                    + "\n2. Select Project"
-                    + "\n3. Back "
+                    + "\n2. Edit Project"
+                    + "\n3. Delete Project"
+                    + "\n4. Select Project"
+                    + "\n5. Back "
                     + "\nEnter choice: ");
             choice = sc.nextInt();
             
@@ -37,14 +42,44 @@ public class project extends config {
                     addRecord(sql, name, desc, uid, status);
                     break;
                 case 2:
-                    selectProject();
+                    editProject();
                     break;
                 case 3:
+                    deleteProject();
+                    break;
+                case 4:
+                    System.out.print("Enter ID: ");
+                    projectID = sc.nextInt();
+
+                    System.out.println("--------------------------------------------------------------------------------");
+                    searchID(projectID);
+                    System.out.print("Choose what you want to do: "
+                            + "\n1. Manage Tasks"
+                            + "\n2. Manage Teams"
+                            + "\n3. Back"
+                            + "\nEnter selection: ");
+                    int select = sc.nextInt();
+                    
+                    switch(select){
+                        case 1:
+                            ts.taskInterface(projectID);
+                            break;
+                        case 2:
+                            tm.teamInterface(projectID);
+                            break;
+                        case 3:
+                            break;
+                        default:
+                            System.out.println("Error: Invalid selection.");
+                    }
+                    break;
+                case 5:
+                    isSelected = true;
                     break;
                 default:
                     System.out.println("Error: Invalid Selection.");
             }
-        } while(choice != 3);
+        } while(!isSelected);
     }
     
     public void viewProjectList(){
@@ -73,44 +108,19 @@ public class project extends config {
             
             search.setInt(1, pid);
             ResultSet result = search.executeQuery();
-            System.out.println("\nSelected project: "+result.getString("project_name"));
+            System.out.println("Selected project: "+result.getString("project_name"));
             result.close();
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
         }
     }
     
-    private void selectProject(){
+    private void editProject(){
         System.out.print("Enter ID: ");
         id = sc.nextInt();
-
+        
+        System.out.println("--------------------------------------------------------------------------------");
         searchID(id);
-        System.out.print("Choose what you want to do:"
-                + "\n1. Edit Project"
-                + "\n2. Delete Project"
-                + "\n3. View Tasks"
-                + "\n4. Back"
-                + "\nEnter selection: ");
-        int projSelection = sc.nextInt();
-
-        switch(projSelection){
-            case 1:
-                editProject();
-                break;
-            case 2:
-                deleteProject();
-                break;
-            case 3:
-                t.taskInterface(id);
-                break;
-            case 4:
-                break;
-            default:
-                System.out.println("Error: Invalid selection.");
-        }
-    }
-    
-    private void editProject(){
         System.out.print("\n1. Change project name\n"
                 + "2. Change project description\n"
                 + "3. Change status\n"
@@ -151,12 +161,16 @@ public class project extends config {
     }
     
     private void deleteProject(){
+        System.out.print("Enter ID: ");
+        id = sc.nextInt();
+        
+        System.out.println("--------------------------------------------------------------------------------");
+        searchID(id);
         System.out.print("Confirm Delete? [y/n]: ");
         confirm = sc.next();
 
         if(confirm.equals("y")){
             sql = "DELETE FROM project WHERE project_id = ?";
-
             deleteRecord(sql, id);
         } else{
             System.out.println("Deletion Cancelled.");

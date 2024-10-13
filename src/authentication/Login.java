@@ -5,7 +5,6 @@ import java.util.*;
 import users.*;
 import java.sql.*;
 import password.securePassword;
-import ui.project;
 
 public class Login extends config {
     Scanner sc = new Scanner(System.in);

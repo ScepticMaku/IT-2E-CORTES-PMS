@@ -109,42 +109,6 @@ public class config {
         }
     }
     
-    /*public void deleteRecord(String sqlQuery, String getID, String getUpdate, String sequenceQuery, int pid, String columnName){
-        try{
-            PreparedStatement delete = connectDB().prepareStatement(sqlQuery);
-            PreparedStatement update = connectDB().prepareStatement(getUpdate);
-            PreparedStatement fetch = connectDB().prepareStatement(getID);
-            PreparedStatement sequence = connectDB().prepareStatement(sequenceQuery);
-            
-            // Deletes the row from the selected id
-            delete.setInt(1, pid);
-            delete.executeUpdate();
-            
-            // Sorts the table after deletion
-            int newID = 1;
-            
-            ResultSet getMax = fetch.executeQuery();
-            while(getMax.next()){
-                int currID = getMax.getInt(columnName);
-                getMax.close();
-                
-                if(currID != newID){
-                    update.setInt(1, newID);
-                    update.setInt(2, currID); 
-                    update.executeUpdate();
-                }
-                newID++;
-            }
-
-            // Updates the auto increment sequence (from the primary key)
-            sequence.executeUpdate();
-            
-            System.out.println("Deletion successful.");
-        } catch (SQLException e){
-            System.out.print("Error: "+e.getMessage());
-        }
-    }*/
-    
     public void viewRecords (String sqlQuery, String[] columnHeaders, String[] columnNames){
         
         // Check that columnHeaders and columnNames arrays are the same length
@@ -159,7 +123,6 @@ public class config {
             
             // Print the headers dynamically
             StringBuilder headerLine = new StringBuilder();
-            System.out.println("List of Projects: ");
             headerLine.append("--------------------------------------------------------------------------------\n");
             for(String header : columnHeaders){
                 headerLine.append(String.format("%-20s ",header)); // Adjust format as needed
