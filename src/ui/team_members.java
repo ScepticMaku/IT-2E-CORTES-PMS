@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.Scanner;
-import users.Admin;
 
 public class team_members extends config{
     Scanner sc = new Scanner(System.in);
@@ -17,7 +16,7 @@ public class team_members extends config{
     public void memberInterface(int tid){
        do{
             System.out.println("--------------------------------------------------------------------------------");
-            String sqlQuery = "SELECT member_id, user.first_name, team.team_name FROM members INNER JOIN team ON members.team_id INNER JOIN user ON members.user_id WHERE team.team_id = ?";
+            String sqlQuery = "SELECT u.user_id, u.first_name FROM team_member tm INNER JOIN User u ON tm.user_id = u.user_id WHERE tm.team_id = ?;";
             try{
                 PreparedStatement findRow = connectDB().prepareStatement(sqlQuery);
                 findRow.setInt(1, tid);
@@ -47,8 +46,10 @@ public class team_members extends config{
                     addMember(tid);
                     break;
                 case 2:
+                    replaceMember(tid);
                     break;
                 case 3:
+                    removeMember(tid);
                     break;
                 case 4:
                     isSelected = true;
@@ -65,15 +66,15 @@ public class team_members extends config{
             findRow.setInt(1, id);
             ResultSet checkRow = findRow.executeQuery();
             
-            System.out.printf("%-20s %-20s %-20s\n", "ID", "Member", "Team");
+            
+            System.out.printf("%-20s %-20s\n", "ID", "Member");
             while(checkRow.next()){
-                int memberID = checkRow.getInt("member_id");
-                String memberName = checkRow.getString("first_name");
-                String teamName = checkRow.getString("team_name");
+                int memberID = checkRow.getInt("user_id");
+            String memberName = checkRow.getString("first_name");
                 
                 String[] name = memberName.split(" ");
                 
-                System.out.printf("%-20d %-20s %-20s\n", memberID, name[0], teamName);
+                System.out.printf("%-20d %-20s\n", memberID, name[0]);
             }
             System.out.println("--------------------------------------------------------------------------------");
             checkRow.close();
@@ -92,19 +93,52 @@ public class team_members extends config{
         String confirm = sc.next();
         
         if(confirm.equals("y")){
-            sql = "INSERT INTO members (team_id, user_id) VALUES (?, ?)";
+            sql = "INSERT INTO team_member (team_id, user_id) VALUES (?, ?)";
             addRecord(sql, id, memberID);
         } else{
-            System.out.println("Cancelled.");
+            System.out.println("Add Cancelled.");
         }
     }
     
-    private void replaceMember(){
+    private void replaceMember(int id){
+        String sqlQuery = "SELECT u.user_id, u.first_name FROM team_member tm INNER JOIN User u ON tm.user_id = u.user_id WHERE tm.team_id = ?;";
+        viewMemberList(id, sqlQuery);
         
+        System.out.print("\nEnter target ID: ");
+        int memberID = sc.nextInt();
+        
+        searchID(memberID);
+        viewUserList();
+        System.out.print("Enter ID: ");
+        int replacedMemberID = sc.nextInt();
+        System.out.print("Confirm replace? [y/n]: ");
+        String confirm = sc.next();
+        
+        if(confirm.equals("y")){
+            sql = "UPDATE team_member SET user_id = ? WHERE team_member_id = ?";
+            updateRecord(sql, replacedMemberID, memberID);
+        } else{
+            System.out.println("Replacement Cancelled.");
+        }
     }
     
-    private void removeMember(){
+    private void removeMember(int id){
+        String sqlQuery = "SELECT u.user_id, u.first_name FROM team_member tm INNER JOIN User u ON tm.user_id = u.user_id WHERE tm.team_id = ?;";
+        viewMemberList(id, sqlQuery);
         
+        System.out.print("\nEnter ID: ");
+        int memberID = sc.nextInt();
+        
+        searchID(memberID);
+        System.out.print("Confirm delete? [y/n]: ");
+        String confirm = sc.next();
+        
+        if(confirm.equals("y")){
+            sql = "DELETE FROM team_member WHERE user_id = ?";
+            deleteRecord(sql, memberID);
+        } else{
+            System.out.println("Deletion cancelled.");
+        }
     }
     
     private void searchID(int mid){
@@ -142,4 +176,5 @@ public class team_members extends config{
             System.out.println("Error: "+e.getMessage());
         }
     }
+
 }

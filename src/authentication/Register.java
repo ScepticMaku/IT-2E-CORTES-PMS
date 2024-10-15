@@ -13,7 +13,6 @@ public class Register extends config{
         Scanner sc = new Scanner(System.in);
         securePassword pass = new securePassword();
         
-        System.out.println("\nRegister: ");
         System.out.print("Enter first name: ");
         String fname = sc.nextLine();
         
@@ -38,18 +37,21 @@ public class Register extends config{
             confirmPass = sc.next();
         }
         
-        System.out.print("Confrim registration? [y/n]: ");
+        System.out.print("Confirm registration? [y/n]: ");
         String confirm = sc.next();
         
         if(confirm.equals("y")){
             try{
-            PreparedStatement state = connectDB().prepareStatement("INSERT INTO user (first_name, middle_name, last_name, username, password_hash, role) VALUES (?, ?, ?, ?, ?, Team Member)");
+            PreparedStatement state = connectDB().prepareStatement("INSERT INTO user (first_name, middle_name, last_name, username, password_hash, role) VALUES (?, ?, ?, ?, ?, 'Team Member')");
             
             state.setString(1, fname);
             state.setString(2, mname);
             state.setString(3, lname);
             state.setString(4, username);
-            state.setString(4, pass.passwordHashing(confirmPass));
+            state.setString(5, pass.passwordHashing(confirmPass));
+            state.executeUpdate();
+            
+                System.out.println("Successfully Registered.");
             
             } catch(SQLException e){
                 System.out.println("Error: "+e.getMessage());

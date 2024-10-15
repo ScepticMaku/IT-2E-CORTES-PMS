@@ -10,8 +10,8 @@ public class team extends config {
     Scanner sc = new Scanner(System.in);
     team_members tm = new team_members();
     
-    String team_name, sql;
-    int project_id, choice;
+    String team_name, sql, another;
+    int project_id, choice, userID;
     boolean isSelected = false;
     
     public void teamInterface(int pid){
@@ -38,7 +38,7 @@ public class team extends config {
             System.out.print("\n1. Add team"
                     + "\n2. Edit team"
                     + "\n3. Delete team"
-                    + "\n4. Manage members"
+                    + "\n4. Select team"
                     + "\n5. Back"
                     + "\nEnter selection: ");
             choice = sc.nextInt();
@@ -48,7 +48,7 @@ public class team extends config {
                     System.out.print("\nEnter team name: ");
                     sc.nextLine();
                     team_name = sc.nextLine();
-
+                    
                     project_id = pid;
                     sql = "INSERT INTO team (team_name, project_id) VALUES (?, ?)";
 
@@ -61,7 +61,7 @@ public class team extends config {
                     deleteTeam();
                     break;
                 case 4:
-                    System.out.print("\nEnter ID: ");
+                    System.out.print("Enter ID: ");
                     int teamID = sc.nextInt();
                     tm.memberInterface(teamID);
                     break;
@@ -125,7 +125,7 @@ public class team extends config {
     
     private void searchID(int id){
         try{
-            PreparedStatement search = connectDB().prepareStatement("SELECT * FROM team WHERE team_id = ?");;
+            PreparedStatement search = connectDB().prepareStatement("SELECT * FROM team WHERE team_id = ?");
             
             search.setInt(1,id);
             ResultSet result = search.executeQuery();

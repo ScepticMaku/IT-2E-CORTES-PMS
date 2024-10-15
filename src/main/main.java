@@ -23,6 +23,7 @@ public class main {
                     login.loginCredentials();
                     break;
                 case 2:
+                    System.out.println("\nRegister: ");
                     register.registerCredentials();
                     break;
                 case 3:
