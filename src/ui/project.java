@@ -7,7 +7,7 @@ import java.sql.*;
 
 public class project extends config {
     Scanner sc = new Scanner(System.in);
-    task ts = new task();
+    projectTask ts = new projectTask();
     team tm = new team();
     
     String name, desc, sql, status, confirm;

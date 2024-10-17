@@ -1,5 +1,6 @@
 package authentication;
 
+import java.io.IOException;
 import main.config;
 import java.util.*;
 import users.*;
@@ -14,7 +15,7 @@ public class Login extends config {
     String locatedUser, locatedPass, locatedRole;
     boolean userDetected = false;
     
-    public void loginCredentials(){
+    public void loginCredentials() throws IOException{
         
             System.out.println("\nLogin:");
             System.out.print("Enter username: ");
@@ -26,7 +27,7 @@ public class Login extends config {
             locateUser(user, pass);
     }
     
-    public void locateUser(String username, String password){
+    public void locateUser(String username, String password) throws IOException{
         try{
             PreparedStatement state = connectDB().prepareStatement("SELECT user_id, first_name, username, password, role FROM user");
             ResultSet result = state.executeQuery();

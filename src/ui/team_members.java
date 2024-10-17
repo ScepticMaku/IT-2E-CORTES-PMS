@@ -16,7 +16,7 @@ public class team_members extends config{
     public void memberInterface(int tid){
        do{
             System.out.println("--------------------------------------------------------------------------------");
-            String sqlQuery = "SELECT u.user_id, u.first_name FROM team_member tm INNER JOIN User u ON tm.user_id = u.user_id WHERE tm.team_id = ?;";
+            String sqlQuery = "SELECT u.user_id, u.first_name FROM team_member tm INNER JOIN user u ON tm.user_id = u.user_id WHERE tm.team_id = ?;";
             try{
                 PreparedStatement findRow = connectDB().prepareStatement(sqlQuery);
                 findRow.setInt(1, tid);

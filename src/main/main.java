@@ -2,9 +2,10 @@ package main;
 
 import java.util.Scanner;
 import authentication.*;
+import java.io.IOException;
 
 public class main {
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException{
         Scanner sc = new Scanner(System.in);
         Login login = new Login();
         Register register = new Register();

@@ -179,9 +179,19 @@ public class users extends config {
     private void deleteUser(){
         System.out.print("\nEnter ID: ");
         userID = sc.nextInt();
-
+        
         System.out.println("--------------------------------------------------------------------------------");
         searchID(userID);
+        
+        System.out.print("Confirm delete? [y/n]: ");
+        String confirm = sc.next();
+        
+        if(confirm.equals("y")){
+            Query = "DELETE FROM user WHERE user_id = ?";
+            deleteRecord(Query, userID);
+        } else{
+            System.out.println("Deletion cancelled.");
+        }
     }
         
 }

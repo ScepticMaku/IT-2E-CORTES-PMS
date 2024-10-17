@@ -14,6 +14,7 @@ public class Admin extends config {
     project proj = new project();
     Register reg = new Register();
     users u = new users();
+    taskList tl = new taskList();
     
     boolean isSelected = false;
             
@@ -33,7 +34,7 @@ public class Admin extends config {
                     proj.projectInterface(uid);
                     break;
                 case 2:
-                    
+                    tl.taskListInterface(uid);
                     break;
                 case 3:
                     u.userInterface();
