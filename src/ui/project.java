@@ -108,7 +108,10 @@ public class project extends config {
             
             search.setInt(1, pid);
             ResultSet result = search.executeQuery();
-            System.out.println("Selected project: "+result.getString("project_name"));
+            
+            String project = result.getString("project_name");
+            System.out.println("Selected project: "+project);
+            
             result.close();
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());

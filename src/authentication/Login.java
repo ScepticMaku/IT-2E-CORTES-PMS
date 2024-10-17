@@ -4,12 +4,10 @@ import main.config;
 import java.util.*;
 import users.*;
 import java.sql.*;
-import password.securePassword;
 
 public class Login extends config {
     Scanner sc = new Scanner(System.in);
     Admin admin = new Admin();
-    securePassword passw = new securePassword();
     
     int id;
     String user, pass, role, fname;
@@ -30,17 +28,17 @@ public class Login extends config {
     
     public void locateUser(String username, String password){
         try{
-            PreparedStatement state = connectDB().prepareStatement("SELECT user_id, first_name, username, password_hash, role FROM user");
+            PreparedStatement state = connectDB().prepareStatement("SELECT user_id, first_name, username, password, role FROM user");
             ResultSet result = state.executeQuery();
             
             while(result.next()){
                 locatedUser = result.getString("username");
-                locatedPass = result.getString("password_hash");
+                locatedPass = result.getString("password");
                 locatedRole = result.getString("role");
                 fname = result.getString("first_name");
                 id = result.getInt("user_id");
                 
-                if(username.equals(locatedUser) && passw.passwordHashing(password).equals(locatedPass)){
+                if(username.equals(locatedUser) && password.equals(locatedPass)){
                     userDetected = true;
                     break;
                 }
@@ -54,7 +52,7 @@ public class Login extends config {
                     admin.displayInterface(id, role, fname);
                 } else if(locatedRole.equals("Team Member")){
                     role = "Team Member";
-                    admin.displayInterface(id, role, fname);;
+                    admin.displayInterface(id, role, fname);
                 }
             } else{
                 System.out.println("\nInvalid Credentials.\n");
