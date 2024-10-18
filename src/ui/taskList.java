@@ -1,14 +1,19 @@
 package ui;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import main.config;
+import java.util.Scanner;
 
 public class taskList extends config{
+    Scanner sc = new Scanner(System.in);
+    projectTask pj = new projectTask();
+    
     boolean isSelected = false;
     
-    public void taskListInterface(){
+    public void taskListInterface() throws IOException{
         do{
             System.out.println("--------------------------------------------------------------------------------");
             String sqlQuery = "SELECT t.task_id, t.task_name, t.description, u.first_name, t.status FROM task t INNER JOIN user u ON t.assigned_to = u.user_id";
@@ -21,7 +26,7 @@ public class taskList extends config{
                 } else{
                     System.out.println("List of Tasks: ");
                     System.out.println("--------------------------------------------------------------------------------");
-                    viewTaskList(pid, sqlQuery);
+                    viewTaskList(sqlQuery);
                 }
                 checkTable.close();
             } catch(SQLException e){
@@ -31,44 +36,34 @@ public class taskList extends config{
             System.out.print("\n1. Add Task"
                     + "\n2. Edit Task"
                     + "\n3. Delete Task"
-                    + "\n4. Back"
+                    + "\n4. View Task Info"
+                    + "\n5. Back"
                     + "\nEnter selection: ");
-            choice = sc.nextInt();
+            int choice = sc.nextInt();
 
             switch(choice){
                 case 1:
-                    System.out.print("Enter task name: ");
-                    sc.nextLine();
-                    Tname = sc.nextLine();
-
-                    System.out.print("Enter task description: ");
-                    desc = sc.nextLine();
-                    
-                    System.out.print("Enter user ID to assign: ");
-                    userID = sc.nextInt();
-
-                    tid = pid;
-                    status = "Not Started";
-                    sql = "INSERT INTO task (task_name, description, assigned_to, project_id, status) VALUES (?, ?, ?, ?, ?)";
-
-                    addRecord(sql, Tname, desc, userID, tid, status);
+                    addTask();
                     break;
                 case 2:
-                    editTask();
+                    pj.editTask();
                     break;
                 case 3:
-                    deleteTask();
+                    pj.deleteTask();
                     break;
                 case 4:
+                    pj.viewInfo();
+                    break;
+                case 5:
                     isSelected = true;
                     break;
                 default:
                     System.out.println("Error: Invalid selection.");
             }
-        } while(isSelected);
+        } while(!isSelected);
     }
     
-    public void viewTaskList(int id, String taskQuery){
+    public void viewTaskList(String taskQuery){
         try{
             PreparedStatement findRow = connectDB().prepareStatement(taskQuery);
             ResultSet checkRow = findRow.executeQuery();
@@ -88,5 +83,27 @@ public class taskList extends config{
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
         }
+    }
+    
+    private void addTask(){
+        System.out.println("--------------------------------------------------------------------------------");
+        System.out.print("Enter task name: ");
+                    sc.nextLine();
+                    String Tname = sc.nextLine();
+
+                    System.out.print("Enter task description: ");
+                    String desc = sc.nextLine();
+                    
+                    System.out.print("Enter user ID to assign: ");
+                    int userID = sc.nextInt();
+                    
+                    System.out.print("Enter project ID to assign: ");
+                    int pid = sc.nextInt();
+
+                    int tid = pid;
+                    String status = "Not Started";
+                    String sql = "INSERT INTO task (task_name, description, assigned_to, project_id, status) VALUES (?, ?, ?, ?, ?)";
+
+                    addRecord(sql, Tname, desc, userID, tid, status);
     }
 }

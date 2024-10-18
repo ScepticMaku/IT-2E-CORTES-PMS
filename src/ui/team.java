@@ -26,7 +26,7 @@ public class team extends config {
                 if(!checkTable.next()){
                     System.out.println("Team List Empty");
                 } else{
-                    System.out.println("List of Teams: ");
+                    System.out.println("List of teams working on this project: ");
                     System.out.println("--------------------------------------------------------------------------------");
                     viewTeamList(pid, sqlQuery);
                 }

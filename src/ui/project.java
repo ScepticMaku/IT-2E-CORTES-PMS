@@ -1,5 +1,6 @@
 package ui;
 
+import java.io.IOException;
 import main.config;
 import java.util.*;
 import java.sql.*;
@@ -14,7 +15,7 @@ public class project extends config {
     int  choice, id, selectEdit, projectID;
     boolean isSelected = false;
     
-    public void projectInterface(int uid){
+    public void projectInterface(int uid) throws IOException{
         do{
             System.out.println("--------------------------------------------------------------------------------");
             System.out.println("List of Projects: ");
@@ -53,7 +54,8 @@ public class project extends config {
 
                     System.out.println("--------------------------------------------------------------------------------");
                     searchID(projectID);
-                    System.out.print("Choose what you want to do: "
+                    System.out.print(""
+                            + "\nChoose what you want to do: "
                             + "\n1. Manage Tasks"
                             + "\n2. Manage Teams"
                             + "\n3. Back"
@@ -104,13 +106,16 @@ public class project extends config {
     
     private void searchID(int pid){
         try{
-            PreparedStatement search = connectDB().prepareStatement("SELECT * FROM project WHERE project_id = ?");
+            PreparedStatement search = connectDB().prepareStatement("SELECT project_name, description, u.first_name, status FROM project INNER JOIN user u ON project_manager_id = u.user_id WHERE project_id = ?;");
             
             search.setInt(1, pid);
             ResultSet result = search.executeQuery();
             
             String project = result.getString("project_name");
-            System.out.println("Selected project: "+project);
+            System.out.println("Selected project: "+project
+                        + "\nDescription: "+result.getString("description")
+                        + "\nProject Manager: "+result.getString("first_name")
+                        + "\nStatus: "+result.getString("status"));
             
             result.close();
         } catch(SQLException e){
@@ -179,4 +184,6 @@ public class project extends config {
             System.out.println("Deletion Cancelled.");
         }
     }
+    
+    
 }

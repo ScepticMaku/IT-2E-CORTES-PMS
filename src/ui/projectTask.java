@@ -1,5 +1,6 @@
 package ui;
 
+import java.io.IOException;
 import java.sql.*;
 import main.config;
 import java.util.Scanner;
@@ -9,9 +10,9 @@ public class projectTask extends config {
     
     String Tname, desc, status, sql;
     int tid, choice, selectEdit, userID;
-    boolean isSelected = false;
     
-    public void taskInterface(int pid){
+    public void taskInterface(int pid) throws IOException{
+        boolean isSelected = false;
         do{
             System.out.println("--------------------------------------------------------------------------------");
             String sqlQuery = "SELECT t.task_id, t.task_name, t.description, u.first_name, t.status FROM task t INNER JOIN user u ON t.assigned_to = u.user_id WHERE project_id = ?";
@@ -23,7 +24,7 @@ public class projectTask extends config {
                 if(!checkTable.next()){
                     System.out.println("Task Empty.");
                 } else{
-                    System.out.println("List of Tasks: ");
+                    System.out.println("List of tasks in this project: ");
                     System.out.println("--------------------------------------------------------------------------------");
                     viewTaskList(pid, sqlQuery);
                 }
@@ -35,7 +36,8 @@ public class projectTask extends config {
             System.out.print("\n1. Add Task"
                     + "\n2. Edit Task"
                     + "\n3. Delete Task"
-                    + "\n4. Back"
+                    + "\n4. View Task Info"
+                    + "\n5. Back"
                     + "\nEnter selection: ");
             choice = sc.nextInt();
 
@@ -64,12 +66,26 @@ public class projectTask extends config {
                     deleteTask();
                     break;
                 case 4:
+                    viewInfo();
+                    break;
+                case 5:
                     isSelected = true;
                     break;
                 default:
                     System.out.println("Error: Invalid selection.");
             }
-        } while (!isSelected);
+        } while(!isSelected);
+    }
+    
+    public void viewInfo() throws IOException{
+        System.out.print("\nEnter ID: ");
+        int taskID = sc.nextInt();
+
+        System.out.println("--------------------------------------------------------------------------------");
+        searchID(taskID);
+        System.out.println("--------------------------------------------------------------------------------");
+        System.out.print("Press any key to continue...");
+        System.in.read();
     }
     
     public void viewTaskList(int id, String taskQuery){
@@ -95,7 +111,8 @@ public class projectTask extends config {
         }
     }
     
-    private void editTask(){
+    public void editTask(){
+        boolean isSelected = false;
         System.out.print("\nEnter ID: ");
         int taskID = sc.nextInt();
         
@@ -136,14 +153,15 @@ public class projectTask extends config {
                     updateRecord(sql, newStatus, taskID);
                     break;
                 case 4:
+                    isSelected = true;
                     break;
                 default:
                     System.out.println("Error: Invalid selection.");
             }
-        } while(selectEdit != 4);
+        } while(!isSelected);
     }
     
-    private void deleteTask(){
+    public void deleteTask(){
         System.out.print("\nEnter ID: ");
         int taskID = sc.nextInt();
         
@@ -160,11 +178,15 @@ public class projectTask extends config {
     
     private void searchID(int id){
         try{
-            PreparedStatement search = connectDB().prepareStatement("SELECT * FROM task WHERE task_id = ?");
+            PreparedStatement search = connectDB().prepareStatement("SELECT task_name, t.description, u.first_name, p.project_name, t.status FROM task t INNER JOIN user u ON assigned_to = u.user_id INNER JOIN project p ON t.project_id = p.project_id WHERE task_id = ?;");
             
             search.setInt(1, id);
             ResultSet result = search.executeQuery();
-            System.out.println("Selected task: "+result.getString("task_name"));
+            System.out.println("Selected task: "+result.getString("task_name")
+                    + "\nDescription: "+result.getString("description")
+                    + "\nAssigned to: "+result.getString("first_name")
+                    + "\nFrom project: "+result.getString("project_name")
+                    + "\nStatus: "+result.getString("status"));
             result.close();
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());

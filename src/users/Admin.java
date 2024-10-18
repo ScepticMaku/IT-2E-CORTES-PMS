@@ -34,7 +34,7 @@ public class Admin extends config {
                     proj.projectInterface(uid);
                     break;
                 case 2:
-                    tl.taskListInterface(uid);
+                    tl.taskListInterface();
                     break;
                 case 3:
                     u.userInterface();
