@@ -141,7 +141,7 @@ public class users extends config {
                     updateRecord(Query, newPass, userID);
                     break;
                 case 2:
-                    System.out.print("\nEnter new Role [admin/team member/project manager]: ");
+                    System.out.print("\nEnter new Role [admin/member/project manager]: ");
                     sc.nextLine();
                     String newRole = sc.nextLine();
                     

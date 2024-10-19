@@ -40,7 +40,7 @@ public class Register extends config{
         
         if(confirm.equals("y")){
             try{
-            PreparedStatement state = connectDB().prepareStatement("INSERT INTO user (first_name, middle_name, last_name, username, password_hash, role) VALUES (?, ?, ?, ?, ?, 'team tember')");
+            PreparedStatement state = connectDB().prepareStatement("INSERT INTO user (first_name, middle_name, last_name, username, password_hash, role) VALUES (?, ?, ?, ?, ?, 'member')");
             
             state.setString(1, fname);
             state.setString(2, mname);

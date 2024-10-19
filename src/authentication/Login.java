@@ -9,6 +9,7 @@ import java.sql.*;
 public class Login extends config {
     Scanner sc = new Scanner(System.in);
     Admin admin = new Admin();
+    Member member = new Member();
     
     int id;
     String user, pass, role, fname;
@@ -50,9 +51,9 @@ public class Login extends config {
                     
                     role = "admin";
                     admin.displayInterface(id, role, fname);
-                } else if(locatedRole.equals("Team Member")){
+                } else if(locatedRole.equals("member")){
                     role = "Team Member";
-                    admin.displayInterface(id, role, fname);
+                    member.displayInterface(id, role, fname);
                 }
             } else{
                 System.out.println("\nInvalid Credentials.\n");

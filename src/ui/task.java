@@ -15,7 +15,7 @@ public class task extends config{
     public void taskListInterface() throws IOException{
         do{
             System.out.println("================================================================================================================================================================");
-            String sqlQuery = "SELECT t.task_id, t.task_name, t.description, t.due_date, u.first_name, p.project_name, t.status FROM task t INNER JOIN user u ON t.assigned_to = u.user_id INNER JOIN project p ON t.project_id = p.project_id";
+            String sqlQuery = "SELECT t.task_id, t.task_name, t.due_date, u.first_name, p.project_name, t.status FROM task t INNER JOIN user u ON t.assigned_to = u.user_id INNER JOIN project p ON t.project_id = p.project_id";
             try{
                 PreparedStatement findRow = connectDB().prepareStatement(sqlQuery);
                 ResultSet checkTable = findRow.executeQuery();
@@ -116,13 +116,13 @@ public class task extends config{
 
                     int tid = pid;
                     String status = "Not Started";
-                    String sql = "INSERT INTO task (task_name, description, due_date, assigned_to, project_id, status) VALUES (?, ?, ?, ?, ?, ?)";
+                    String sql = "INSERT INTO task (task_name, description, date_created, due_date, assigned_to, project_id, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-                    addRecord(sql, Tname, desc, dueDate, userID, tid, status);
+                    addRecord(sql, Tname, desc, date.toString(), dueDate, userID, tid, status);
     }
     
     public void editTask(){
-        boolean isSelected = false;
+        boolean Selected = false;
         System.out.print("\nEnter ID: ");
         int taskID = sc.nextInt();
         
@@ -134,7 +134,8 @@ public class task extends config{
                     + "\n2. Change task description"
                     + "\n3. Change due date"
                     + "\n4. Change status"
-                    + "\n5. Back"
+                    + "\n5. Change asignee"
+                    + "\n6. Back"
                     + "\nEnter selection: ");
             int selectEdit = sc.nextInt();
 
@@ -171,12 +172,19 @@ public class task extends config{
                     updateRecord(sql, newStatus, taskID);
                     break;
                 case 5:
-                    isSelected = true;
+                    System.out.print("\nEnter user ID to assign: ");
+                    int userID = sc.nextInt();
+                    
+                    sql = "UPDATE task SET assigned_to = ? WHERE task_id = ?";
+                    updateRecord(sql, userID, taskID);
+                    break;
+                case 6:
+                    Selected = true;
                     break;
                 default:
                     System.out.println("Error: Invalid selection.");
             }
-        } while(!isSelected);
+        } while(!Selected);
     }
     
     public void deleteTask(){

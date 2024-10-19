@@ -25,7 +25,8 @@ public class project extends config {
                     + "\n2. Edit Project"
                     + "\n3. Delete Project"
                     + "\n4. View Info"
-                    + "\n5. Back "
+                    + "\n5. View by Status "
+                    + "\n6. Back "
                     + "\nEnter choice: ");
             choice = sc.nextInt();
             
@@ -55,12 +56,58 @@ public class project extends config {
                     viewProjectInfo();
                     break;
                 case 5:
+                    viewFilteredList();
+                    break;
+                case 6:
                     isSelected = true;
                     break;
                 default:
                     System.out.println("Error: Invalid Selection.");
             }
         } while(!isSelected);
+    }
+    
+    private void viewFilteredList() throws IOException{
+        boolean isBack = false;
+        do{
+            try{
+                PreparedStatement filter = connectDB().prepareStatement("SELECT * FROM project WHERE status = ?");
+                
+                System.out.print("Enter status [Planned/Completed/In-Progress]: ");
+                String getStatus = sc.next();
+                filter.setString(1, getStatus);
+                ResultSet checkRow = filter.executeQuery();
+
+                System.out.printf("%-20s %-20s %-20s %-20s\n", "ID", "Name", "Due Date", "Status");
+                while(checkRow.next()){
+                    int pid = checkRow.getInt("project_id");
+                    String pname = checkRow.getString("project_name");
+                    String pdue = checkRow.getString("due_date");
+                    String pstats = checkRow.getString("status");
+
+                    System.out.printf("%-20d %-20s %-20s %-20s\n", pid, pname, pdue, pstats);
+                }
+                System.out.println("--------------------------------------------------------------------------------");
+                System.out.print("1. Change status filter"
+                        + "\n2. Back"
+                        + "\nEnter selection: ");
+                int select = sc.nextInt();
+                
+                switch(select){
+                    case 1:
+                        isBack = false;
+                        break;
+                    case 2:
+                        isBack = true;
+                        break;
+                    default: System.out.println("Error: Invalid selection: ");
+                }
+                checkRow.close();
+            } catch(SQLException e){
+                System.out.println("Error: "+e.getMessage());
+                isBack = true;
+            }
+        } while(!isBack);
     }
     
     private void viewProjectInfo() throws IOException{
@@ -76,7 +123,7 @@ public class project extends config {
     public void viewProjectList(){
         String projectQuery = "SELECT * FROM project";
         String[] projectHeaders = {"ID", "Name", "Due Date", "Status"};
-        String[] projectColumns = {"project_id", "description", "due_date", "status"};
+        String[] projectColumns = {"project_id", "project_name", "due_date", "status"};
         
         try{
             PreparedStatement findRow = connectDB().prepareStatement(projectQuery);
@@ -146,20 +193,20 @@ public class project extends config {
                 updateRecord(sql, newDesc, id);
                 break;
             case 3:
-                System.out.print("\nEnter new status[Planned/In-Progress/Completed]: ");
-                sc.nextLine();
-                String newStatus = sc.nextLine();
-
-                sql = "UPDATE project SET status = ? WHERE project_id = ?";
-                updateRecord(sql, newStatus, id);
-                break;
-            case 4:
                 System.out.print("\nEnter new due date [FORMAT: YYYY-MM-DD]: ");
                 String newDate = sc.next();
                 
                 sql = "UPDATE project SET due_date = ? WHERE project_id = ?";
                 updateRecord(sql, newDate, id);
                 break;
+            case 4:
+            System.out.print("\nEnter new status[Planned/In-Progress/Completed]: ");
+            sc.nextLine();
+            String newStatus = sc.nextLine();
+
+            sql = "UPDATE project SET status = ? WHERE project_id = ?";
+            updateRecord(sql, newStatus, id);
+            break;
             case 5:
                 break;
             default:
