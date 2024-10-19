@@ -36,7 +36,8 @@ public class task extends config{
                     + "\n2. Edit Task"
                     + "\n3. Delete Task"
                     + "\n4. View Task Info"
-                    + "\n5. Back"
+                    + "\n5. Filter By"
+                    + "\n6. Back"
                     + "\nEnter selection: ");
             int choice = sc.nextInt();
 
@@ -54,6 +55,8 @@ public class task extends config{
                     viewInfo();
                     break;
                 case 5:
+                    break;
+                case 6:
                     isSelected = true;
                     break;
                 default:
@@ -219,5 +222,20 @@ public class task extends config{
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
         }
+    }
+    
+    private void viewFilteredList(){
+        boolean Back = false;
+        do{
+            try{
+                PreparedStatement state = connectDB().prepareStatement("SELECT t.task_id, t.task_name, t.due_date, u.first_name, p.project_name, t.status FROM task t INNER JOIN user u ON t.assigned_to = u.user_id INNER JOIN project p ON t.project_id = p.project_id");
+                
+                System.out.print("Filter by:\n"
+                    + "1. ");
+                System.out.print("");
+            } catch(SQLException e){
+                System.out.println("Error: "+e.getMessage());
+            }
+        }while(!Back);
     }
 }

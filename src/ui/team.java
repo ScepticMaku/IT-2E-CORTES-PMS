@@ -17,7 +17,7 @@ public class team extends config {
     public void teamInterface(){
         do{
             System.out.println("================================================================================================================================================================");
-            String sqlQuery = "SELECT * FROM team";
+            String sqlQuery = "SELECT t.team_id, t.team_name, p.project_name FROM team t INNER JOIN project p ON t.project_id = p.project_id";;
             try{
                 PreparedStatement findRow = connectDB().prepareStatement(sqlQuery);
                 ResultSet checkTable = findRow.executeQuery();
@@ -48,7 +48,7 @@ public class team extends config {
                     sc.nextLine();
                     team_name = sc.nextLine();
                     
-                    System.out.print("\nEnter project ID to assign: ");
+                    System.out.print("Enter project ID to assign: ");
                     int pid = sc.nextInt();
                     sql = "INSERT INTO team (team_name, project_id) VALUES (?, ?)";
 
@@ -80,12 +80,32 @@ public class team extends config {
         
         System.out.println("--------------------------------------------------------------------------------");
         searchID(teamID);
-        System.out.print("Enter new name: ");
-        sc.nextLine();
-        String newName = sc.nextLine();
+        System.out.print("\n1. Change Name"
+                + "\n2. Change assigned project"
+                + "\n3. Cancel"
+                + "\nEnter selection: ");
+        int editSelect = sc.nextInt();
         
-        sql = "UPDATE team SET team_name = ? WHERE team_id = ?";
-        updateRecord(sql, newName, teamID);
+        switch(editSelect){
+            case 1:
+                System.out.print("Enter new name: ");
+                sc.nextLine();
+                String newName = sc.nextLine();
+
+                sql = "UPDATE team SET team_name = ? WHERE team_id = ?";
+                updateRecord(sql, newName, teamID);
+                break;
+            case 2:
+                System.out.print("Enter project ID to assign: ");
+                int newID = sc.nextInt();
+                
+                sql = "UPDATE team SET project_id = ? WHERE team_id = ?";
+                updateRecord(sql, newID, teamID);
+                break;
+            case 3:
+                System.out.println("Update Cancelled.");
+                break;
+        }
     }
     
     private void deleteTeam(){
@@ -108,12 +128,13 @@ public class team extends config {
             PreparedStatement findRow = connectDB().prepareStatement(Query);
             ResultSet checkRow = findRow.executeQuery();
             
-            System.out.printf("%-20s %-20s\n", "ID", "Name");
+            System.out.printf("%-20s %-20s %-20s\n", "ID", "Name", "Project");
             while(checkRow.next()){
                 int tid = checkRow.getInt("team_id");
                 String tname = checkRow.getString("team_name");
+                String pname = checkRow.getString("project_name");
                 
-                System.out.printf("%-20d %-20s\n", tid, tname);
+                System.out.printf("%-20d %-20s %-20s\n", tid, tname, pname);
             }
             System.out.println("--------------------------------------------------------------------------------");
             checkRow.close();

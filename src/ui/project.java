@@ -25,7 +25,7 @@ public class project extends config {
                     + "\n2. Edit Project"
                     + "\n3. Delete Project"
                     + "\n4. View Info"
-                    + "\n5. View by Status "
+                    + "\n5. Filter by Status "
                     + "\n6. Back "
                     + "\nEnter choice: ");
             choice = sc.nextInt();
