@@ -10,7 +10,7 @@ public class Register extends config{
     
     public void registerCredentials(){
         Scanner sc = new Scanner(System.in);
-        
+        System.out.println("================================================================================================================================================================");
         System.out.print("Enter first name: ");
         String fname = sc.nextLine();
         

@@ -15,8 +15,8 @@ public class team_members extends config{
     
     public void memberInterface(int tid){
        do{
-            System.out.println("--------------------------------------------------------------------------------");
-            String sqlQuery = "SELECT u.user_id, u.first_name FROM team_member tm INNER JOIN user u ON tm.user_id = u.user_id WHERE tm.team_id = ?;";
+            System.out.println("================================================================================================================================================================");
+            String sqlQuery = "SELECT u.user_id, u.first_name, t.team_name FROM team_member tm INNER JOIN user u ON tm.user_id = u.user_id INNER JOIN team t ON tm.team_id = t.team_id WHERE tm.team_id = ?";
             try{
                 PreparedStatement findRow = connectDB().prepareStatement(sqlQuery);
                 findRow.setInt(1, tid);
@@ -25,6 +25,7 @@ public class team_members extends config{
                 if(!checkTable.next()){
                     System.out.println("Member List Empty");
                 } else{
+                    System.out.println("Team name: "+checkTable.getString("team_name"));
                     System.out.println("List of Members: ");
                     System.out.println("--------------------------------------------------------------------------------");
                     viewMemberList(tid, sqlQuery);

@@ -23,7 +23,6 @@ public class Login extends config {
 
             System.out.print("Enter password: ");
             pass = sc.next();
-            System.out.print("--------------------------------------------------------------------------------");
             locateUser(user, pass);
     }
     

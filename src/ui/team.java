@@ -14,13 +14,12 @@ public class team extends config {
     int project_id, choice, userID;
     boolean isSelected = false;
     
-    public void teamInterface(int pid){
+    public void teamInterface(){
         do{
-            System.out.println("--------------------------------------------------------------------------------");
-            String sqlQuery = "SELECT * FROM team WHERE project_id = ?";
+            System.out.println("================================================================================================================================================================");
+            String sqlQuery = "SELECT * FROM team";
             try{
                 PreparedStatement findRow = connectDB().prepareStatement(sqlQuery);
-                findRow.setInt(1, pid);
                 ResultSet checkTable = findRow.executeQuery();
 
                 if(!checkTable.next()){
@@ -28,7 +27,7 @@ public class team extends config {
                 } else{
                     System.out.println("List of teams working on this project: ");
                     System.out.println("--------------------------------------------------------------------------------");
-                    viewTeamList(pid, sqlQuery);
+                    viewTeamList(sqlQuery);
                 }
                 checkTable.close();
             } catch(SQLException e){
@@ -49,10 +48,11 @@ public class team extends config {
                     sc.nextLine();
                     team_name = sc.nextLine();
                     
-                    project_id = pid;
+                    System.out.print("\nEnter project ID to assign: ");
+                    int pid = sc.nextInt();
                     sql = "INSERT INTO team (team_name, project_id) VALUES (?, ?)";
 
-                    addRecord(sql, team_name, project_id);
+                    addRecord(sql, team_name, pid);
                     break;
                 case 2:
                     editTeam();
@@ -103,10 +103,9 @@ public class team extends config {
         }
     }
     
-    private void viewTeamList(int id, String Query){
+    private void viewTeamList(String Query){
         try{
             PreparedStatement findRow = connectDB().prepareStatement(Query);
-            findRow.setInt(1, id);
             ResultSet checkRow = findRow.executeQuery();
             
             System.out.printf("%-20s %-20s\n", "ID", "Name");

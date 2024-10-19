@@ -1,8 +1,11 @@
 package main;
 
 import java.sql.*;
+import java.time.LocalDate;
 
 public class config {
+    
+    public LocalDate date = LocalDate.now();
     
     public Connection connectDB(){
         Connection connect = null;

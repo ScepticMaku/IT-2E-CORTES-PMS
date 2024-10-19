@@ -1,8 +1,5 @@
 package users;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import ui.*;
 import java.util.Scanner;
 import main.config;
@@ -14,7 +11,8 @@ public class Admin extends config {
     project proj = new project();
     Register reg = new Register();
     users u = new users();
-    taskList tl = new taskList();
+    task tl = new task();
+    team tm = new team();
     
     boolean isSelected = false;
             
@@ -22,10 +20,13 @@ public class Admin extends config {
         String[] name = first_name.split(" ");
         System.out.printf("\nSuccessfully Logged in as: %s, welcome %s!", user_role, name[0]);
         do{
-            System.out.print("\n1. Projects\n"
+            System.out.print("\n================================================================================================================================================================");
+            System.out.print("\nMain menu: \n"
+                    + "1. Projects\n"
                     + "2. Tasks\n"
-                    + "3. Users\n"
-                    + "4. Logout\n"
+                    + "3. Teams\n"
+                    + "4. Users\n"
+                    + "5. Logout\n"
                     + "Enter selection: ");
             int select = sc.nextInt();
             
@@ -37,9 +38,12 @@ public class Admin extends config {
                     tl.taskListInterface();
                     break;
                 case 3:
-                    u.userInterface();
+                    tm.teamInterface();
                     break;
                 case 4:
+                    u.userInterface();
+                    break;
+                case 5:
                     isSelected = true;
                     break;
                 default:

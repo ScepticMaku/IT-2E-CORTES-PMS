@@ -18,6 +18,8 @@ public class users extends config {
     
     public void userInterface() throws IOException{
         do{
+            System.out.println("================================================================================================================================================================");
+            System.out.println("List of users: ");
             viewUserList();
         
             System.out.print("1. Register a user"
