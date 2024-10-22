@@ -9,7 +9,6 @@ import java.io.IOException;
 public class Admin extends config {
     Scanner sc = new Scanner(System.in);
     project proj = new project();
-    Register reg = new Register();
     users u = new users();
     task tl = new task();
     team tm = new team();
@@ -50,8 +49,5 @@ public class Admin extends config {
                     System.out.println("Error: Invalid selection.");
             }
         } while(!isSelected);
-    }
-    
-    private void viewTasks(){
     }
 }

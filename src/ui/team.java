@@ -17,7 +17,7 @@ public class team extends config {
     public void teamInterface(){
         do{
             System.out.println("================================================================================================================================================================");
-            String sqlQuery = "SELECT t.team_id, t.team_name, p.project_name FROM team t INNER JOIN project p ON t.project_id = p.project_id";;
+            String sqlQuery = "SELECT t.team_id, t.team_name, p.project_name FROM team t INNER JOIN project p ON t.project_id = p.project_id";
             try{
                 PreparedStatement findRow = connectDB().prepareStatement(sqlQuery);
                 ResultSet checkTable = findRow.executeQuery();
@@ -37,8 +37,9 @@ public class team extends config {
             System.out.print("\n1. Add team"
                     + "\n2. Edit team"
                     + "\n3. Delete team"
-                    + "\n4. Select team"
-                    + "\n5. Back"
+                    + "\n4. View team info"
+                    + "\n5. Filter by"
+                    + "\n6. Back"
                     + "\nEnter selection: ");
             choice = sc.nextInt();
 
@@ -63,9 +64,47 @@ public class team extends config {
                 case 4:
                     System.out.print("Enter ID: ");
                     int teamID = sc.nextInt();
+                    searchID(teamID);
                     tm.memberInterface(teamID);
                     break;
                 case 5:
+                    boolean isBack = false;
+                    do{
+                        System.out.print("\nFilter by:"
+                                + "\n1. Project"
+                                + "\n2. Back"
+                                + "\nEnter selection: ");
+                        int filterSelect = sc.nextInt();
+                        
+                        switch(filterSelect){
+                            case 1:
+                                System.out.print("Enter project ID: ");
+                                int getProject = sc.nextInt();
+                                
+                                System.out.println("\nTeam list filtered by: Project");
+                                System.out.println("--------------------------------------------------------------------------------");
+                                try{
+                                    PreparedStatement state = connectDB().prepareStatement("SELECT p.project_name FROM team t INNER JOIN project p ON t.project_id = p.project_id WHERE t.project_id = ?");
+
+                                    state.setInt(1, getProject);
+                                    ResultSet result = state.executeQuery();
+
+                                    sql = "SELECT t.team_id, t.team_name, p.project_name FROM team t INNER JOIN project p ON t.project_id = p.project_id WHERE p.project_name = ?";
+                                    System.out.println(result.getString("project_name"));
+                                    viewFilteredList(result.getString("project_name"), sql);
+                                    result.close();
+                                } catch(SQLException e){
+                                    System.out.println("Error: "+e.getMessage());
+                                }
+                                break;
+                            case 2:
+                                isBack = true;
+                                break;
+                            default: System.out.println("Error: Invalid selection");
+                        }
+                    } while(!isBack);
+                    break;
+                case 6:
                     isSelected = true;
                     break;
                 default:
@@ -108,6 +147,27 @@ public class team extends config {
         }
     }
     
+    public void viewFilteredList(String getColumn, String query){
+        try{
+            PreparedStatement filter = connectDB().prepareStatement(query);
+            
+            filter.setString(1, getColumn);
+            ResultSet checkRow = filter.executeQuery();
+            System.out.printf("%-20s %-20s %-20s\n", "ID", "Name", "Project");
+            while(checkRow.next()){
+                int tid = checkRow.getInt("team_id");
+                String tname = checkRow.getString("team_name");
+                String pname = checkRow.getString("project_name");
+                
+                System.out.printf("%-20d %-20s %-20s\n", tid, tname, pname);
+            }
+            System.out.println("--------------------------------------------------------------------------------");
+            checkRow.close();
+        } catch(SQLException e){
+            System.out.println("Error: "+e.getMessage());
+        }
+    }
+    
     private void deleteTeam(){
         System.out.print("\nEnter ID: ");
         int teamID = sc.nextInt();
@@ -145,11 +205,13 @@ public class team extends config {
     
     private void searchID(int id){
         try{
-            PreparedStatement search = connectDB().prepareStatement("SELECT * FROM team WHERE team_id = ?");
+            PreparedStatement search = connectDB().prepareStatement("SELECT tm.team_id, tm.team_name, p.project_name FROM team tm INNER JOIN project p ON tm.project_id = p.project_id WHERE team_id = ?");
             
             search.setInt(1,id);
             ResultSet result = search.executeQuery();
+            System.out.println("--------------------------------------------------------------------------------");
             System.out.println("Selected team: "+result.getString("team_name"));
+            System.out.println("From project: "+result.getString("project_name"));
             result.close();
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());

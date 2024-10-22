@@ -9,13 +9,14 @@ import java.sql.*;
 
 public class project extends config {
     Scanner sc = new Scanner(System.in);
+    task ts = new task();
     team tm = new team();
     
     String name, desc, sql, status, confirm, dueDate;
     int  choice, id, selectEdit, projectID;
-    boolean isSelected = false;
     
     public void projectInterface(int uid) throws IOException{
+        boolean pSelected = false;
         do{
             System.out.println("================================================================================================================================================================");
             System.out.println("List of Projects: ");
@@ -25,7 +26,7 @@ public class project extends config {
                     + "\n2. Edit Project"
                     + "\n3. Delete Project"
                     + "\n4. View Info"
-                    + "\n5. Filter by Status "
+                    + "\n5. Filter by"
                     + "\n6. Back "
                     + "\nEnter choice: ");
             choice = sc.nextInt();
@@ -56,68 +57,78 @@ public class project extends config {
                     viewProjectInfo();
                     break;
                 case 5:
-                    viewFilteredList();
+                    boolean isBack = false;
+                    do{
+                        System.out.print("\nFilter by: "
+                                + "\n1. Due date"
+                                + "\n2. Status"
+                                + "\n3. Back"
+                                + "\nEnter selection: ");
+                        int filterSelect = sc.nextInt();
+
+                        switch(filterSelect){
+                            case 1:
+                                System.out.print("Enter due date [YYYY-MM-DD]: ");
+                                String getDate = sc.next();
+                                
+                                System.out.println("Task list fileted by: Date");
+                                System.out.println("--------------------------------------------------------------------------------");
+                                sql = "SELECT * FROM project WHERE due_date = ?";
+                                viewFilteredList(getDate,sql);
+                                break;
+                            case 2:
+                                System.out.print("Enter status [Planned/Completed/In-Progress]: ");
+                                String getStatus = sc.next();
+                                
+                                System.out.println("Task list fileted by: Status");
+                                System.out.println("--------------------------------------------------------------------------------");
+                                sql = "SELECT * FROM project WHERE status = ?";
+                                viewFilteredList(getStatus, sql);
+                                break;
+                            case 3:
+                                isBack = true;
+                                break;
+                            default: System.out.println("Error: Invalid Selection.");
+                        }
+                    } while(!isBack);
                     break;
                 case 6:
-                    isSelected = true;
+                    pSelected = true;
                     break;
                 default:
                     System.out.println("Error: Invalid Selection.");
             }
-        } while(!isSelected);
+        } while(!pSelected);
     }
     
-    private void viewFilteredList() throws IOException{
-        boolean isBack = false;
-        do{
-            try{
-                PreparedStatement filter = connectDB().prepareStatement("SELECT * FROM project WHERE status = ?");
-                
-                System.out.print("Enter status [Planned/Completed/In-Progress]: ");
-                String getStatus = sc.next();
-                filter.setString(1, getStatus);
-                ResultSet checkRow = filter.executeQuery();
+    private void viewFilteredList(String getColumn, String query) throws IOException{
+        try{
+            PreparedStatement filter = connectDB().prepareStatement(query);
 
-                System.out.printf("%-20s %-20s %-20s %-20s\n", "ID", "Name", "Due Date", "Status");
-                while(checkRow.next()){
-                    int pid = checkRow.getInt("project_id");
-                    String pname = checkRow.getString("project_name");
-                    String pdue = checkRow.getString("due_date");
-                    String pstats = checkRow.getString("status");
+            filter.setString(1, getColumn);
+            ResultSet checkRow = filter.executeQuery();
+            System.out.printf("%-20s %-20s %-20s %-20s\n", "ID", "Name", "Due Date", "Status");
+            while(checkRow.next()){
+                int pid = checkRow.getInt("project_id");
+                String pname = checkRow.getString("project_name");
+                String pdue = checkRow.getString("due_date");
+                String pstats = checkRow.getString("status");
 
-                    System.out.printf("%-20d %-20s %-20s %-20s\n", pid, pname, pdue, pstats);
-                }
-                System.out.println("--------------------------------------------------------------------------------");
-                System.out.print("1. Change status filter"
-                        + "\n2. Back"
-                        + "\nEnter selection: ");
-                int select = sc.nextInt();
-                
-                switch(select){
-                    case 1:
-                        isBack = false;
-                        break;
-                    case 2:
-                        isBack = true;
-                        break;
-                    default: System.out.println("Error: Invalid selection: ");
-                }
-                checkRow.close();
-            } catch(SQLException e){
-                System.out.println("Error: "+e.getMessage());
-                isBack = true;
+                System.out.printf("%-20d %-20s %-20s %-20s\n", pid, pname, pdue, pstats);
             }
-        } while(!isBack);
+            System.out.println("--------------------------------------------------------------------------------");
+            checkRow.close();
+        } catch(SQLException e){
+            System.out.println("Error: "+e.getMessage());
+        }
     }
     
     private void viewProjectInfo() throws IOException{
         System.out.print("Enter ID: ");
         projectID = sc.nextInt();
-
+        
         System.out.println("--------------------------------------------------------------------------------");
         searchID(projectID);
-        System.out.print("Press any key to continue...");
-        System.in.read();
     }
     
     public void viewProjectList(){
@@ -141,6 +152,7 @@ public class project extends config {
     }
     
     private void searchID(int pid){
+        boolean isSelected = false;
         try{
             PreparedStatement search = connectDB().prepareStatement("SELECT p.project_name, p.description, p.date_created, p.due_date, u.first_name, p.status FROM project p INNER JOIN user u ON project_manager_id = u.user_id WHERE project_id = ?;");
             
@@ -155,6 +167,32 @@ public class project extends config {
                         + "\nProject Manager: "+result.getString("first_name")
                         + "\nStatus: "+result.getString("status"));
             
+            do{
+                System.out.print("\n1. Show team list"
+                        + "\n2. Show task list"
+                        + "\n3. Back"
+                        + "\nEnter selection: ");
+                int showSelect = sc.nextInt();
+
+                switch(showSelect){
+                    case 1:
+                        System.out.println("\nTeam list: ");
+                        System.out.println("--------------------------------------------------------------------------------");
+                        sql = "SELECT t.team_id, t.team_name, p.project_name FROM team t INNER JOIN project p ON t.project_id = p.project_id WHERE p.project_name = ?";
+                        tm.viewFilteredList(result.getString("project_name"), sql);
+                        break;
+                    case 2:
+                        System.out.println("\nTask list: ");
+                        System.out.println("--------------------------------------------------------------------------------");
+                        sql = "SELECT t.task_id, t.task_name, t.due_date, u.first_name, p.project_name, t.status FROM task t INNER JOIN user u ON t.assigned_to = u.user_id INNER JOIN project p ON t.project_id = p.project_id WHERE p.project_name = ?";
+                        ts.viewFilteredList(result.getString("project_name"), sql);
+                        break;
+                    case 3:
+                        isSelected = true;
+                        break;
+                    default: System.out.println("Error: Invalid selection");
+                }
+            } while(!isSelected);
             result.close();
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());

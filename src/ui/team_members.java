@@ -25,7 +25,6 @@ public class team_members extends config{
                 if(!checkTable.next()){
                     System.out.println("Member List Empty");
                 } else{
-                    System.out.println("Team name: "+checkTable.getString("team_name"));
                     System.out.println("List of Members: ");
                     System.out.println("--------------------------------------------------------------------------------");
                     viewMemberList(tid, sqlQuery);

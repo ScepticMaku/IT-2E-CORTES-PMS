@@ -9,10 +9,10 @@ import java.util.Scanner;
 
 public class task extends config{
     Scanner sc = new Scanner(System.in);
-    
-    boolean isSelected = false;
+    String sql;
     
     public void taskListInterface() throws IOException{
+        boolean isSelected = false;
         do{
             System.out.println("================================================================================================================================================================");
             String sqlQuery = "SELECT t.task_id, t.task_name, t.due_date, u.first_name, p.project_name, t.status FROM task t INNER JOIN user u ON t.assigned_to = u.user_id INNER JOIN project p ON t.project_id = p.project_id";
@@ -55,6 +55,41 @@ public class task extends config{
                     viewInfo();
                     break;
                 case 5:
+                    boolean isBack = false;
+                    do{
+                        System.out.print("\nFilter by: "
+                                + "\n1. Due date"
+                                + "\n2. Status"
+                                + "\n3. Back"
+                                + "\nEnter selection: ");
+                        int filterSelect = sc.nextInt();
+                        
+                        switch(filterSelect){
+                            case 1:
+                                System.out.print("Enter due date [YYYY-MM-DD]: ");
+                                String getDate = sc.next();
+                                
+                                System.out.println("Task list filtered by: Date");
+                                System.out.println("--------------------------------------------------------------------------------");
+                                sql = "SELECT t.task_id, t.task_name, t.due_date, u.first_name, p.project_name, t.status FROM task t INNER JOIN user u ON t.assigned_to = u.user_id INNER JOIN project p ON t.project_id = p.project_id WHERE t.due_date = ?";
+                                viewFilteredList(getDate, sql);
+                                break;
+                            case 2:
+                                System.out.print("Enter status [Not Started/In Progress/Completed]: ");
+                                sc.nextLine();
+                                String getStatus = sc.nextLine();
+                                
+                                System.out.println("Task list fileted by: Status");
+                                System.out.println("--------------------------------------------------------------------------------");
+                                sql = "SELECT t.task_id, t.task_name, t.due_date, u.first_name, p.project_name, t.status FROM task t INNER JOIN user u ON t.assigned_to = u.user_id INNER JOIN project p ON t.project_id = p.project_id WHERE t.status = ?";
+                                viewFilteredList(getStatus, sql);
+                                break;
+                            case 3:
+                                isBack = true;
+                                break;
+                            default: System.out.println("Error: Invalid selection.");
+                        }
+                    } while(!isBack);
                     break;
                 case 6:
                     isSelected = true;
@@ -63,6 +98,30 @@ public class task extends config{
                     System.out.println("Error: Invalid selection.");
             }
         } while(!isSelected);
+    }
+    
+    public void viewFilteredList(String getColumn, String query){
+        try{
+            PreparedStatement filter = connectDB().prepareStatement(query);
+            
+            filter.setString(1, getColumn);
+            ResultSet checkRow = filter.executeQuery();
+            System.out.printf("%-5s %-20s %-20s %-20s %-20s %-20s\n", "ID", "Name", "Due Date", "Assigned to", "Project", "Status");
+            while(checkRow.next()){
+                int t_id = checkRow.getInt("task_id");
+                String t_name = checkRow.getString("task_name");
+                String d_date = checkRow.getString("due_date");
+                String u_name = checkRow.getString("first_name");
+                String p_name = checkRow.getString("project_name");
+                String t_status = checkRow.getString("status");
+                
+                System.out.printf("%-5d %-20s %-20s %-20s %-20s %-20s\n", t_id, t_name, d_date, u_name, p_name, t_status);
+            }
+            System.out.println("--------------------------------------------------------------------------------");
+            checkRow.close();
+        } catch(SQLException e){
+            System.out.println("Error: "+e.getMessage());
+        }
     }
     
     public void viewInfo() throws IOException{
@@ -81,7 +140,7 @@ public class task extends config{
             PreparedStatement findRow = connectDB().prepareStatement(taskQuery);
             ResultSet checkRow = findRow.executeQuery();
             
-            System.out.printf("%-20s %-20s %-20s %-20s %-20s %-20s\n", "ID", "Name", "Due Date", "Assigned to", "Project", "Status");
+            System.out.printf("%-5s %-20s %-20s %-20s %-20s %-20s\n", "ID", "Name", "Due Date", "Assigned to", "Project", "Status");
             while(checkRow.next()){
                 int t_id = checkRow.getInt("task_id");
                 String t_name = checkRow.getString("task_name");
@@ -90,7 +149,7 @@ public class task extends config{
                 String p_project = checkRow.getString("project_name");
                 String t_status = checkRow.getString("status");
                 
-                System.out.printf("%-20d %-20s %-20s %-20s %-20s %-20s\n", t_id, t_name, d_date, u_name, p_project, t_status);
+                System.out.printf("%-5d %-20s %-20s %-20s %-20s %-20s\n", t_id, t_name, d_date, u_name, p_project, t_status);
             }
             System.out.println("--------------------------------------------------------------------------------");
             checkRow.close();
@@ -167,7 +226,7 @@ public class task extends config{
                     updateRecord(sql, newDate, taskID);
                     break;
                 case 4:
-                    System.out.print("\nEnter new status[Not Started/In Progress/Completed");
+                    System.out.print("\nEnter new status [Not Started/In Progress/Completed]: ");
                     sc.nextLine();
                     String newStatus = sc.nextLine();
 
@@ -222,20 +281,5 @@ public class task extends config{
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
         }
-    }
-    
-    private void viewFilteredList(){
-        boolean Back = false;
-        do{
-            try{
-                PreparedStatement state = connectDB().prepareStatement("SELECT t.task_id, t.task_name, t.due_date, u.first_name, p.project_name, t.status FROM task t INNER JOIN user u ON t.assigned_to = u.user_id INNER JOIN project p ON t.project_id = p.project_id");
-                
-                System.out.print("Filter by:\n"
-                    + "1. ");
-                System.out.print("");
-            } catch(SQLException e){
-                System.out.println("Error: "+e.getMessage());
-            }
-        }while(!Back);
     }
 }
