@@ -1,6 +1,8 @@
 package ui;
 
 import main.config;
+
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
@@ -14,7 +16,7 @@ public class team extends config {
     int project_id, choice, userID;
     boolean isSelected = false;
     
-    public void teamInterface(){
+    public void teamInterface() throws IOException{
         do{
             System.out.println("================================================================================================================================================================");
             String sqlQuery = "SELECT t.team_id, t.team_name, p.project_name FROM team t INNER JOIN project p ON t.project_id = p.project_id";
@@ -65,7 +67,12 @@ public class team extends config {
                     System.out.print("Enter ID: ");
                     int teamID = sc.nextInt();
                     searchID(teamID);
-                    tm.memberInterface(teamID);
+                    
+                    sql = "SELECT tm.team_member_id, u.first_name, t.team_name FROM team_member tm INNER JOIN user u ON tm.user_id = u.user_id INNER JOIN team t ON tm.team_id = t.team_id WHERE tm.team_id = ?";
+                    System.out.println("\nTeam Members: ");
+                    tm.viewFilteredList(sql, teamID);
+                    System.out.print("Press any key to continue...");
+                    System.in.read();
                     break;
                 case 5:
                     boolean isBack = false;

@@ -1,7 +1,10 @@
 package main;
 
+import authentication.Login;
+import authentication.Register;
+import authentication.Change_Password;
+
 import java.util.Scanner;
-import authentication.*;
 import java.io.IOException;
 
 public class main {
@@ -9,12 +12,15 @@ public class main {
         Scanner sc = new Scanner(System.in);
         Login login = new Login();
         Register register = new Register();
+        Change_Password change = new Change_Password();
         
         while(true){
+            System.out.print("================================================================================================================================================================");
             System.out.println("Project Management System");
             System.out.print("1. Login\n"
                     + "2. Register\n"
-                    + "3. Close\n"
+                    + "3. Reset Password\n"
+                    + "4. Close\n"
                     + "Enter choice: ");
             int choice = sc.nextInt();
             
@@ -28,6 +34,10 @@ public class main {
                     register.registerCredentials();
                     break;
                 case 3:
+                    System.out.println("\nChange Password: ");
+                    change.changeCredentials();
+                    break;
+                case 4:
                     System.exit(0);
                     break;
                 default:

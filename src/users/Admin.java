@@ -1,9 +1,13 @@
 package users;
 
-import ui.*;
-import java.util.Scanner;
 import main.config;
-import authentication.Register;
+import ui.project;
+import ui.task;
+import ui.users;
+import ui.team;
+import ui.team_members;
+
+import java.util.Scanner;
 import java.io.IOException;
 
 public class Admin extends config {
@@ -12,6 +16,7 @@ public class Admin extends config {
     users u = new users();
     task tl = new task();
     team tm = new team();
+    team_members tmm = new team_members();
     
     boolean isSelected = false;
             
@@ -24,8 +29,9 @@ public class Admin extends config {
                     + "1. Projects\n"
                     + "2. Tasks\n"
                     + "3. Teams\n"
-                    + "4. Users\n"
-                    + "5. Logout\n"
+                    + "4. Team Members\n"
+                    + "5. Users\n"
+                    + "6. Logout\n"
                     + "Enter selection: ");
             int select = sc.nextInt();
             
@@ -40,9 +46,12 @@ public class Admin extends config {
                     tm.teamInterface();
                     break;
                 case 4:
-                    u.userInterface();
+                    tmm.memberInterface();
                     break;
                 case 5:
+                    u.userInterface();
+                    break;
+                case 6:
                     isSelected = true;
                     break;
                 default:

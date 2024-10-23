@@ -1,7 +1,8 @@
 package ui;
 
-import java.io.IOException;
 import main.config;
+
+import java.io.IOException;
 import java.util.*;
 import java.sql.*;
 
@@ -129,6 +130,7 @@ public class project extends config {
         
         System.out.println("--------------------------------------------------------------------------------");
         searchID(projectID);
+        viewLists(projectID);
     }
     
     public void viewProjectList(){
@@ -152,7 +154,6 @@ public class project extends config {
     }
     
     private void searchID(int pid){
-        boolean isSelected = false;
         try{
             PreparedStatement search = connectDB().prepareStatement("SELECT p.project_name, p.description, p.date_created, p.due_date, u.first_name, p.status FROM project p INNER JOIN user u ON project_manager_id = u.user_id WHERE project_id = ?;");
             
@@ -160,12 +161,25 @@ public class project extends config {
             ResultSet result = search.executeQuery();
             
             String project = result.getString("project_name");
+            String[] name = result.getString("first_name").split(" ");
             System.out.println("Selected project: "+project
                         + "\nDescription: "+result.getString("description")
                         + "\nDate Created: "+result.getString("date_created")
                         + "\nDue Date: "+result.getString("due_date")
-                        + "\nProject Manager: "+result.getString("first_name")
+                        + "\nProject Manager: "+name[0]
                         + "\nStatus: "+result.getString("status"));
+            result.close();
+        } catch(SQLException e){
+            System.out.println("Error: "+e.getMessage());
+        }
+    }
+    
+    private void viewLists(int pid){
+        boolean isSelected = false;
+        try{
+            PreparedStatement search = connectDB().prepareStatement("SELECT p.project_name, p.description, p.date_created, p.due_date, u.first_name, p.status FROM project p INNER JOIN user u ON project_manager_id = u.user_id WHERE project_id = ?;");
+            search.setInt(1, pid);
+            ResultSet result = search.executeQuery();
             
             do{
                 System.out.print("\n1. Show team list"

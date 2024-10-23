@@ -1,10 +1,11 @@
 package ui;
 
+import main.config;
+
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import main.config;
 import java.util.Scanner;
 
 public class task extends config{
@@ -106,12 +107,14 @@ public class task extends config{
             
             filter.setString(1, getColumn);
             ResultSet checkRow = filter.executeQuery();
+                    
             System.out.printf("%-5s %-20s %-20s %-20s %-20s %-20s\n", "ID", "Name", "Due Date", "Assigned to", "Project", "Status");
             while(checkRow.next()){
+                String[] name = checkRow.getString("first_name").split(" ");
                 int t_id = checkRow.getInt("task_id");
                 String t_name = checkRow.getString("task_name");
                 String d_date = checkRow.getString("due_date");
-                String u_name = checkRow.getString("first_name");
+                String u_name = name[0];
                 String p_name = checkRow.getString("project_name");
                 String t_status = checkRow.getString("status");
                 
@@ -142,10 +145,11 @@ public class task extends config{
             
             System.out.printf("%-5s %-20s %-20s %-20s %-20s %-20s\n", "ID", "Name", "Due Date", "Assigned to", "Project", "Status");
             while(checkRow.next()){
+                String[] name = checkRow.getString("first_name").split(" ");
                 int t_id = checkRow.getInt("task_id");
                 String t_name = checkRow.getString("task_name");
                 String d_date = checkRow.getString("due_date");
-                String u_name = checkRow.getString("first_name");
+                String u_name = name[0];
                 String p_project = checkRow.getString("project_name");
                 String t_status = checkRow.getString("status");
                 
@@ -267,14 +271,16 @@ public class task extends config{
     private void searchID(int id){
         try{
             PreparedStatement search = connectDB().prepareStatement("SELECT task_name, t.description, t.date_created, t.due_date, u.first_name, p.project_name, t.status FROM task t INNER JOIN user u ON assigned_to = u.user_id INNER JOIN project p ON t.project_id = p.project_id WHERE task_id = ?;");
-            
             search.setInt(1, id);
             ResultSet result = search.executeQuery();
+            
+            String[] name = result.getString("first_name").split(" ");
+            
             System.out.println("Selected task: "+result.getString("task_name")
                     + "\nDescription: "+result.getString("description")
                     + "\nDate created: "+result.getString("date_created")
                     + "\nDue date :"+result.getString("due_date")
-                    + "\nAssigned to: "+result.getString("first_name")
+                    + "\nAssigned to: "+name[0]
                     + "\nFrom project: "+result.getString("project_name")
                     + "\nStatus: "+result.getString("status"));
             result.close();
