@@ -1,6 +1,10 @@
 package main;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.ResultSet;
 import java.time.LocalDate;
 
 public class config {
@@ -147,5 +151,10 @@ public class config {
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
         }
+    }
+    
+    public void exitMessage(){
+        System.out.println("Exit successful.");
+        System.exit(0);
     }
 }

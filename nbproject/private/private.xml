@@ -5,16 +5,17 @@
         <group>
             <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/ui/task.java</file>
             <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/ui/users.java</file>
-            <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/authentication/Change_Password.java</file>
             <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/main/config.java</file>
+            <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/users/Project_Manager.java</file>
             <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/authentication/Login.java</file>
             <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/main/main.java</file>
-            <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/ui/project.java</file>
             <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/authentication/Register.java</file>
+            <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/ui/team_members.java</file>
+            <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/authentication/Change_Password.java</file>
+            <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/ui/project.java</file>
             <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/users/Admin.java</file>
             <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/users/Member.java</file>
             <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/ui/team.java</file>
-            <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/ui/team_members.java</file>
         </group>
     </open-files>
 </project-private>

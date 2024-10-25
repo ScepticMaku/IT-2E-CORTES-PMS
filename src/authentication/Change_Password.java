@@ -29,12 +29,11 @@ public class Change_Password extends config {
             
             try(ResultSet checkEmail = findEmail.executeQuery()){
                 if(getEmail.equals(checkEmail.getString("email"))){
-                    String[] getName = checkEmail.getString("first_name").split(" ");
                     
-                    System.out.println("User found: "+getName[0]);
+                    System.out.println("Username found: "+checkEmail.getString("username"));
                     checkEmail.close();
                     
-                    setPassword();
+                    setPassword(getEmail);
                     
                     isFound = true;
                 } else{
@@ -47,10 +46,10 @@ public class Change_Password extends config {
         }
     }
     
-    private void setPassword(){
+    private void setPassword(String userEmail){
         boolean isMatched = false;
         do{
-            System.out.print("\nEnter password: ");
+            System.out.print("\nEnter new password: ");
             String newPassword = sc.next();
 
             System.out.print("Confirm password: ");
@@ -64,7 +63,7 @@ public class Change_Password extends config {
 
                 if(confirm.equalsIgnoreCase("y")){
                     String updatePass = "UPDATE user SET password = ? WHERE email = ?";
-                    updateRecord(updatePass, confirmPass);
+                    updateRecord(updatePass, confirmPass, userEmail);
                     break;
                 } else{
                     System.out.println("Change password cancelled.");

@@ -1,22 +1,23 @@
 package users;
 
 import main.config;
-import ui.project;
-import ui.task;
-import ui.users;
-import ui.team;
-import ui.team_members;
+import ui.admin.project;
+import ui.admin.task;
+import ui.admin.users;
+import ui.admin.team;
+import ui.admin.team_members;
 
 import java.util.Scanner;
 import java.io.IOException;
 
 public class Admin extends config {
     Scanner sc = new Scanner(System.in);
+    
+    team_members tmm = new team_members();
     project proj = new project();
     users u = new users();
     task tl = new task();
     team tm = new team();
-    team_members tmm = new team_members();
     
     boolean isSelected = false;
             
@@ -32,6 +33,7 @@ public class Admin extends config {
                     + "4. Team Members\n"
                     + "5. Users\n"
                     + "6. Logout\n"
+                    + "0. Exit\n"
                     + "Enter selection: ");
             int select = sc.nextInt();
             
@@ -54,8 +56,10 @@ public class Admin extends config {
                 case 6:
                     isSelected = true;
                     break;
-                default:
-                    System.out.println("Error: Invalid selection.");
+                case 0:
+                    exitMessage();
+                    break;
+                default: System.out.println("Error: Invalid selection.");
             }
         } while(!isSelected);
     }

@@ -3,7 +3,6 @@ package authentication;
 import main.config;
 
 import java.util.*;
-import java.sql.*;
 
 public class Register extends config{
     
@@ -25,6 +24,9 @@ public class Register extends config{
         System.out.print("Enter username: ");
         String username = sc.next();
         
+        System.out.print("Enter email address: ");
+        String email = sc.next();
+        
         System.out.print("Enter password: ");
         String password = sc.next();
         
@@ -40,21 +42,9 @@ public class Register extends config{
         String confirm = sc.next();
         
         if(confirm.equals("y")){
-            try{
-            PreparedStatement state = connectDB().prepareStatement("INSERT INTO user (first_name, middle_name, last_name, username, password_hash, role) VALUES (?, ?, ?, ?, ?, 'member')");
+            String sql = "INSERT INTO user (first_name, middle_name, last_name, username, email, password, role) VALUES (?, ?, ?, ?, ?, 'member')";
             
-            state.setString(1, fname);
-            state.setString(2, mname);
-            state.setString(3, lname);
-            state.setString(4, username);
-            state.setString(5, confirmPass);
-            state.executeUpdate();
-            
-            System.out.println("Successfully Registered.");
-            
-            } catch(SQLException e){
-                System.out.println("Error: "+e.getMessage());
-            }
+            addRecord(sql,fname, mname, lname, username, email, confirmPass);
         } else{
             System.out.println("Registration Cancelled.");
         }

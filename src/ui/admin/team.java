@@ -1,4 +1,4 @@
-package ui;
+package ui.admin;
 
 import main.config;
 
@@ -47,15 +47,7 @@ public class team extends config {
 
             switch(choice){
                 case 1:
-                    System.out.print("\nEnter team name: ");
-                    sc.nextLine();
-                    team_name = sc.nextLine();
-                    
-                    System.out.print("Enter project ID to assign: ");
-                    int pid = sc.nextInt();
-                    sql = "INSERT INTO team (team_name, project_id) VALUES (?, ?)";
-
-                    addRecord(sql, team_name, pid);
+                    addTeam();
                     break;
                 case 2:
                     editTeam();
@@ -119,6 +111,18 @@ public class team extends config {
             }
         } while(!isSelected);
     }
+    
+    private void addTeam(){
+        System.out.print("\nEnter team name: ");
+        sc.nextLine();
+        team_name = sc.nextLine();
+
+        System.out.print("Enter project ID to assign: ");
+        int pid = sc.nextInt();
+        sql = "INSERT INTO team (team_name, project_id) VALUES (?, ?)";
+
+        addRecord(sql, team_name, pid);
+    }
    
     private void editTeam(){
         System.out.print("\nEnter ID: ");
@@ -157,19 +161,20 @@ public class team extends config {
     public void viewFilteredList(String getColumn, String query){
         try{
             PreparedStatement filter = connectDB().prepareStatement(query);
-            
             filter.setString(1, getColumn);
-            ResultSet checkRow = filter.executeQuery();
-            System.out.printf("%-20s %-20s %-20s\n", "ID", "Name", "Project");
-            while(checkRow.next()){
-                int tid = checkRow.getInt("team_id");
-                String tname = checkRow.getString("team_name");
-                String pname = checkRow.getString("project_name");
-                
-                System.out.printf("%-20d %-20s %-20s\n", tid, tname, pname);
+            
+            try (ResultSet checkRow = filter.executeQuery()) {
+                System.out.println("--------------------------------------------------------------------------------");
+                System.out.printf("%-20s %-20s %-20s\n", "ID", "Name", "Project");
+                while(checkRow.next()){
+                    int tid = checkRow.getInt("team_id");
+                    String tname = checkRow.getString("team_name");
+                    String pname = checkRow.getString("project_name");
+                    
+                    System.out.printf("%-20d %-20s %-20s\n", tid, tname, pname);
+                }
+                System.out.println("--------------------------------------------------------------------------------");
             }
-            System.out.println("--------------------------------------------------------------------------------");
-            checkRow.close();
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
         }

@@ -1,4 +1,4 @@
-package ui;
+package ui.admin;
 
 import java.io.IOException;
 import main.config;

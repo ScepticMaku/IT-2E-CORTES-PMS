@@ -8,42 +8,44 @@ import java.util.Scanner;
 import java.io.IOException;
 
 public class main {
+    
     public static void main(String[] args) throws IOException{
         Scanner sc = new Scanner(System.in);
-        Login login = new Login();
-        Register register = new Register();
-        Change_Password change = new Change_Password();
         
-        while(true){
-            System.out.print("================================================================================================================================================================");
-            System.out.println("Project Management System");
-            System.out.print("1. Login\n"
+        Change_Password change = new Change_Password();
+        Register register = new Register();
+        Login login = new Login();
+        config conf = new config();
+        
+        do{
+            System.out.print("================================================================================================================================================================\n"
+                    + "Project Management System\n"
+                    + "1. Login\n"
                     + "2. Register\n"
                     + "3. Reset Password\n"
-                    + "4. Close\n"
+                    + "0. Exit\n"
                     + "Enter choice: ");
             int choice = sc.nextInt();
             
-            System.out.print("================================================================================================================================================================");
+            System.out.println("================================================================================================================================================================");
             switch(choice){
                 case 1:
                     login.loginCredentials();
                     break;
                 case 2:
-                    System.out.println("\nRegister: ");
+                    System.out.println("Register: ");
                     register.registerCredentials();
                     break;
                 case 3:
-                    System.out.println("\nChange Password: ");
+                    System.out.println("Change Password: ");
                     change.changeCredentials();
                     break;
-                case 4:
-                    System.exit(0);
+                case 0:
+                    conf.exitMessage();
                     break;
                 default:
-                    System.out.println("\nInvalid selection.");
-                    System.exit(0);
+                    System.out.println("Invalid selection.");
             }
-        }
+        } while(true);
     }
 }

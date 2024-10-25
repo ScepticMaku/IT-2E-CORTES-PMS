@@ -1,4 +1,4 @@
-package ui;
+package ui.admin;
 
 import main.config;
 
@@ -104,24 +104,24 @@ public class task extends config{
     public void viewFilteredList(String getColumn, String query){
         try{
             PreparedStatement filter = connectDB().prepareStatement(query);
-            
             filter.setString(1, getColumn);
-            ResultSet checkRow = filter.executeQuery();
+            
+            try (ResultSet checkRow = filter.executeQuery()) {
+                System.out.println("--------------------------------------------------------------------------------");
+                System.out.printf("%-5s %-20s %-20s %-20s %-20s %-20s\n", "ID", "Name", "Due Date", "Assigned to", "Project", "Status");
+                while(checkRow.next()){
+                    String[] name = checkRow.getString("first_name").split(" ");
+                    int t_id = checkRow.getInt("task_id");
+                    String t_name = checkRow.getString("task_name");
+                    String d_date = checkRow.getString("due_date");
+                    String u_name = name[0];
+                    String p_name = checkRow.getString("project_name");
+                    String t_status = checkRow.getString("status");
                     
-            System.out.printf("%-5s %-20s %-20s %-20s %-20s %-20s\n", "ID", "Name", "Due Date", "Assigned to", "Project", "Status");
-            while(checkRow.next()){
-                String[] name = checkRow.getString("first_name").split(" ");
-                int t_id = checkRow.getInt("task_id");
-                String t_name = checkRow.getString("task_name");
-                String d_date = checkRow.getString("due_date");
-                String u_name = name[0];
-                String p_name = checkRow.getString("project_name");
-                String t_status = checkRow.getString("status");
-                
-                System.out.printf("%-5d %-20s %-20s %-20s %-20s %-20s\n", t_id, t_name, d_date, u_name, p_name, t_status);
+                    System.out.printf("%-5d %-20s %-20s %-20s %-20s %-20s\n", t_id, t_name, d_date, u_name, p_name, t_status);
+                }
+                System.out.println("--------------------------------------------------------------------------------");
             }
-            System.out.println("--------------------------------------------------------------------------------");
-            checkRow.close();
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
         }
