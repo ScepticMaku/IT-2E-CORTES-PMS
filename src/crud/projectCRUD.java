@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Scanner;
+
 import main.config;
 
-import java.util.Scanner;
-import ui.admin.task;
-import ui.admin.team;
-
-public class projectCRUD extends config{
+public class projectCRUD extends config {
+    Scanner sc = new Scanner(System.in);
+    
     String sql;
     
     public void viewProject(){
@@ -36,7 +36,7 @@ public class projectCRUD extends config{
         }
     }
     
-    public void addProject(Scanner sc, int uid){
+    public void addProject(int uid){
         System.out.println("--------------------------------------------------------------------------------");
         System.out.print("Enter project name: ");
         sc.nextLine();
@@ -52,13 +52,13 @@ public class projectCRUD extends config{
         addRecord(sql, name, desc, date.toString(), dueDate, uid);
     }
     
-    public void editProject(Scanner sc){
+    public void editProject(){
         boolean isSelected = false;
         
         System.out.print("Enter project ID: ");
         int id = sc.nextInt();
         
-        searchProject(id);
+        getProjectInfo(id);
         do{
             System.out.print("Choose what you want to do:"
                     + "\n1. Change project name\n"
@@ -110,11 +110,11 @@ public class projectCRUD extends config{
         } while(!isSelected);
     }
     
-    public void deleteProject(Scanner sc){
+    public void deleteProject(){
         System.out.print("Enter project ID: ");
         int id = sc.nextInt();
         
-        searchProject(id);
+        getProjectInfo(id);
         System.out.print("Confirm Delete? [y/n]: ");
         String confirm = sc.next();
         
@@ -126,7 +126,7 @@ public class projectCRUD extends config{
         }
     }
     
-    public void FilterBy(Scanner sc) throws IOException{
+    public void FilterBy() throws IOException{
         boolean isBack = false;
         do{
             System.out.print("\nFilter by: "
@@ -161,20 +161,63 @@ public class projectCRUD extends config{
         } while(!isBack);
     }
     
-    public void viewProjectInfo(Scanner sc) throws IOException{
+    public void viewProjectInfo() throws IOException{
         System.out.print("Enter project ID: ");
         int id = sc.nextInt();
         
-        searchProject(id);
-        viewList(id, sc);
+        getProjectInfo(id);
+        viewList(id);
     }
     
-    private void searchProject(int id){
-        try{
-            PreparedStatement search = connectDB().prepareStatement("SELECT p.project_name, p.description, p.date_created, p.due_date, u.first_name, p.status FROM project p INNER JOIN user u ON project_manager_id = u.user_id WHERE project_id = ?;");
-            search.setInt(1, id);
+    /*public void searchProject(Scanner sc) throws IOException{
+        boolean isSelected = false;
+        boolean isFound = false;
+        
+        do{
+            System.out.print("Enter project name: ");
+            sc.nextLine();
+            String name = sc.nextLine();
+
+            try{
+                PreparedStatement search = connectDB().prepareStatement("SELECT project_name FROM project");
+
+                try(ResultSet result = search.executeQuery()){
+                    
+                    while(result.next()){
+                        String locatedName = result.getString("project_name");
+                        
+                        if(!locatedName.contains(name)){
+                            isFound = true;
+                            break;
+                        }
+                    }
+                    
+                    if(!isFound){
+                        System.out.println("Project not found.");
+                    } else{
+                        sql = "SELECT * FROM project WHERE project_name = ?";
+                        viewProjectFiltered(locatedName, sql);
+                    }
+                }
+            } catch(SQLException e){
+                System.out.println("Error: "+e.getMessage());
+            }
             
-            try (ResultSet result = search.executeQuery()) {
+            System.out.print("1. Search another"
+                    + "\n2. Back"
+                    + "\nEnter selection: ");
+            int selection = sc.nextInt();
+            
+            isSelected = (selection!=1);
+        } while(!isSelected);
+    }*/
+    
+    private void getProjectInfo(int id){
+        try{
+            PreparedStatement findRow = connectDB().prepareStatement("SELECT p.project_name, p.description, p.date_created, p.due_date, u.first_name, p.status FROM project p INNER JOIN user u ON project_manager_id = u.user_id WHERE project_id = ?;");
+            findRow.setInt(1, id);
+            
+            try (ResultSet result = findRow.executeQuery()) {
                 String[] name = result.getString("first_name").split(" ");
                 
                 System.out.println("--------------------------------------------------------------------------------"
@@ -192,9 +235,9 @@ public class projectCRUD extends config{
         }
     }
     
-    private void viewList(int pid, Scanner sc) throws IOException{
-        task ts = new task();
-        team tm = new team();
+    private void viewList(int pid) throws IOException{
+        taskCRUD tsk = new taskCRUD();
+        teamCRUD tm = new teamCRUD();
         
         boolean isSelected = false;
         try{
@@ -213,12 +256,12 @@ public class projectCRUD extends config{
                         case 1:
                             System.out.println("\nTeam list:");
                             sql = "SELECT t.team_id, t.team_name, p.project_name FROM team t INNER JOIN project p ON t.project_id = p.project_id WHERE p.project_name = ?";
-                            tm.viewFilteredList(result.getString("project_name"), sql);
+                            tm.viewTeamFiltered(result.getString("project_name"), sql);
                             break;
                         case 2:
                             System.out.println("\nTask list:");
                             sql = "SELECT t.task_id, t.task_name, t.due_date, u.first_name, p.project_name, t.status FROM task t INNER JOIN user u ON t.assigned_to = u.user_id INNER JOIN project p ON t.project_id = p.project_id WHERE p.project_name = ?";
-                            ts.viewFilteredList(result.getString("project_name"), sql);
+                            tsk.viewTaskFiltered(result.getString("project_name"), sql);
                             break;
                         case 3:
                             isSelected = true;
@@ -241,6 +284,7 @@ public class projectCRUD extends config{
             try (ResultSet checkRow = filter.executeQuery()) {
                 System.out.println("--------------------------------------------------------------------------------");
                 System.out.printf("%-20s %-20s %-20s %-20s\n", "ID", "Name", "Due Date", "Status");
+                
                 while(checkRow.next()){
                     int pid = checkRow.getInt("project_id");
                     String pname = checkRow.getString("project_name");

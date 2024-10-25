@@ -21,7 +21,7 @@ public class team_members extends config{
         boolean isBack = false;
        do{
             System.out.println("================================================================================================================================================================");
-            String sqlQuery = "SELECT tm.team_member_id, u.first_name, t.team_name FROM team_member tm INNER JOIN user u ON tm.user_id = u.user_id INNER JOIN team t ON tm.team_id = t.team_id";
+            String sqlQuery = "SELECT tm.team_member_id, u.first_name, tm.team_id, t.team_name FROM team_member tm INNER JOIN user u ON tm.user_id = u.user_id INNER JOIN team t ON tm.team_id = t.team_id";
             try{
                 PreparedStatement findRow = connectDB().prepareStatement(sqlQuery);
                 ResultSet checkTable = findRow.executeQuery();
@@ -76,7 +76,7 @@ public class team_members extends config{
                                 System.out.println("\nTeam list filtered by team:");
                                 System.out.println("--------------------------------------------------------------------------------");
                                 sql = "SELECT tm.team_member_id, u.first_name, t.team_name FROM team_member tm INNER JOIN user u ON tm.user_id = u.user_id INNER JOIN team t ON tm.team_id = t.team_id WHERE tm.team_id = ?";
-                                viewFilteredList(sql, teamID);    
+//                                viewFilteredList(sql, teamID);    
                                 break;
                             case 2:
                                 isBack = true;
@@ -133,7 +133,7 @@ public class team_members extends config{
                     System.out.println("\nAssigned tasks");
                     System.out.println("--------------------------------------------------------------------------------");
                     sql = "SELECT t.task_id, t.task_name, t.due_date, u.first_name, p.project_name, t.status FROM task t INNER JOIN user u ON t.assigned_to = u.user_id INNER JOIN project p ON t.project_id = p.project_id WHERE u.first_name = ?";
-                    ts.viewFilteredList(getMember, sql);
+//                    ts.viewFilteredList(getMember, sql);
                     break;
                 case 2:
                     System.out.println("\nAssigned teams");
@@ -169,44 +169,21 @@ public class team_members extends config{
         }
     }
     
-    public void viewFilteredList(String Query, int getTeamID){
-        try{
-            PreparedStatement filter = connectDB().prepareStatement(Query);
-            filter.setInt(1, getTeamID);
-            ResultSet checkRow = filter.executeQuery();
-            
-            System.out.printf("%-5s %-20s %-20s\n", "ID", "Member", "Team");
-            while(checkRow.next()){
-                int memberID = checkRow.getInt("team_member_id");
-                String memberName = checkRow.getString("first_name");
-                String teamName = checkRow.getString("team_name");
-                
-                String[] name = memberName.split(" ");
-                
-                System.out.printf("%-5d %-20s %-20s\n", memberID, name[0], teamName);
-            }
-            System.out.println("--------------------------------------------------------------------------------");
-            
-            checkRow.close();
-        } catch(SQLException e){
-            System.out.println("Error: "+e.getMessage());
-        }
-    }
-    
     private void viewMemberList(String Query){
         try{
             PreparedStatement findRow = connectDB().prepareStatement(Query);
             ResultSet checkRow = findRow.executeQuery();
             
-            System.out.printf("%-5s %-20s %-20s\n", "ID", "Member", "Team");
+            System.out.printf("%-20s %-20s %-20s %-20s\n", "Member ID", "Member", "Team ID", "Team");
             while(checkRow.next()){
                 int memberID = checkRow.getInt("team_member_id");
                 String memberName = checkRow.getString("first_name");
+                int teamID = checkRow.getInt("team_id");
                 String teamName = checkRow.getString("team_name");
                 
                 String[] name = memberName.split(" ");
                 
-                System.out.printf("%-5d %-20s %-20s\n", memberID, name[0], teamName);
+                System.out.printf("%-20d %-20s %-20d %-20s\n", memberID, name[0], teamID, teamName);
             }
             System.out.println("--------------------------------------------------------------------------------");
             checkRow.close();

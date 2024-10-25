@@ -24,7 +24,7 @@ public class Change_Password extends config {
     
     private void findEmail(String getEmail){
         try{
-            PreparedStatement findEmail = connectDB().prepareStatement("SELECT email, first_name FROM user WHERE email = ?");
+            PreparedStatement findEmail = connectDB().prepareStatement("SELECT email, first_name, username FROM user WHERE email = ?");
             findEmail.setString(1, getEmail);
             
             try(ResultSet checkEmail = findEmail.executeQuery()){

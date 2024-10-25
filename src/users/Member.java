@@ -13,7 +13,12 @@ public class Member {
         
         do{
             System.out.print("\n================================================================================================================================================================"
-                    + "\nMain Menu: "
+                    + "\nDate: "
+                    + "\n\nNotifications: "
+                    + "\n\nMain Menu:"
+                    + "\n1. Profile"
+                    + "\n2. Tasks"
+                    + "\n3. Teams"
                     + "\n0. Logout"
                     + "\nEnter selection: ");
             int mainSelect = sc.nextInt();

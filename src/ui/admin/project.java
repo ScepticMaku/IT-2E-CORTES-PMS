@@ -23,28 +23,33 @@ public class project extends config {
                     + "\n3. Delete Project"
                     + "\n4. View Info"
                     + "\n5. Filter by"
-                    + "\n6. Back"
+                    + "\n6. Search (WIP)"
+                    + "\n7. Back"
                     + "\n0. Exit"
                     + "\nEnter choice: ");
             int choice = sc.nextInt();
             
             switch(choice){
                 case 1:
-                    proj.addProject(sc, uid);
+                    proj.addProject(uid);
                     break;
                 case 2:
-                    proj.editProject(sc);
+                    proj.editProject();
                     break;
                 case 3:
-                    proj.deleteProject(sc);
+                    proj.deleteProject();
                     break;
                 case 4:
-                    proj.viewProjectInfo(sc);
+                    proj.viewProjectInfo();
                     break;
                 case 5:
-                    proj.FilterBy(sc);
+                    proj.FilterBy();
                     break;
                 case 6:
+                    System.out.println("Coming soon...");
+//                    proj.searchProject(sc);
+                    break;
+                case 7:
                     pSelected = true;
                     break;
                 case 0:

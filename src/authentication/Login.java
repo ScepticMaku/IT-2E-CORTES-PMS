@@ -41,16 +41,15 @@ public class Login extends config {
                     fname = result.getString("first_name");
                     id= result.getInt("user_id");
                     
-                    result.close();
-                    
                     if(username.equalsIgnoreCase(locatedUser) && password.equals(locatedPass)){
                         userDetected = true;
+                        result.close();
                         break;
                     }
                 }
                 
                 if(!userDetected){
-                        System.out.println("\nInvalid Credentials.");
+                    System.out.println("\nInvalid Credentials.");
                 } 
                 else{
                     if(locatedRole.equals("admin")){
