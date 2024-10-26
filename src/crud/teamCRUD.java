@@ -35,15 +35,19 @@ public class teamCRUD extends config {
     }
     
     public void addTeam(){
+        
         System.out.print("\nEnter team name: ");
         String team_name = sc.nextLine();
 
         System.out.print("Enter project ID to assign: ");
         int pid = sc.nextInt();
         
-        sql = "INSERT INTO team(team_name, project_id) VALUES (?, ?)";
-        addRecord(sql, team_name, pid);
-        
+        if(checkSkip(team_name, pid)){
+            System.out.println("ID successfully inserted.");
+        } else{
+            sql = "INSERT INTO team(team_name, project_id) VALUES (?, ?)";
+            addRecord(sql, team_name, pid);
+        }
         sc.nextLine();
     }
     
@@ -96,6 +100,7 @@ public class teamCRUD extends config {
         } else{
             System.out.println("Deletion cancelled.");
         }
+        sc.nextLine();
     }
     
     public void viewInfo() throws IOException{
@@ -212,5 +217,28 @@ public class teamCRUD extends config {
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
         }
+    }
+    
+    private boolean checkSkip(String t_name,int p_id){
+        try{
+            PreparedStatement findID = connectDB().prepareStatement("SELECT team_id FROM team ORDER BY team_id");
+            ResultSet getID = findID.executeQuery();
+            
+            int previousId = 0;
+            
+            while (getID.next()) {
+                int currentId = getID.getInt("team_id");
+                if (previousId != 0 && currentId != previousId + 1) {
+                    getID.close();
+                    sql = "INSERT INTO team(team_id, team_name, project_id) VALUES (?, ?, ?)";
+                    addRecord(sql, (currentId-1), t_name, p_id);
+                    return true;
+                }
+                previousId = currentId;
+            }
+        } catch(SQLException e){
+            System.out.println("Error: "+e.getMessage());
+        }
+        return false;
     }
 }
