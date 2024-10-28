@@ -10,6 +10,7 @@ import ui.admin.team_members;
 import java.util.Scanner;
 import java.io.IOException;
 
+
 public class Admin extends config {
     Scanner sc = new Scanner(System.in);
     
@@ -26,7 +27,8 @@ public class Admin extends config {
         System.out.printf("\nSuccessfully Logged in as: %s, welcome %s!", user_role, name[0]);
         do{
             System.out.print("\n================================================================================================================================================================");
-            System.out.print("\nMain menu: \n"
+            System.out.print("\nDate: "+date.toString()
+                    + "\n\nMain menu: \n"
                     + "1. Projects\n"
                     + "2. Tasks\n"
                     + "3. Teams\n"
@@ -39,10 +41,10 @@ public class Admin extends config {
             
             switch(select){
                 case 1:
-                    proj.projectInterface(uid);
+                    proj.projectInterface(uid, name[0]);
                     break;
                 case 2:
-                    tl.taskListInterface();
+                    tl.taskListInterface(uid);
                     break;
                 case 3:
                     tm.teamInterface();

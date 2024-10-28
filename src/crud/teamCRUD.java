@@ -42,9 +42,7 @@ public class teamCRUD extends config {
         System.out.print("Enter project ID to assign: ");
         int pid = sc.nextInt();
         
-        if(checkSkip(team_name, pid)){
-            System.out.println("ID successfully inserted.");
-        } else{
+        if(!checkSkip(team_name, pid)){
             sql = "INSERT INTO team(team_name, project_id) VALUES (?, ?)";
             addRecord(sql, team_name, pid);
         }
@@ -109,7 +107,7 @@ public class teamCRUD extends config {
         
         getTeamInfo(teamID);
 
-        sql = "SELECT tm.team_member_id, u.first_name, t.team_name FROM team_member tm INNER JOIN user u ON tm.user_id = u.user_id INNER JOIN team t ON tm.team_id = t.team_id WHERE tm.team_id = ?";
+        sql = "SELECT tm.team_member_id, u.first_name, tm.team_id, t.team_name FROM team_member tm INNER JOIN user u ON tm.user_id = u.user_id INNER JOIN team t ON tm.team_id = t.team_id WHERE tm.team_id = ?";
         System.out.println("\nTeam Members: ");
         tm.viewTeamMemberFiltered(sql, teamID);
         System.out.print("Press any key to continue...");
@@ -211,6 +209,7 @@ public class teamCRUD extends config {
                 System.out.println("--------------------------------------------------------------------------------"
                         + "\nSelected team:     | "+result.getString("team_name")
                         + "\n-------------------+"
+                        + "\nTeam ID:           | "+result.getInt("team_id")
                         + "\nFrom project:      | "+result.getString("project_name")
                         + "\n--------------------------------------------------------------------------------");
             }

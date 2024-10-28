@@ -1,8 +1,8 @@
 package crud;
 
-import java.io.IOException;
 import main.config;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +14,7 @@ public class taskCRUD extends config {
     String sql;
     
     public void viewTask(){
-        sql = "SELECT t.task_id, t.task_name, t.due_date, u.first_name, p.project_name, t.status FROM task t INNER JOIN user u ON t.assigned_to = u.user_id INNER JOIN project p ON t.project_id = p.project_id";
+        sql = "SELECT t.task_id, t.task_name, t.due_date, p.manager_name, tm.member_name, p.project_name, t.status FROM task t JOIN team_member tm ON t.assigned_to = tm.team_member_id JOIN project p ON t.project_id = p.project_id";
         
         try{
             PreparedStatement findRow = connectDB().prepareStatement(sql);
@@ -32,7 +32,7 @@ public class taskCRUD extends config {
         }
     }
     
-    public void addTask(){
+    public void addTask(int id){
         System.out.println("--------------------------------------------------------------------------------");
         System.out.print("Enter task name: ");
         String Tname = sc.nextLine();
@@ -46,9 +46,9 @@ public class taskCRUD extends config {
         System.out.print("Enter project ID to assign: ");
         int pid = sc.nextInt();
         
-        sql = "INSERT INTO task (task_name, description, date_created, due_date, assigned_to, project_id, status) VALUES (?, ?, ?, ?, 0, ?, 'Not Started')";
+        sql = "INSERT INTO task (task_name, description, date_created, due_date, created_by, assigned_to, project_id, status) VALUES (?, ?, ?, ?, ?, 0, ?, 'Not Started')";
 
-        addRecord(sql, Tname, desc, date.toString(), dueDate, pid);
+        addRecord(sql, Tname, desc, date.toString(), dueDate, id, pid);
     }
     
     public void editTask(){
@@ -137,6 +137,45 @@ public class taskCRUD extends config {
         }
     }
     
+    public void assignMember(){
+        teamCRUD t = new teamCRUD();
+        teamMemberCRUD tm = new teamMemberCRUD();
+         
+        System.out.println("");
+        t.viewTeam();
+        
+        System.out.print("Enter team ID: ");
+        int tid = sc.nextInt();
+        
+        System.out.println("\nTeam members: ");
+        sql = "SELECT tm.team_member_id, u.first_name, tm.team_id, t.team_name FROM team_member tm INNER JOIN user u ON tm.user_id = u.user_id INNER JOIN team t ON tm.team_id = t.team_id WHERE tm.team_id = ?";
+        tm.viewTeamMemberFiltered(sql, tid);  
+        
+        System.out.print("Enter member ID: ");
+        int mid = sc.nextInt();
+        
+        System.out.println("--------------------------------------------------------------------------------");
+        tm.searchMember(mid);
+        
+        sql = "SELECT t.task_id, t.task_name, t.due_date, p.manager_name, tm.member_name, p.project_name, t.status FROM task t JOIN team_member tm ON t.assigned_to = tm.team_member_id JOIN project p ON t.project_id = p.project_id WHERE tm.member_name = ?";
+        viewTaskFiltered("None", sql);
+        
+        System.out.print("Enter task ID: ");
+        int task = sc.nextInt();
+        
+        getTaskInfo(task);
+        
+        System.out.print("Confirm assign member? [y/n]: ");
+        String confirm = sc.next();
+        
+        if(confirm.equalsIgnoreCase("y")){
+            sql = "UPDATE task SET assigned_to = ? WHERE task_id = ?";
+            updateRecord(sql, mid, task);
+        } else{
+            System.out.print("Assign cancelled.");
+        }
+    }
+    
     public void filterBy(){
         boolean isBack = false;
         do{
@@ -179,18 +218,19 @@ public class taskCRUD extends config {
             
             try (ResultSet checkRow = findRow.executeQuery()) {
                 System.out.println("--------------------------------------------------------------------------------");
-                System.out.printf("%-20s %-20s %-20s %-20s %-20s %-20s\n", "ID", "Name", "Due Date", "Assigned to", "Project", "Status");
+                System.out.printf("%-20s %-20s %-20s %-20s %-20s %-20s %-20s\n", "ID", "Name", "Due Date", "Created by", "Assigned to", "Project", "Status");
                 
                 while(checkRow.next()){
-                    String[] name = checkRow.getString("first_name").split(" ");
+                    
                     int t_id = checkRow.getInt("task_id");
                     String t_name = checkRow.getString("task_name");
                     String d_date = checkRow.getString("due_date");
-                    String u_name = name[0];
+                    String p_creator = checkRow.getString("manager_name");
+                    String tm_name = checkRow.getString("member_name");
                     String p_project = checkRow.getString("project_name");
                     String t_status = checkRow.getString("status");
                     
-                    System.out.printf("%-20d %-20s %-20s %-20s %-20s %-20s\n", t_id, t_name, d_date, u_name, p_project, t_status);
+                    System.out.printf("%-20d %-20s %-20s %-20s %-20s %-20s %-20s\n", t_id, t_name, d_date, p_creator, tm_name, p_project, t_status);
                 }
                 System.out.println("--------------------------------------------------------------------------------");
             }
@@ -208,7 +248,7 @@ public class taskCRUD extends config {
                 System.out.println("--------------------------------------------------------------------------------");
                 System.out.printf("%-20s %-20s %-20s %-20s %-20s %-20s\n", "ID", "Name", "Due Date", "Assigned to", "Project", "Status");
                 while(checkRow.next()){
-                    String[] name = checkRow.getString("first_name").split(" ");
+                    String[] name = checkRow.getString("member_name").split(" ");
                     int t_id = checkRow.getInt("task_id");
                     String t_name = checkRow.getString("task_name");
                     String d_date = checkRow.getString("due_date");
@@ -236,15 +276,16 @@ public class taskCRUD extends config {
     
     private void getTaskInfo(int id){
         try{
-            PreparedStatement search = connectDB().prepareStatement("SELECT task_name, t.description, t.date_created, t.due_date, u.first_name, p.project_name, t.status FROM task t INNER JOIN user u ON assigned_to = u.user_id INNER JOIN project p ON t.project_id = p.project_id WHERE task_id = ?;");
+            PreparedStatement search = connectDB().prepareStatement("SELECT task_id, task_name, t.description, t.date_created, t.due_date, tm.member_name, p.project_name, t.status FROM task t INNER JOIN team_member tm ON assigned_to = tm.team_member_id INNER JOIN project p ON t.project_id = p.project_id WHERE task_id = ?;");
             search.setInt(1, id);
             
             try (ResultSet result = search.executeQuery()) {
-                String[] name = result.getString("first_name").split(" ");
+                String[] name = result.getString("member_name").split(" ");
                 System.out.println("--------------------------------------------------------------------------------"
                         + "\nSelected task:     | "+result.getString("task_name")
                         + "\n-------------------+"
-                                + "\nDescription:       | "+result.getString("description")
+                        + "\nTask ID:           | "+result.getInt("task_id")
+                        + "\nDescription:       | "+result.getString("description")
                         + "\nDate created:      | "+result.getString("date_created")
                         + "\nDue date:          | "+result.getString("due_date")
                         + "\nAssigned to:       | "+name[0]

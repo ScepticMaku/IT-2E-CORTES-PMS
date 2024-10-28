@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class project extends config {
-    public void projectInterface(int uid) throws IOException{
+    public void projectInterface(int uid, String mname) throws IOException{
         Scanner sc = new Scanner(System.in);
         
         projectCRUD proj = new projectCRUD();
@@ -23,15 +23,14 @@ public class project extends config {
                     + "\n3. Delete Project"
                     + "\n4. View Info"
                     + "\n5. Filter by"
-                    + "\n6. Search (WIP)"
-                    + "\n7. Back"
+                    + "\n6. Back"
                     + "\n0. Exit"
                     + "\nEnter choice: ");
             int choice = sc.nextInt();
             
             switch(choice){
                 case 1:
-                    proj.addProject(uid);
+                    proj.addProject(uid, mname);
                     break;
                 case 2:
                     proj.editProject();
@@ -46,10 +45,6 @@ public class project extends config {
                     proj.FilterBy();
                     break;
                 case 6:
-                    System.out.println("Coming soon...");
-//                    proj.searchProject(sc);
-                    break;
-                case 7:
                     pSelected = true;
                     break;
                 case 0:

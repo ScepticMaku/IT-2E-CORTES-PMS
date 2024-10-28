@@ -4,6 +4,9 @@ import main.config;
 import crud.taskCRUD;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class task extends config{
@@ -11,7 +14,7 @@ public class task extends config{
     
     taskCRUD tsk = new taskCRUD();
     
-    public void taskListInterface() throws IOException{
+    public void taskListInterface(int uid) throws IOException{
         boolean isSelected = false;
         
         do{
@@ -21,15 +24,16 @@ public class task extends config{
             System.out.print("1. Add Task"
                     + "\n2. Edit Task"
                     + "\n3. Delete Task"
-                    + "\n4. View Task Info"
-                    + "\n5. Filter By"
-                    + "\n6. Back"
+                    + "\n4. Assign a member"
+                    + "\n5. View Task Info"
+                    + "\n6. Filter By"
+                    + "\n7. Back"
                     + "\nEnter selection: ");
             int choice = sc.nextInt();
 
             switch(choice){
                 case 1:
-                    tsk.addTask();
+                    tsk.addTask(uid);
                     break;
                 case 2:
                     tsk.editTask();
@@ -38,12 +42,15 @@ public class task extends config{
                     tsk.deleteTask();
                     break;
                 case 4:
-                    tsk.viewInfo();
+                    tsk.assignMember();
                     break;
                 case 5:
-                    tsk.filterBy();
+                    tsk.viewInfo();
                     break;
                 case 6:
+                    tsk.filterBy();
+                    break;
+                case 7:
                     isSelected = true;
                     break;
                 default:

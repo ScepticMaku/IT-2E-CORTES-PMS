@@ -10,6 +10,7 @@ import java.io.IOException;
 public class main {
     
     public static void main(String[] args) throws IOException{
+
         Scanner sc = new Scanner(System.in);
         
         Change_Password change = new Change_Password();

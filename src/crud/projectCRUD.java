@@ -36,10 +36,9 @@ public class projectCRUD extends config {
         }
     }
     
-    public void addProject(int uid){
+    public void addProject(int uid, String mname){
         System.out.println("--------------------------------------------------------------------------------");
         System.out.print("Enter project name: ");
-        sc.nextLine();
         String name = sc.nextLine();
 
         System.out.println("Enter description: ");
@@ -48,8 +47,9 @@ public class projectCRUD extends config {
         System.out.print("Enter due date [FORMAT: YYYY-MM-DD]: ");
         String dueDate = sc.next();
         
-        sql = "INSERT INTO project (project_name, description, date_created, due_date, project_manager_id, status) VALUES (?, ?, ?, ?, ?, 'Planned')";
-        addRecord(sql, name, desc, date.toString(), dueDate, uid);
+        sql = "INSERT INTO project (project_name, description, date_created, due_date, project_manager_id, manager_name, status) VALUES (?, ?, ?, ?, ?, ?, 'Planned')";
+        addRecord(sql, name, desc, date.toString(), dueDate, uid, mname);
+        sc.nextLine();
     }
     
     public void editProject(){
@@ -169,64 +169,21 @@ public class projectCRUD extends config {
         viewList(id);
     }
     
-    /*public void searchProject(Scanner sc) throws IOException{
-        boolean isSelected = false;
-        boolean isFound = false;
-        
-        do{
-            System.out.print("Enter project name: ");
-            sc.nextLine();
-            String name = sc.nextLine();
-
-            try{
-                PreparedStatement search = connectDB().prepareStatement("SELECT project_name FROM project");
-
-                try(ResultSet result = search.executeQuery()){
-                    
-                    while(result.next()){
-                        String locatedName = result.getString("project_name");
-                        
-                        if(!locatedName.contains(name)){
-                            isFound = true;
-                            break;
-                        }
-                    }
-                    
-                    if(!isFound){
-                        System.out.println("Project not found.");
-                    } else{
-                        sql = "SELECT * FROM project WHERE project_name = ?";
-                        viewProjectFiltered(locatedName, sql);
-                    }
-                }
-            } catch(SQLException e){
-                System.out.println("Error: "+e.getMessage());
-            }
-            
-            System.out.print("1. Search another"
-                    + "\n2. Back"
-                    + "\nEnter selection: ");
-            int selection = sc.nextInt();
-            
-            isSelected = (selection!=1);
-        } while(!isSelected);
-    }*/
-    
     private void getProjectInfo(int id){
         try{
-            PreparedStatement findRow = connectDB().prepareStatement("SELECT p.project_name, p.description, p.date_created, p.due_date, u.first_name, p.status FROM project p INNER JOIN user u ON project_manager_id = u.user_id WHERE project_id = ?;");
+            PreparedStatement findRow = connectDB().prepareStatement("SELECT p.project_id, p.project_name, p.description, p.date_created, p.due_date, p.manager_name, p.status FROM project p INNER JOIN user u ON project_manager_id = u.user_id WHERE project_id = ?;");
             findRow.setInt(1, id);
             
             try (ResultSet result = findRow.executeQuery()) {
-                String[] name = result.getString("first_name").split(" ");
                 
                 System.out.println("--------------------------------------------------------------------------------"
                         + "\nSelected project:  | "+result.getString("project_name")
-                        + "\n-------------------+"
+                        + "\n-------------------+ "
+                        + "\nProject ID:        | "+result.getInt("project_id")
                         + "\nDescription:       | "+result.getString("description")
                         + "\nDate Created:      | "+result.getString("date_created")
                         + "\nDue Date:          | "+result.getString("due_date")
-                        + "\nProject Manager:   | "+name[0]
+                        + "\nProject Manager:   | "+result.getString("manager_name")
                         + "\nStatus:            | "+result.getString("status")
                         + "\n--------------------------------------------------------------------------------");
             }

@@ -4,17 +4,12 @@ import main.config;
 import crud.teamCRUD;
 
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.ResultSet;
 import java.util.Scanner;
 
 public class team extends config {
     Scanner sc = new Scanner(System.in);
     team_members tm = new team_members();
     
-    String team_name, sql, another;
-    int project_id, choice, userID;
     boolean isSelected = false;
     
     public void teamInterface() throws IOException{
@@ -31,7 +26,7 @@ public class team extends config {
                     + "\n5. Filter by"
                     + "\n6. Back"
                     + "\nEnter selection: ");
-            choice = sc.nextInt();
+            int choice = sc.nextInt();
 
             switch(choice){
                 case 1:
