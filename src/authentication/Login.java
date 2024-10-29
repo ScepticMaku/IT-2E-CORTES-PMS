@@ -12,6 +12,7 @@ public class Login extends config {
     
     Admin admin = new Admin();
     Member member = new Member();
+    Project_Manager manager = new Project_Manager();
     
     int id;
     String user, pass, fname;
@@ -52,11 +53,18 @@ public class Login extends config {
                     System.out.println("\nInvalid Credentials.");
                 } 
                 else{
-                    if(locatedRole.equals("admin")){
-                        admin.displayInterface(id, locatedRole, fname);
-                    } 
-                    else if(locatedRole.equals("member")){
-                        member.displayInterface(id, locatedRole, fname);
+                    switch (locatedRole) {
+                        case "admin":
+                            admin.displayInterface(id, locatedRole, fname);
+                            break;
+                        case "member":
+                            member.displayInterface(id, locatedRole, fname);
+                            break;
+                        case "project manager":
+                            manager.displayInterface(id, locatedRole, fname);
+                            break;
+                        default: System.out.println("Error: Role not found.");
+                            break;
                     }
                 }
             }

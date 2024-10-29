@@ -46,13 +46,13 @@ public class Member extends config {
                     u.viewUserInfo(uid);
                     break;
                 case 2:
-                    System.out.println("\nAssigned tasks");
+                    System.out.println("\nAssigned tasks:");
                     sql = "SELECT t.task_id, t.task_name, t.due_date, tm.member_name, p.project_name, t.status FROM task t INNER JOIN team_member tm ON t.assigned_to = tm.team_member_id INNER JOIN project p ON t.project_id = p.project_id WHERE tm.member_name = ?";
                     tsk.viewTaskFiltered(first_name, sql);
                     pause();
                     break;
                 case 3:
-                    System.out.println("\nAssigned teams");
+                    System.out.println("\nAssigned teams:");
                     System.out.println("--------------------------------------------------------------------------------");
                     sql = "SELECT t.team_id, t.team_name, tm.member_name FROM team_member tm INNER JOIN team t ON tm.team_id = t.team_id WHERE tm.member_name = ?";
                     tm.viewAssignedTeams(first_name, sql);

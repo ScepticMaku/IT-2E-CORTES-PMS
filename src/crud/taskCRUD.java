@@ -276,7 +276,7 @@ public class taskCRUD extends config {
     
     private void getTaskInfo(int id){
         try{
-            PreparedStatement search = connectDB().prepareStatement("SELECT task_id, task_name, t.description, t.date_created, t.due_date, tm.member_name, p.project_name, t.status FROM task t INNER JOIN team_member tm ON assigned_to = tm.team_member_id INNER JOIN project p ON t.project_id = p.project_id WHERE task_id = ?;");
+            PreparedStatement search = connectDB().prepareStatement("SELECT t.task_id, t.task_name, t.description, t.date_created, t.due_date, p.manager_name, tm.member_name, p.project_name, t.status FROM task t JOIN team_member tm ON t.assigned_to = tm.team_member_id JOIN project p ON t.project_id = p.project_id WHERE t.task_id = ?;");
             search.setInt(1, id);
             
             try (ResultSet result = search.executeQuery()) {
@@ -288,6 +288,7 @@ public class taskCRUD extends config {
                         + "\nDescription:       | "+result.getString("description")
                         + "\nDate created:      | "+result.getString("date_created")
                         + "\nDue date:          | "+result.getString("due_date")
+                        + "\nCreated By:        | "+result.getString("manager_name")
                         + "\nAssigned to:       | "+name[0]
                         + "\nFrom project:      | "+result.getString("project_name")
                         + "\nStatus:            | "+result.getString("status")
