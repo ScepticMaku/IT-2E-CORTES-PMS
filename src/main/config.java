@@ -1,5 +1,6 @@
 package main;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -21,6 +22,10 @@ public class config {
         }
         return connect;
     }
+    
+    //-----------------------------------------------
+    // ADD METHOD
+    //-----------------------------------------------
     
     public void addRecord(String sql, Object... values) {
     try {
@@ -95,6 +100,10 @@ public class config {
         }
     }
     
+    //-----------------------------------------------
+    // DELETE METHOD
+    //-----------------------------------------------
+    
     // Add this method in the config class
     public void deleteRecord(String sql, Object... values) {
         try (Connection conn = this.connectDB();
@@ -115,6 +124,10 @@ public class config {
             System.out.println("Error deleting record: " + e.getMessage());
         }
     }
+    
+    //-----------------------------------------------
+    // VIEW METHOD
+    //-----------------------------------------------
     
     public void viewRecords (String sqlQuery, String[] columnHeaders, String[] columnNames){
         
@@ -156,5 +169,10 @@ public class config {
     public void exitMessage(){
         System.out.println("Exit successful.");
         System.exit(0);
+    }
+    
+    public void pause() throws IOException{
+        System.out.print("Press any key to continue...");
+        System.in.read();
     }
 }

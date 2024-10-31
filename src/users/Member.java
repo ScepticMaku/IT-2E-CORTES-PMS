@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class Member extends config {
     Scanner sc = new Scanner(System.in);
@@ -69,11 +68,6 @@ public class Member extends config {
                 default: System.out.println("Error: Invalid selection.");
             }
         } while(!isSelected);
-    }
-    
-    private void pause() throws IOException{
-        System.out.print("Press any key to continue...");
-        System.in.read();
     }
     
     private void trackDays(String name, String query){

@@ -1,6 +1,7 @@
 package authentication;
 
 import main.config;
+import main.validation;
 
 import java.io.IOException;
 import java.util.*;
@@ -10,6 +11,7 @@ import java.sql.*;
 public class Login extends config {
     Scanner sc = new Scanner(System.in);
     
+    validation validate = new validation();
     Admin admin = new Admin();
     Member member = new Member();
     Project_Manager manager = new Project_Manager();
@@ -23,10 +25,19 @@ public class Login extends config {
         
             System.out.println("Login:");
             System.out.print("Enter username: ");
-            user = sc.next();
+            user = sc.nextLine();
+            
+            while(validate.spaceValidate(user)){
+                user = sc.nextLine();
+            }
 
             System.out.print("Enter password: ");
-            pass = sc.next();
+            pass = sc.nextLine();
+            
+            while(validate.spaceValidate(pass)){
+                pass = sc.nextLine();
+            }
+            
             locateUser(user, pass);
     }
     
@@ -50,7 +61,7 @@ public class Login extends config {
                 }
                 
                 if(!userDetected){
-                    System.out.println("\nInvalid Credentials.");
+                    System.out.println("\nUser not found.");
                 } 
                 else{
                     switch (locatedRole) {
