@@ -1,15 +1,15 @@
 package ui.admin;
 
 import main.config;
+import main.validation;
 import crud.projectCRUD;
 
 import java.io.IOException;
-import java.util.Scanner;
 
 public class project extends config {
     public void projectInterface(int uid, String mname) throws IOException{
-        Scanner sc = new Scanner(System.in);
         
+        validation validate = new validation();
         projectCRUD proj = new projectCRUD();
         
         boolean pSelected = false;
@@ -26,7 +26,7 @@ public class project extends config {
                     + "\n6. Back"
                     + "\n0. Exit"
                     + "\nEnter choice: ");
-            int choice = sc.nextInt();
+            int choice = validate.validateInt();
             
             switch(choice){
                 case 1:

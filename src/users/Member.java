@@ -87,7 +87,13 @@ public class Member extends config {
                     
                     long remain = ChronoUnit.DAYS.between(date, LocalDate.parse(d_date));
                     
-                    System.out.printf("%-20d %-20s %-20s %-20s %-20s\n", t_id, t_name, d_date, t_status, String.valueOf(remain));
+                    String remDays = String.valueOf(remain);
+                    
+                    if(Integer.parseInt(remDays) < 0){
+                        remDays = "0";
+                    }
+                    
+                    System.out.printf("%-20d %-20s %-20s %-20s %-20s\n", t_id, t_name, d_date, t_status, remDays);
                 }
                 System.out.println("--------------------------------------------------------------------------------");
             }

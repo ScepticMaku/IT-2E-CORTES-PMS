@@ -4,15 +4,13 @@ import authentication.Login;
 import authentication.Register;
 import authentication.Change_Password;
 
-import java.util.Scanner;
 import java.io.IOException;
 
 public class main {
     
-    public static void main(String[] args) throws IOException{
-
-        Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) throws IOException {
         
+        validation validate = new validation();
         Change_Password change = new Change_Password();
         Register register = new Register();
         Login login = new Login();
@@ -26,7 +24,7 @@ public class main {
                     + "3. Reset Password\n"
                     + "0. Exit\n"
                     + "Enter choice: ");
-            int choice = sc.nextInt();
+            int choice = validate.validateInt();
             
             System.out.println("================================================================================================================================================================");
             switch(choice){
