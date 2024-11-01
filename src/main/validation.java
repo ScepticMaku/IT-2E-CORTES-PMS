@@ -8,6 +8,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 
 public class validation extends config {
     Scanner sc = new Scanner(System.in);
@@ -93,10 +94,47 @@ public class validation extends config {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try{
             LocalDate.parse(getDate, format);
+            
+            long remain = ChronoUnit.DAYS.between(date, LocalDate.parse(getDate));
+            String remDays = String.valueOf(remain);
+
+            if(Integer.parseInt(remDays) < 0){
+                System.out.print("Error: Due date must not be from the past, try again: ");
+                return false;
+            }
             return true;
         } catch(DateTimeParseException e){
             System.out.print("Error: Date is incorrect, try again: ");
         }
+        return false;
+    }
+    
+    public boolean idValidate(String query, int getID){
+        try{
+            PreparedStatement findRow = connectDB().prepareStatement(query);
+            findRow.setInt(1, getID);
+            
+            try(ResultSet result = findRow.executeQuery()){
+                if(!result.next()){
+                    System.out.println("Error: No such ID.");
+                    return true;
+                }
+            }
+        } catch(SQLException e){
+            System.out.println("Error: "+e.getMessage());
+        }
+        return false;
+    }
+    
+    public boolean roleValidate(String getRole){
+        String[] role = {"admin", "member", "project_manager"};
+        
+        for(String i : role){
+            if(getRole.equals(i)){
+                return true;
+            }
+        }
+        System.out.print("Error: Invalid role, try again: ");
         return false;
     }
 }

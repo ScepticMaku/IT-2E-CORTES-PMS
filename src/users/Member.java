@@ -7,11 +7,6 @@ import crud.teamMemberCRUD;
 
 import java.io.IOException;
 import java.util.Scanner;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.temporal.ChronoUnit;
-import java.time.LocalDate;
 
 public class Member extends config {
     Scanner sc = new Scanner(System.in);
@@ -35,7 +30,6 @@ public class Member extends config {
                     + "\n1. Profile"
                     + "\n2. Tasks"
                     + "\n3. Teams"
-                    + "\n4. Track days"
                     + "\n0. Logout"
                     + "\nEnter selection: ");
             int mainSelect = sc.nextInt();
@@ -57,11 +51,11 @@ public class Member extends config {
                     tm.viewAssignedTeams(first_name, sql);
                     pause();
                     break;
-                case 4:
+                /*case 4:
                     sql = "SELECT t.task_id, t.task_name, t.due_date, tm.member_name, t.status FROM task t INNER JOIN team_member tm ON t.assigned_to = tm.team_member_id WHERE tm.member_name = ?";
                     trackDays(name[0], sql);
                     pause();
-                    break;
+                    break;*/
                 case 0:
                     isSelected = true;
                     break;
@@ -70,7 +64,7 @@ public class Member extends config {
         } while(!isSelected);
     }
     
-    private void trackDays(String name, String query){
+    /*private void trackDays(String name, String query){
         try{
             PreparedStatement state = connectDB().prepareStatement(query);
             state.setString(1, name);
@@ -100,5 +94,5 @@ public class Member extends config {
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
         }
-    }
+    }*/
 }

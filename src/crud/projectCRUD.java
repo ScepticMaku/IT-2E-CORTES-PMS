@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.Scanner;
 
@@ -57,12 +59,8 @@ public class projectCRUD extends config {
             dueDate = sc.nextLine();
         }
         
-        while(!validate.dateValidate(dueDate)){
+        while(!(validate.dateValidate(dueDate))){
             dueDate = sc.nextLine();
-            
-            while(validate.spaceValidate(dueDate)){
-                dueDate = sc.nextLine();
-            }
         }
         
         if(!checkSkip(name, desc, dueDate, uid, mname)){
@@ -79,98 +77,97 @@ public class projectCRUD extends config {
         System.out.print("Enter project ID: ");
         int id = validate.validateInt();
         
-        getProjectInfo(id);
+        sql = "SELECT project_id FROM project WHERE project_id = ?";
+        if(!validate.idValidate(sql, id)){
+            getProjectInfo(id);
         do{
             System.out.print("Choose what you want to do:"
-                    + "\n1. Change project name\n"
-                    + "2. Change project description\n"
-                    + "3. Change due date\n"
-                    + "4. Change status\n"
-                    + "5. Back\n"
-                    + "Enter selection: ");
-            int selectEdit = validate.validateInt();
-            
-            switch(selectEdit){
-                case 1:
-                    sql = "UPDATE project SET project_name = ? WHERE project_id = ?";
+                        + "\n1. Change project name\n"
+                        + "2. Change project description\n"
+                        + "3. Change due date\n"
+                        + "4. Change status\n"
+                        + "5. Back\n"
+                        + "Enter selection: ");
+                int selectEdit = validate.validateInt();
 
-                    System.out.print("\nEnter new project name: ");
-                    sc.nextLine();
-                    String newName = sc.nextLine();
-                    updateRecord(sql, newName, id);
-                    break;
-                case 2:
-                    System.out.print("\nEnter new project description: ");
-                    sc.nextLine();
-                    String newDesc = sc.nextLine();
+                switch(selectEdit){
+                    case 1:
+                        sql = "UPDATE project SET project_name = ? WHERE project_id = ?";
 
-                    sql = "UPDATE project SET description = ? WHERE project_id = ?";
-                    updateRecord(sql, newDesc, id);
-                    break;
-                case 3:
-                    System.out.print("\nEnter new due date [FORMAT: YYYY-MM-DD]: ");
-                    String newDate = sc.nextLine();
-                    
-                    while(validate.spaceValidate(newDate)){
-                        newDate = sc.nextLine();
-                    }
+                        System.out.print("\nEnter new project name: ");
+                        sc.nextLine();
+                        String newName = sc.nextLine();
+                        updateRecord(sql, newName, id);
+                        break;
+                    case 2:
+                        System.out.print("\nEnter new project description: ");
+                        sc.nextLine();
+                        String newDesc = sc.nextLine();
 
-                    while(!validate.dateValidate(newDate)){
-                        newDate = sc.nextLine();
+                        sql = "UPDATE project SET description = ? WHERE project_id = ?";
+                        updateRecord(sql, newDesc, id);
+                        break;
+                    case 3:
+                        System.out.print("\nEnter new due date [FORMAT: YYYY-MM-DD]: ");
+                        String newDate = sc.nextLine();
 
                         while(validate.spaceValidate(newDate)){
                             newDate = sc.nextLine();
                         }
-                    }
 
-                    sql = "UPDATE project SET due_date = ? WHERE project_id = ?";
-                    updateRecord(sql, newDate, id);
-                    break;
-                case 4:
-                System.out.print("\nEnter new status[Planned/In-Progress/Completed/Overdue]: ");
-                String newStatus = sc.nextLine();
-                
-                while(validate.spaceValidate(newStatus)){
-                    newStatus = sc.nextLine();
-                }
-                
-                while(statusValidate(newStatus)){
-                    newStatus = sc.nextLine();
-                    
+                        while(validate.dateValidate(newDate)){
+                            newDate = sc.nextLine();
+                        }
+
+                        sql = "UPDATE project SET due_date = ? WHERE project_id = ?";
+                        updateRecord(sql, newDate, id);
+                        break;
+                    case 4:
+                    System.out.print("\nEnter new status[Planned/In-Progress/Completed/Overdue]: ");
+                    String newStatus = sc.nextLine();
+
                     while(validate.spaceValidate(newStatus)){
                         newStatus = sc.nextLine();
                     }
-                }
 
-                sql = "UPDATE project SET status = ? WHERE project_id = ?";
-                updateRecord(sql, newStatus, id);
-                break;
-                case 5:
-                    isSelected = true;
+                    while(statusValidate(newStatus)){
+                        newStatus = sc.nextLine();
+                    }
+
+                    sql = "UPDATE project SET status = ? WHERE project_id = ?";
+                    updateRecord(sql, newStatus, id);
                     break;
-                default: System.out.println("Error: Invalid selection.");
-            }
-            System.out.println("");
-        } while(!isSelected);
+                    case 5:
+                        isSelected = true;
+                        break;
+                    default: System.out.println("Error: Invalid selection.");
+                }
+                System.out.println("");
+            } while(!isSelected);
+        }
     }
     
     public void deleteProject(){
         System.out.print("Enter project ID: ");
         int id = validate.validateInt();
         
-        getProjectInfo(id);
-        System.out.print("Confirm Delete? [y/n]: ");
-        String confirm = sc.nextLine();
+        sql = "SELECT project_id FROM project WHERE project_id = ?";
         
-        while(validate.spaceValidate(confirm)){
-            confirm = sc.nextLine();
-        }
-        
-        if(validate.confirm(confirm)){
-            sql = "DELETE FROM project WHERE project_id = ?";
-            deleteRecord(sql, id);
-        } else{
-            System.out.println("Deletion Cancelled.");
+        if(!validate.idValidate(sql, id)){
+            getProjectInfo(id);
+            System.out.print("Confirm Delete? [y/n]: ");
+            String confirm = sc.nextLine();
+
+            while(validate.spaceValidate(confirm)){
+                confirm = sc.nextLine();
+            }
+
+            if(validate.confirm(confirm)){
+                sql = "DELETE FROM project WHERE project_id = ?";
+                deleteRecord(sql, id);
+            } else{
+                System.out.println("Deletion Cancelled.");
+            }
         }
     }
     
@@ -193,12 +190,8 @@ public class projectCRUD extends config {
                         getDate = sc.nextLine();
                     }
 
-                    while(!validate.dateValidate(getDate)){
+                    while(!checkDate(getDate)){
                         getDate = sc.nextLine();
-
-                        while(validate.spaceValidate(getDate)){
-                            getDate = sc.nextLine();
-                        }
                     }
 
                     System.out.println("\nTask list fileted by: Date");
@@ -237,8 +230,42 @@ public class projectCRUD extends config {
         System.out.print("Enter project ID: ");
         int id = validate.validateInt();
         
-        getProjectInfo(id);
-        viewList(id);
+        sql = "SELECT p.project_id, p.project_name, p.description, p.date_created, p.due_date, p.manager_name, p.status FROM project p INNER JOIN user u ON project_manager_id = u.user_id WHERE project_id = ?";
+        
+        if(!validate.idValidate(sql, id)){
+            getProjectInfo(id);
+            viewList(id);
+        }
+    }
+    
+    public void updateStatus(){
+        try{
+            PreparedStatement state = connectDB().prepareStatement("SELECT * FROM project");
+            ResultSet result = state.executeQuery();
+            
+            while(result.next()){
+                int getID = result.getInt("project_id");
+                String dueDate = result.getString("due_date");
+                String projectName = result.getString("project_name");
+                String getStatus = result.getString("status");
+                
+                if(!getStatus.equals("Overdue")){
+
+                    if(date.isAfter(LocalDate.parse(dueDate))){
+                        result.close();
+                        sql = "UPDATE project SET status = 'Overdue' WHERE project_id = ?";
+                        updateRecord(sql, getID);
+
+                        System.out.println("Project "+projectName+" is passed due date, status updated to Overdue.");
+                    }
+                }
+            }
+            
+            result.close();
+        } catch(SQLException e){
+            System.out.println("Error: "+e.getMessage());
+        }
+            
     }
     
     private void getProjectInfo(int id){
@@ -360,6 +387,17 @@ public class projectCRUD extends config {
             }
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
+        }
+        return false;
+    }
+    
+    private boolean checkDate(String getDate){
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        try{
+            LocalDate.parse(getDate, format);
+            return true;
+        } catch(DateTimeParseException e){
+            System.out.print("Error: Date is incorrect, try again: ");
         }
         return false;
     }

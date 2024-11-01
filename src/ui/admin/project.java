@@ -16,6 +16,9 @@ public class project extends config {
         
         do{
             System.out.println("================================================================================================================================================================");
+            System.out.println("Notifications: ");
+            proj.updateStatus();
+            System.out.println("");
             proj.viewProject();
             
             System.out.print("1. Add Project"
