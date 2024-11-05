@@ -1,5 +1,6 @@
 package ui.admin;
 
+import main.validation;
 import main.config;
 import crud.teamCRUD;
 
@@ -8,6 +9,8 @@ import java.util.Scanner;
 
 public class team extends config {
     Scanner sc = new Scanner(System.in);
+    
+    validation validate = new validation();
     team_members tm = new team_members();
     
     boolean isSelected = false;
@@ -26,7 +29,7 @@ public class team extends config {
                     + "\n5. Filter by"
                     + "\n6. Back"
                     + "\nEnter selection: ");
-            int choice = sc.nextInt();
+            int choice = validate.validateInt();
 
             switch(choice){
                 case 1:

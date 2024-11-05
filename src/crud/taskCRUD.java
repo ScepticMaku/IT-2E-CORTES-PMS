@@ -155,7 +155,12 @@ public class taskCRUD extends config {
         System.out.print("\nEnter ID: ");
         int taskID = validate.validateInt();
         
-        getTaskInfo(validate.checkID("SELECT task_id FROM task WHERE task_id = ?", taskID));
+        while(getSingleValue("SELECT task_id FROM task WHERE task_id = ?", taskID) == 0){
+            System.out.print("Error: ID doesn't exist, try again: ");
+            taskID = validate.validateInt();
+        }
+        
+        getTaskInfo(taskID);
         
         System.out.print("Confirm delete? [y/n]: ");
         String confirm = sc.next();

@@ -144,7 +144,12 @@ public class projectCRUD extends config {
         System.out.print("Enter project ID: ");
         int id = validate.validateInt();
         
-        getProjectInfo(validate.checkID("SELECT project_id FROM project WHERE project_id = ?", id));
+        while(getSingleValue("SELECT project_id FROM project WHERE project_id = ?", id) == 0){
+            System.out.print("Error: ID doesn't exist, try again: ");
+            id = validate.validateInt();
+        }
+        
+        getProjectInfo(id);
         
         System.out.print("Confirm Delete? [y/n]: ");
         String confirm = sc.nextLine();
