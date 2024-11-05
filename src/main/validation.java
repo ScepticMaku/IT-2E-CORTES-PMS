@@ -109,7 +109,7 @@ public class validation extends config {
         return false;
     }
     
-    public boolean idValidate(String query, int getID){
+    /*public boolean idValidate(String query, int getID){
         try{
             PreparedStatement findRow = connectDB().prepareStatement(query);
             findRow.setInt(1, getID);
@@ -124,6 +124,14 @@ public class validation extends config {
             System.out.println("Error: "+e.getMessage());
         }
         return false;
+    }*/
+    
+    public int checkID(String query, int getID){
+        while(getSingleValue(query, getID) == 0){
+            System.out.print("Error: ID doesn't exist, try again: ");
+            getID = validateInt();
+        }
+        return getID;
     }
     
     public boolean roleValidate(String getRole){

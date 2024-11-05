@@ -16,6 +16,8 @@ public class main {
         Login login = new Login();
         config conf = new config();
         
+        boolean isSelected = false;
+        
         do{
             System.out.print("================================================================================================================================================================\n"
                     + "Project Management System\n"
@@ -45,6 +47,6 @@ public class main {
                 default:
                     System.out.println("Invalid selection.");
             }
-        } while(true);
+        } while(!isSelected);
     }
 }

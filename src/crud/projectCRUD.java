@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
 import java.util.Scanner;
 
 import main.config;
@@ -64,7 +63,8 @@ public class projectCRUD extends config {
         }
         
         if(!checkSkip(name, desc, dueDate, uid, mname)){
-            sql = "INSERT INTO project (project_name, description, date_created, due_date, project_manager_id, manager_name, status) VALUES (?, ?, ?, ?, ?, ?, 'Planned')";
+            sql = "INSERT INTO project (project_name, description, date_created, due_date, project_manager_id, manager_name, status) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, 'Planned')";
         addRecord(sql, name, desc, date.toString(), dueDate, uid, mname);
         }
         
@@ -77,98 +77,88 @@ public class projectCRUD extends config {
         System.out.print("Enter project ID: ");
         int id = validate.validateInt();
         
-        sql = "SELECT project_id FROM project WHERE project_id = ?";
-        if(!validate.idValidate(sql, id)){
-            getProjectInfo(id);
+        getProjectInfo(validate.checkID("SELECT project_id FROM project WHERE project_id = ?", id));
+        
         do{
             System.out.print("Choose what you want to do:"
-                        + "\n1. Change project name\n"
-                        + "2. Change project description\n"
-                        + "3. Change due date\n"
-                        + "4. Change status\n"
-                        + "5. Back\n"
-                        + "Enter selection: ");
-                int selectEdit = validate.validateInt();
+                    + "\n1. Change project name\n"
+                    + "2. Change project description\n"
+                    + "3. Change due date\n"
+                    + "4. Change status\n"
+                    + "5. Back\n"
+                    + "Enter selection: ");
+            int selectEdit = validate.validateInt();
 
-                switch(selectEdit){
-                    case 1:
-                        sql = "UPDATE project SET project_name = ? WHERE project_id = ?";
-
-                        System.out.print("\nEnter new project name: ");
-                        sc.nextLine();
-                        String newName = sc.nextLine();
-                        updateRecord(sql, newName, id);
-                        break;
-                    case 2:
-                        System.out.print("\nEnter new project description: ");
-                        sc.nextLine();
-                        String newDesc = sc.nextLine();
-
-                        sql = "UPDATE project SET description = ? WHERE project_id = ?";
-                        updateRecord(sql, newDesc, id);
-                        break;
-                    case 3:
-                        System.out.print("\nEnter new due date [FORMAT: YYYY-MM-DD]: ");
-                        String newDate = sc.nextLine();
-
-                        while(validate.spaceValidate(newDate)){
-                            newDate = sc.nextLine();
-                        }
-
-                        while(validate.dateValidate(newDate)){
-                            newDate = sc.nextLine();
-                        }
-
-                        sql = "UPDATE project SET due_date = ? WHERE project_id = ?";
-                        updateRecord(sql, newDate, id);
-                        break;
-                    case 4:
-                    System.out.print("\nEnter new status[Planned/In-Progress/Completed/Overdue]: ");
-                    String newStatus = sc.nextLine();
-
-                    while(validate.spaceValidate(newStatus)){
-                        newStatus = sc.nextLine();
-                    }
-
-                    while(statusValidate(newStatus)){
-                        newStatus = sc.nextLine();
-                    }
-
-                    sql = "UPDATE project SET status = ? WHERE project_id = ?";
-                    updateRecord(sql, newStatus, id);
+            switch(selectEdit){
+                case 1:
+                    System.out.print("\nEnter new project name: ");
+                    sc.nextLine();
+                    String newName = sc.nextLine();
+                    updateRecord("UPDATE project SET project_name = ? WHERE project_id = ?", newName, id);
                     break;
-                    case 5:
-                        isSelected = true;
-                        break;
-                    default: System.out.println("Error: Invalid selection.");
+                case 2:
+                    System.out.print("\nEnter new project description: ");
+                    sc.nextLine();
+                    String newDesc = sc.nextLine();
+                    
+                    updateRecord("UPDATE project SET description = ? WHERE project_id = ?", newDesc, id);
+                    break;
+                case 3:
+                    System.out.print("\nEnter new due date [FORMAT: YYYY-MM-DD]: ");
+                    String newDate = sc.nextLine();
+
+                    while(validate.spaceValidate(newDate)){
+                        newDate = sc.nextLine();
+                    }
+
+                    while(validate.dateValidate(newDate)){
+                        newDate = sc.nextLine();
+                    }
+                    
+                    updateRecord("UPDATE project SET due_date = ? WHERE project_id = ?", newDate, id);
+                    break;
+                case 4:
+                System.out.print("\nEnter new status[Planned/In-Progress/Completed/Overdue]: ");
+                String newStatus = sc.nextLine();
+
+                while(validate.spaceValidate(newStatus)){
+                    newStatus = sc.nextLine();
                 }
-                System.out.println("");
-            } while(!isSelected);
-        }
+
+                while(statusValidate(newStatus)){
+                    newStatus = sc.nextLine();
+                }
+                
+                updateRecord("UPDATE project SET status = ? WHERE project_id = ?", newStatus, id);
+                break;
+                case 5:
+                    isSelected = true;
+                    break;
+                default: System.out.println("Error: Invalid selection.");
+            }
+            System.out.println("");
+        } while(!isSelected);
     }
     
     public void deleteProject(){
         System.out.print("Enter project ID: ");
         int id = validate.validateInt();
         
-        sql = "SELECT project_id FROM project WHERE project_id = ?";
+        getProjectInfo(validate.checkID("SELECT project_id FROM project WHERE project_id = ?", id));
         
-        if(!validate.idValidate(sql, id)){
-            getProjectInfo(id);
-            System.out.print("Confirm Delete? [y/n]: ");
-            String confirm = sc.nextLine();
+        System.out.print("Confirm Delete? [y/n]: ");
+        String confirm = sc.nextLine();
 
-            while(validate.spaceValidate(confirm)){
-                confirm = sc.nextLine();
-            }
-
-            if(validate.confirm(confirm)){
-                sql = "DELETE FROM project WHERE project_id = ?";
-                deleteRecord(sql, id);
-            } else{
-                System.out.println("Deletion Cancelled.");
-            }
+        while(validate.spaceValidate(confirm)){
+            confirm = sc.nextLine();
         }
+
+        if(validate.confirm(confirm)){
+            deleteRecord("DELETE FROM project WHERE project_id = ?", id);
+        } else{
+            System.out.println("Deletion Cancelled.");
+        }
+        
     }
     
     public void FilterBy() throws IOException{
@@ -195,8 +185,7 @@ public class projectCRUD extends config {
                     }
 
                     System.out.println("\nTask list fileted by: Date");
-                    sql = "SELECT * FROM project WHERE due_date = ?";
-                    viewProjectFiltered(getDate,sql);
+                    viewProjectFiltered(getDate,"SELECT * FROM project WHERE due_date = ?");
                     break;
                 case 2:
                     System.out.print("Enter status [Planned/In-Progress/Completed/Overdue]: ");
@@ -215,8 +204,7 @@ public class projectCRUD extends config {
                     }
 
                     System.out.println("\nTask list fileted by: Status");
-                    sql = "SELECT * FROM project WHERE status = ?";
-                    viewProjectFiltered(getStatus, sql);
+                    viewProjectFiltered(getStatus, "SELECT * FROM project WHERE status = ?");
                     break;
                 case 3:
                     isBack = true;
@@ -230,12 +218,13 @@ public class projectCRUD extends config {
         System.out.print("Enter project ID: ");
         int id = validate.validateInt();
         
-        sql = "SELECT p.project_id, p.project_name, p.description, p.date_created, p.due_date, p.manager_name, p.status FROM project p INNER JOIN user u ON project_manager_id = u.user_id WHERE project_id = ?";
+        sql = "SELECT p.project_id, p.project_name, p.description, p.date_created, p.due_date, p.manager_name, p.status "
+                + "FROM project p "
+                + "INNER JOIN user u ON project_manager_id = u.user_id "
+                + "WHERE project_id = ?";
+        getProjectInfo(validate.checkID(sql, id));
+        viewList(id);
         
-        if(!validate.idValidate(sql, id)){
-            getProjectInfo(id);
-            viewList(id);
-        }
     }
     
     public void updateStatus(){
@@ -270,7 +259,10 @@ public class projectCRUD extends config {
     
     private void getProjectInfo(int id){
         try{
-            PreparedStatement findRow = connectDB().prepareStatement("SELECT p.project_id, p.project_name, p.description, p.date_created, p.due_date, p.manager_name, p.status FROM project p INNER JOIN user u ON project_manager_id = u.user_id WHERE project_id = ?;");
+            PreparedStatement findRow = connectDB().prepareStatement("SELECT p.project_id, p.project_name, p.description, p.date_created, p.due_date, p.manager_name, p.status "
+                    + "FROM project p "
+                    + "INNER JOIN user u ON project_manager_id = u.user_id "
+                    + "WHERE project_id = ?;");
             findRow.setInt(1, id);
             
             try (ResultSet result = findRow.executeQuery()) {
@@ -297,7 +289,9 @@ public class projectCRUD extends config {
         
         boolean isSelected = false;
         try{
-            PreparedStatement search = connectDB().prepareStatement("SELECT p.project_name, p.description, p.date_created, p.due_date, u.first_name, p.status FROM project p INNER JOIN user u ON project_manager_id = u.user_id WHERE project_id = ?;");
+            PreparedStatement search = connectDB().prepareStatement("SELECT p.project_name, p.description, p.date_created, p.due_date, u.first_name, p.status FROM project p "
+                    + "INNER JOIN user u ON project_manager_id = u.user_id "
+                    + "WHERE project_id = ?;");
             search.setInt(1, pid);
             
             try(ResultSet result = search.executeQuery()){
@@ -311,12 +305,19 @@ public class projectCRUD extends config {
                     switch(showSelect){
                         case 1:
                             System.out.println("\nTeam list:");
-                            sql = "SELECT t.team_id, t.team_name, p.project_name FROM team t INNER JOIN project p ON t.project_id = p.project_id WHERE p.project_name = ?";
+                            sql = "SELECT t.team_id, t.team_name, p.project_name "
+                                    + "FROM team t "
+                                    + "INNER JOIN project p ON t.project_id = p.project_id "
+                                    + "WHERE p.project_name = ?";
                             tm.viewTeamFiltered(result.getString("project_name"), sql);
                             break;
                         case 2:
                             System.out.println("\nTask list:");
-                            sql = "SELECT t.task_id, t.task_name, t.due_date, u.first_name, p.project_name, t.status FROM task t INNER JOIN user u ON t.assigned_to = u.user_id INNER JOIN project p ON t.project_id = p.project_id WHERE p.project_name = ?";
+                            sql = "SELECT t.task_id, t.task_name, t.due_date, u.first_name, p.project_name, t.status "
+                                    + "FROM task t "
+                                    + "INNER JOIN user u ON t.assigned_to = u.user_id "
+                                    + "INNER JOIN project p ON t.project_id = p.project_id "
+                                    + "WHERE p.project_name = ?";
                             tsk.viewTaskFiltered(result.getString("project_name"), sql);
                             break;
                         case 3:
@@ -377,9 +378,11 @@ public class projectCRUD extends config {
             
             while (getID.next()) {
                 int currentId = getID.getInt("project_id");
+                
                 if (previousId != 0 && currentId != previousId + 1) {
                     getID.close();
-                    sql = "INSERT INTO project (project_id, project_name, description, date_created, due_date, project_manager_id, manager_name, status) VALUES (?, ?, ?, ?, ?, ?, ?, 'Planned')";
+                    sql = "INSERT INTO project (project_id, project_name, description, date_created, due_date, project_manager_id, manager_name, status) "
+                            + "VALUES (?, ?, ?, ?, ?, ?, ?, 'Planned')";
                     addRecord(sql, (currentId-1), getName, getDesc, date.toString(), getDue, mid, Manager);
                     return true;
                 }

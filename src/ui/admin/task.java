@@ -2,15 +2,14 @@ package ui.admin;
 
 import main.config;
 import crud.taskCRUD;
+import main.validation;
 
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Scanner;
 
 public class task extends config{
     Scanner sc = new Scanner(System.in);
+    validation validate = new validation();
     
     taskCRUD tsk = new taskCRUD();
     
@@ -28,8 +27,9 @@ public class task extends config{
                     + "\n5. View Task Info"
                     + "\n6. Filter By"
                     + "\n7. Back"
+                    + "\n0. Exit"
                     + "\nEnter selection: ");
-            int choice = sc.nextInt();
+            int choice = validate.validateInt();
 
             switch(choice){
                 case 1:
@@ -52,6 +52,9 @@ public class task extends config{
                     break;
                 case 7:
                     isSelected = true;
+                    break;
+                case 0:
+                    exitMessage();
                     break;
                 default:
                     System.out.println("Error: Invalid selection.");
