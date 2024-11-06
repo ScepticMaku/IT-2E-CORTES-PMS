@@ -67,8 +67,6 @@ public class projectCRUD extends config {
                     + "VALUES (?, ?, ?, ?, ?, ?, 'Planned')";
         addRecord(sql, name, desc, date.toString(), dueDate, uid, mname);
         }
-        
-        sc.nextLine();
     }
     
     public void editProject(){
@@ -253,15 +251,14 @@ public class projectCRUD extends config {
                 String projectName = result.getString("project_name");
                 String getStatus = result.getString("status");
                 
-                if(!getStatus.equals("Overdue")){
+                if(!getStatus.equals("Overdue") && !getStatus.equals("Completed")
+                        && date.isAfter(LocalDate.parse(dueDate))){
 
-                    if(date.isAfter(LocalDate.parse(dueDate))){
                         result.close();
                         sql = "UPDATE project SET status = 'Overdue' WHERE project_id = ?";
                         updateRecord(sql, getID);
 
                         System.out.println("Project "+projectName+" is passed due date, status updated to Overdue.");
-                    }
                 }
             }
             

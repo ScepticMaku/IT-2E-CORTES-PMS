@@ -350,7 +350,6 @@ public class taskCRUD extends config {
             search.setInt(1, id);
             
             try (ResultSet result = search.executeQuery()) {
-                String[] name = result.getString("member_name").split(" ");
                 System.out.println("--------------------------------------------------------------------------------"
                         + "\nSelected task:     | "+result.getString("task_name")
                         + "\n-------------------+"
@@ -359,7 +358,7 @@ public class taskCRUD extends config {
                         + "\nDate created:      | "+result.getString("date_created")
                         + "\nDue date:          | "+result.getString("due_date")
                         + "\nCreated By:        | "+result.getString("manager_name")
-                        + "\nAssigned to:       | "+name[0]
+                        + "\nAssigned to:       | "+result.getString("member_name")
                         + "\nFrom project:      | "+result.getString("project_name")
                         + "\nStatus:            | "+result.getString("status")
                         + "\n--------------------------------------------------------------------------------");

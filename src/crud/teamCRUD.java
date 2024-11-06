@@ -117,7 +117,6 @@ public class teamCRUD extends config {
         } else{
             System.out.println("Deletion cancelled.");
         }
-        sc.nextLine();
     }
     
     public void viewInfo() throws IOException{

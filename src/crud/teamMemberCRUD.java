@@ -83,8 +83,11 @@ public class teamMemberCRUD extends config {
                 result.close();
                 
                 if(validate.confirm(confirm)){
-                    addRecord("INSERT INTO team_member (team_id, member_name, user_id) "
+                    if(!checkSkip(teamID, name[0], userID)){
+                        addRecord("INSERT INTO team_member (team_id, member_name, user_id) "
                             + "VALUES (?, ?, ?)", teamID, name[0], userID);
+                    }
+                    
                 } else{
                     System.out.println("Add Cancelled.");
                 }
@@ -353,5 +356,29 @@ public class teamMemberCRUD extends config {
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
         }
+    }
+    
+    private boolean checkSkip(int tid,String name, int uid){
+        try{
+            PreparedStatement findID = connectDB().prepareStatement("SELECT team_member_id FROM team_member ORDER BY team_member_id");
+            ResultSet getID = findID.executeQuery();
+            
+            int previousId = 0;
+            
+            while (getID.next()) {
+                int currentId = getID.getInt("team_member_id");
+                if (previousId != 0 && currentId != previousId + 1) {
+                    getID.close();
+                    
+                    addRecord("INSERT INTO team_member (team_member_id, team_id, member_name, user_id) "
+                            + "VALUES (?, ?, ?)",(currentId-1), tid, name, uid);
+                    return true;
+                }
+                previousId = currentId;
+            }
+        } catch(SQLException e){
+            System.out.println("Error: "+e.getMessage());
+        }
+        return false;
     }
 }
