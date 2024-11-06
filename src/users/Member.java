@@ -30,13 +30,14 @@ public class Member extends config {
                     + "\n1. Profile"
                     + "\n2. Tasks"
                     + "\n3. Teams"
-                    + "\n0. Logout"
+                    + "\n4. Logout"
+                    + "\n0. Exit"
                     + "\nEnter selection: ");
             int mainSelect = sc.nextInt();
             
             switch(mainSelect){
                 case 1:
-                    u.viewUserInfo(uid);
+                    u.viewProfile(uid);
                     break;
                 case 2:
                     System.out.println("\nAssigned tasks:");
@@ -56,9 +57,11 @@ public class Member extends config {
                     trackDays(name[0], sql);
                     pause();
                     break;*/
-                case 0:
+                case 4:
                     isSelected = true;
                     break;
+                case 0:
+                    exitMessage();
                 default: System.out.println("Error: Invalid selection.");
             }
         } while(!isSelected);

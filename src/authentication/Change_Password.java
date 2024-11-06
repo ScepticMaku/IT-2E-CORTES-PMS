@@ -88,7 +88,7 @@ public class Change_Password extends config {
         }
         else{
             System.out.print("Confirm credentials? [y/n]: ");
-            String confirm = sc.next();
+            String confirm = sc.nextLine();
 
             if(validate.confirm(confirm)){
                 String updatePass = "UPDATE user SET password = ? WHERE email = ?";

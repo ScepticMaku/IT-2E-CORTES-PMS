@@ -27,7 +27,6 @@ public class Register extends config{
         }
         
         System.out.print("Enter last name: ");
-        sc.nextLine();
         String lname = sc.nextLine();
         
         System.out.print("Enter username: ");
@@ -75,7 +74,8 @@ public class Register extends config{
         String confirm = sc.nextLine();
         
         if(confirm.equals("y")){
-            String sql = "INSERT INTO user (first_name, middle_name, last_name, username, email, password, role) VALUES (?, ?, ?, ?, ?, ? 'member')";
+            String sql = "INSERT INTO user (first_name, middle_name, last_name, username, email, password, role) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, 'member')";
             
             addRecord(sql,fname, mname, lname, username, email, confirmPass);
         } else{

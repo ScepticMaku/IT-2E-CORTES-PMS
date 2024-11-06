@@ -1,18 +1,14 @@
 package ui.manager;
 
-import ui.admin.*;
+import main.validation;
 import main.config;
 import crud.taskCRUD;
 
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Scanner;
 
 public class task extends config{
-    Scanner sc = new Scanner(System.in);
     
+    validation validate = new validation();
     taskCRUD tsk = new taskCRUD();
     
     public void taskListInterface(int uid) throws IOException{
@@ -30,7 +26,7 @@ public class task extends config{
                     + "\n6. Filter By"
                     + "\n7. Back"
                     + "\nEnter selection: ");
-            int choice = sc.nextInt();
+            int choice = validate.validateInt();
 
             switch(choice){
                 case 1:

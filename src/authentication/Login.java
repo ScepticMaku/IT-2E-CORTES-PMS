@@ -63,6 +63,7 @@ public class Login extends config {
                 if(!userDetected){
                     System.out.println("\nUser not found.");
                 } 
+                
                 else{
                     switch (locatedRole) {
                         case "admin":

@@ -5,19 +5,15 @@ import main.config;
 import crud.userCRUD;
 import authentication.Register;
 
-import java.util.Scanner;
 import java.io.IOException;
 
 public class users extends config {
-    Scanner sc = new Scanner(System.in);
     
     validation validate = new validation();
     Register reg = new Register();
     userCRUD u = new userCRUD();
     
-    int userID;
     boolean isSelected = false;
-    String Query;
     
     public void userInterface() throws IOException{
         do{
@@ -45,7 +41,12 @@ public class users extends config {
                     break;
                 case 4:
                     System.out.print("\nEnter ID: ");
-                    int uid = sc.nextInt();
+                    int uid = validate.validateInt();
+                    
+                    while(getSingleValue("SELECT user_id FROM user WHERE user_id = ?", uid) == 0){
+                        System.out.print("Error: ID doesn't exist, try again: ");
+                        uid = validate.validateInt();
+                    }
                     
                     u.viewUserInfo(uid);
                     break;

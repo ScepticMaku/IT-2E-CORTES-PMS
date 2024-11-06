@@ -5,10 +5,8 @@ import crud.taskCRUD;
 import main.validation;
 
 import java.io.IOException;
-import java.util.Scanner;
 
 public class task extends config{
-    Scanner sc = new Scanner(System.in);
     validation validate = new validation();
     
     taskCRUD tsk = new taskCRUD();

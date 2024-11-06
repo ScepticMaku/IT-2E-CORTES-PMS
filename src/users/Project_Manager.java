@@ -1,6 +1,7 @@
 package users;
 
 import main.config;
+import crud.userCRUD;
 import ui.manager.project;
 import ui.manager.task;
 import ui.manager.team;
@@ -13,6 +14,7 @@ import java.util.Scanner;
 public class Project_Manager extends config {
     Scanner sc = new Scanner(System.in);
     
+    userCRUD u = new userCRUD();
     project proj = new project();
     task tl = new task();
     team tm = new team();
@@ -28,29 +30,33 @@ public class Project_Manager extends config {
             System.out.print("\n================================================================================================================================================================");
             System.out.print("\nDate: "+date.toString()
                     + "\n\nMain menu: \n"
-                    + "1. Projects\n"
-                    + "2. Tasks\n"
-                    + "3. Teams\n"
-                    + "4. Team Members\n"
-                    + "5. Logout\n"
+                    + "1. Profile \n"
+                    + "2. Projects\n"
+                    + "3. Tasks\n"
+                    + "4. Teams\n"
+                    + "5. Team Members\n"
+                    + "6. Logout\n"
                     + "0. Exit\n"
                     + "Enter selection: ");
             int select = sc.nextInt();
             
             switch(select){
                 case 1:
-                    proj.projectInterface(uid, name[0]);
+                    u.viewProfile(uid);
                     break;
                 case 2:
-                    tl.taskListInterface(uid);
+                    proj.projectInterface(uid, name[0]);
                     break;
                 case 3:
-                    tm.teamInterface();
+                    tl.taskListInterface(uid);
                     break;
                 case 4:
-                    tmm.memberInterface();
+                    tm.teamInterface();
                     break;
                 case 5:
+                    tmm.memberInterface();
+                    break;
+                case 6:
                     isSelected = true;
                     break;
                 case 0:

@@ -203,6 +203,138 @@ public class userCRUD extends config {
         }
     }
     
+    public void viewProfile(int uid) throws IOException{
+        boolean isBack = false;
+
+        do{
+            viewUserInfo(uid);
+
+            System.out.print("1. Edit Info\n"
+                    + "2. Back\n"
+                    + "Enter selection: ");
+            int editSelect = validate.validateInt();
+
+            switch(editSelect){
+                case 1:
+                    editInfo(uid);
+                    break;
+                case 2:
+                    isBack = true;    
+                    break;
+                default: System.out.println("Error: Invalid selection.");
+            }
+        } while(!isBack);
+    }
+    
+    public void editInfo(int userID){
+        String Query;
+        
+        System.out.print("\nSelect what you want to edit:"
+                + "\n1. Password"
+                + "\n2. Role"
+                + "\n3. Email Address"
+                + "\n4. First Name"
+                + "\n5. Middle Name"
+                + "\n6. Last Name"
+                + "\n7. Back"
+                + "\nEnter selection: ");
+        int select = validate.validateInt();
+
+        switch(select){
+            case 1:
+                System.out.print("\nEnter new password: ");
+                String newPassword = sc.nextLine();
+
+                while(validate.spaceValidate(newPassword)){
+                    newPassword = sc.nextLine();
+                }
+
+                while(validatePassword(userID, newPassword)){
+                    System.out.print("Error: Must not be an old password, try again: ");
+                    newPassword = sc.nextLine();
+
+                    while(validate.spaceValidate(newPassword)){
+                        newPassword = sc.nextLine();
+                    }
+                }
+
+                Query = "UPDATE user SET password = ? WHERE user_id = ?";
+                updateRecord(Query, newPassword, userID);
+                break;
+            case 2:
+                System.out.print("\nEnter new Role [admin/member/project manager]: ");
+                String newRole = sc.nextLine();
+                
+                while(validate.spaceValidate(newRole)){
+                    newRole = sc.nextLine();
+                }
+                
+                while(!(validate.roleValidate(newRole))){
+                    newRole = sc.nextLine();
+                }
+
+                Query = "UPDATE user SET role = ? WHERE user_id = ?";
+                updateRecord(Query, newRole, userID);
+                break;
+            case 3:
+                System.out.print("\nEnter new email address: ");
+                String newEmail = sc.nextLine();
+                
+                while(validate.spaceValidate(newEmail)){
+                    newEmail = sc.nextLine();
+                }
+                
+                while(validate.emailValidate(newEmail)){
+                    newEmail = sc.nextLine();
+                }
+
+                Query = "UPDATE user SET email = ? WHERE user_id = ?";
+                updateRecord(Query, newEmail, userID);
+                break;
+            case 4:
+                System.out.print("\nEnter new first name: ");
+                String newFname = sc.nextLine();
+
+                Query = "UPDATE user SET first_name = ? WHERE user_id = ?";
+                updateRecord(Query, newFname, userID);
+                break;
+            case 5:
+                System.out.print("\nEnter new middle name: ");
+                String newMname = sc.nextLine();
+
+                Query = "UPDATE user SET middle_name = ? WHERE user_id = ?";
+                updateRecord(Query, newMname, userID);
+                break;
+            case 6:
+                System.out.print("\nEnter new last name: ");
+                String newLname = sc.nextLine();
+
+                Query = "UPDATE user SET middle_name = ? WHERE user_id = ?";
+                updateRecord(Query, newLname, userID);
+                break;
+            case 7:
+                break;
+            default: System.out.println("Error: Invalid selection.");
+        }
+    }
+    
+    private boolean validatePassword(int getID, String getPassword){
+        try{
+            PreparedStatement state = connectDB().prepareStatement("SELECT password FROM user WHERE user_id = ?");
+            state.setInt(1, getID);
+            ResultSet result = state.executeQuery();
+            
+            String pass = result.getString("password");
+            result.close();
+            
+            if(getPassword.equals(pass))
+            return true;
+        } catch(SQLException e){
+            System.out.println("Error: "+e.getMessage());
+        }
+        return false;
+    }
+    
     public void searchUser(int id){
         try{
             PreparedStatement search = connectDB().prepareStatement("SELECT * FROM user WHERE user_id = ?");

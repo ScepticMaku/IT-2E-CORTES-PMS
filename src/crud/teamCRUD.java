@@ -131,9 +131,8 @@ public class teamCRUD extends config {
         
         getTeamInfo(teamID);
 
-        sql = "SELECT tm.team_member_id, u.first_name, tm.team_id, t.team_name "
+        sql = "SELECT tm.team_member_id, tm.member_name, tm.team_id, t.team_name "
                 + "FROM team_member tm "
-                + "INNER JOIN user u ON tm.user_id = u.user_id "
                 + "INNER JOIN team t ON tm.team_id = t.team_id "
                 + "WHERE tm.team_id = ?";
         System.out.println("\nTeam Members: ");
