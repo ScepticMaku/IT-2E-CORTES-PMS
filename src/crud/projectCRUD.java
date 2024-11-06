@@ -314,6 +314,8 @@ public class projectCRUD extends config {
                                     + "FROM team t "
                                     + "INNER JOIN project p ON t.project_id = p.project_id "
                                     + "WHERE p.project_name = ?";
+                            System.out.println("List of teams working on this project: ");
+                            
                             tm.viewTeamFiltered(result.getString("project_name"), sql);
                             break;
                         case 2:

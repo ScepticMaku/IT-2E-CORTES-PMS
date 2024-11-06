@@ -29,7 +29,6 @@ public class teamCRUD extends config {
                 if(!checkTable.next()){
                     System.out.println("Team List Empty");
                 } else{
-                    System.out.println("List of teams working on this project: ");
                     viewTeamList(sqlQuery);
                 }
             }
@@ -207,7 +206,6 @@ public class teamCRUD extends config {
     }
     
     private void viewTeamList(String Query){
-        
         String[] teamHeaders = {"Team ID", "Name", "Project ID", "Project"};
         String[] teamColumns = {"team_id", "team_name", "project_id", "project_name"};
         
@@ -216,7 +214,9 @@ public class teamCRUD extends config {
     
     private void getTeamInfo(int id){
         try{
-            PreparedStatement search = connectDB().prepareStatement("SELECT tm.team_id, tm.team_name, p.project_name FROM team tm INNER JOIN project p ON tm.project_id = p.project_id WHERE team_id = ?");
+            PreparedStatement search = connectDB().prepareStatement("SELECT tm.team_id, tm.team_name, p.project_name FROM team tm "
+                    + "INNER JOIN project p ON tm.project_id = p.project_id "
+                    + "WHERE team_id = ?");
             
             search.setInt(1,id);
             

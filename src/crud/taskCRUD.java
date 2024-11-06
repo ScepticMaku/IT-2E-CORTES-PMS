@@ -189,11 +189,10 @@ public class taskCRUD extends config {
         }
         
         System.out.println("\nTeam members: ");
-        sql = "SELECT tm.team_member_id, u.first_name, tm.team_id, t.team_name "
-                + "FROM team_member tm "
-                + "INNER JOIN user u ON tm.user_id = u.user_id "
-                + "INNER JOIN team t ON tm.team_id = t.team_id "
-                + "WHERE tm.team_id = ?";
+        sql = "SELECT team_member_id, member_name, team_member.team_id, t.team_name "
+                + "FROM team_member "
+                + "INNER JOIN team t ON team_member.team_id = t.team_id "
+                + "WHERE team_member.team_id = ?";
         tm.viewTeamMemberFiltered(sql, tid);  
         
         System.out.print("Enter member ID: ");
@@ -296,7 +295,6 @@ public class taskCRUD extends config {
     }
     
     private void viewTaskList(String query){
-        
         String[] taskHeaders = {"ID", "Name", "Due Date", "Status"};
         String[] taskColumns = {"task_id", "task_name", "due_date", "status"};
         
@@ -310,17 +308,14 @@ public class taskCRUD extends config {
             
             try (ResultSet checkRow = filter.executeQuery()) {
                 System.out.println("--------------------------------------------------------------------------------");
-                System.out.printf("%-20s %-20s %-20s %-20s %-20s %-20s\n", "ID", "Name", "Due Date", "Assigned to", "Project", "Status");
+                System.out.printf("%-20s %-20s %-20s %-20s\n", "ID", "Name", "Due Date", "Status");
                 while(checkRow.next()){
-                    String[] name = checkRow.getString("member_name").split(" ");
                     int t_id = checkRow.getInt("task_id");
                     String t_name = checkRow.getString("task_name");
                     String d_date = checkRow.getString("due_date");
-                    String u_name = name[0];
-                    String p_name = checkRow.getString("project_name");
                     String t_status = checkRow.getString("status");
                     
-                    System.out.printf("%-20d %-20s %-20s %-20s %-20s %-20s\n", t_id, t_name, d_date, u_name, p_name, t_status);
+                    System.out.printf("%-20d %-20s %-20s %-20s\n", t_id, t_name, d_date, t_status);
                 }
                 System.out.println("--------------------------------------------------------------------------------");
             }

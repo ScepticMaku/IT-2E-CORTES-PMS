@@ -20,6 +20,7 @@ public class team extends config {
         
         do{
             System.out.println("================================================================================================================================================================");
+            System.out.println("Team List: ");
             t.viewTeam();
             
             System.out.print("1. Add team"

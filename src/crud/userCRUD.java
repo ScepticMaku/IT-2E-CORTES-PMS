@@ -150,6 +150,29 @@ public class userCRUD extends config {
             }
     }
     
+    public void viewUserFiltered(String getColumn, String getQuery){
+        try{
+            PreparedStatement filter = connectDB().prepareStatement(getQuery);
+            filter.setString(1, getColumn);
+            
+            try(ResultSet checkRow = filter.executeQuery()){
+                System.out.println("--------------------------------------------------------------------------------");
+                System.out.printf("%-20s %-20s %-20s\n", "ID", "Name", "Role");
+                while(checkRow.next()){
+                    String[] name = checkRow.getString("first_name").split(" ");
+                    int id = checkRow.getInt("user_id");
+                    String uname = name[0];
+                    String role = checkRow.getString("role");
+                    
+                    System.out.printf("%-20d %-20s %-20s\n", id, uname, role);
+                }
+                System.out.println("--------------------------------------------------------------------------------");
+            }
+        } catch(SQLException e){
+            System.out.println("Error: e"+e.getMessage());
+        }
+    }
+    
     public void searchUser(int id){
         try{
             PreparedStatement search = connectDB().prepareStatement("SELECT * FROM user WHERE user_id = ?");
