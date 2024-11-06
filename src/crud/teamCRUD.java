@@ -59,7 +59,12 @@ public class teamCRUD extends config {
         System.out.print("\nEnter ID to edit: ");
         int teamID = validate.validateInt();
         
-        getTeamInfo(validate.checkID("SELECT team_id FROM team WHERE team_id = ?", teamID));
+        while(getSingleValue("SELECT team_id FROM team WHERE team_id = ?", teamID) == 0){
+            System.out.print("Error: ID doesn't exist, try again: ");
+            teamID = validate.validateInt();
+        }
+        
+        getTeamInfo(teamID);
         
         System.out.print("1. Change Name"
                 + "\n2. Change assigned project"
@@ -78,9 +83,14 @@ public class teamCRUD extends config {
             case 2:
                 System.out.print("Enter project ID to assign: ");
                 int newID = validate.validateInt();
+                
+                while(getSingleValue("SELECT project_id FROM project WHERE project_id = ?", newID) == 0){
+                    System.out.print("Error: ID doesn't exist, try again: ");
+                    newID = validate.validateInt();
+                }
 
                 sql = "UPDATE team SET project_id = ? WHERE team_id = ?";
-                updateRecord(sql, validate.checkID("SELECT project_id FROM project WHERE project_id = ?", newID), teamID);
+                updateRecord(sql, newID, teamID);
                 break;
             case 3:
                 System.out.println("Update Cancelled.");

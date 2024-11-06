@@ -77,7 +77,12 @@ public class projectCRUD extends config {
         System.out.print("Enter project ID: ");
         int id = validate.validateInt();
         
-        getProjectInfo(validate.checkID("SELECT project_id FROM project WHERE project_id = ?", id));
+        while(getSingleValue("SELECT project_id FROM project WHERE project_id = ?", id) == 0){
+            System.out.print("Error: ID doesn't exist, try again: ");
+            id = validate.validateInt();
+        }
+        
+        getProjectInfo(id);
         
         do{
             System.out.print("Choose what you want to do:"
@@ -223,11 +228,16 @@ public class projectCRUD extends config {
         System.out.print("Enter project ID: ");
         int id = validate.validateInt();
         
+        while(getSingleValue("SELECT project_id FROM project WHERE project_id = ?", id) == 0){
+            System.out.print("Error: ID doesn't exist, try again: ");
+            id = validate.validateInt();
+        }
+        
         sql = "SELECT p.project_id, p.project_name, p.description, p.date_created, p.due_date, p.manager_name, p.status "
                 + "FROM project p "
                 + "INNER JOIN user u ON project_manager_id = u.user_id "
                 + "WHERE project_id = ?";
-        getProjectInfo(validate.checkID(sql, id));
+        getProjectInfo(id);
         viewList(id);
         
     }

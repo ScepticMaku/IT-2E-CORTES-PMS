@@ -64,10 +64,15 @@ public class taskCRUD extends config {
         System.out.print("Enter project ID to assign: ");
         int pid = validate.validateInt();
         
+        while(getSingleValue("SELECT project_id FROM project WHERE project_id = ?", pid) == 0){
+            System.out.print("ERROR: ID doesn't exist, try again: ");
+            pid = validate.validateInt();
+        }
+        
         if(!checkSkip(Tname, desc, dateCreated, dueDate, id, pid)){
             sql = "INSERT INTO task (task_name, description, date_created, due_date, created_by, assigned_to, project_id, status) "
                 + "VALUES (?, ?, ?, ?, ?, 0, ?, 'Not Started')";
-            addRecord(sql, Tname, desc, dateCreated, dueDate, id, validate.checkID("SELECT project_id FROM project WHERE project_id = ?", pid));
+            addRecord(sql, Tname, desc, dateCreated, dueDate, id, pid);
         }
     }
     
@@ -77,7 +82,12 @@ public class taskCRUD extends config {
         System.out.print("\nEnter ID: ");
         int taskID = validate.validateInt();
         
-        getTaskInfo(validate.checkID("SELECT task_id FROM task WHERE task_id = ?", taskID));
+        while(getSingleValue("SELECT task_id FROM task WHERE task_id = ?", taskID) == 0){
+            System.out.print("Error: ID doesn't exist, try again: ");
+            taskID = validate.validateInt();
+        }
+        
+        getTaskInfo(taskID);
         
         do{
             System.out.print("1. Change task name"
@@ -215,7 +225,12 @@ public class taskCRUD extends config {
         System.out.print("Enter task ID: ");
         int task = validate.validateInt();
         
-        getTaskInfo(validate.checkID("SELECT task_id FROM task WHERE task_id = ?", task));
+        while(getSingleValue("SELECT task_id FROM task WHERE task_id = ?", task) == 0){
+            System.out.print("ERROR: ID doesn't exist, try again: ");
+            task = validate.validateInt();
+        }
+        
+        getTaskInfo(task);
         
         System.out.print("Confirm assign member? [y/n]: ");
         String confirm = sc.nextLine();
@@ -232,7 +247,12 @@ public class taskCRUD extends config {
         System.out.print("\nEnter ID: ");
         int taskID = validate.validateInt();
         
-        getTaskInfo(validate.checkID("SELECT task_id FROM task WHERE task_id = ?", taskID));
+        while(getSingleValue("SELECT task_id FROM task WHERE task_id = ?", taskID) == 0){
+            System.out.print("ERROR: ID doesn't exist, try again: ");
+            taskID = validate.validateInt();
+        }
+        
+        getTaskInfo(taskID);
         System.out.print("Press any key to continue...");
         System.in.read();
     }
@@ -376,7 +396,7 @@ public class taskCRUD extends config {
                     
                     sql = "INSERT INTO task (task_id, task_name, description, date_created, due_date, created_by, assigned_to, project_id, status) "
                 + "VALUES (?, ?, ?, ?, ?, ?, 0, ?, 'Not Started')";
-                addRecord(sql, (currentId-1), getName, getDesc, getCreationDate, getDueDate, getID, validate.checkID("SELECT project_id FROM project WHERE project_id = ?", getProjectID));
+                addRecord(sql, (currentId-1), getName, getDesc, getCreationDate, getDueDate, getID, getProjectID);
                 return true;
                 }
                 previousId = currentId;

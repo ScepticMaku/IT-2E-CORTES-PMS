@@ -1,5 +1,6 @@
 package ui.admin;
 
+import main.validation;
 import main.config;
 import crud.userCRUD;
 import authentication.Register;
@@ -10,6 +11,7 @@ import java.io.IOException;
 public class users extends config {
     Scanner sc = new Scanner(System.in);
     
+    validation validate = new validation();
     Register reg = new Register();
     userCRUD u = new userCRUD();
     
@@ -29,7 +31,7 @@ public class users extends config {
                     + "\n4. View full info"
                     + "\n5. Back"
                     + "\nEnter selection: ");
-            int userSelect = sc.nextInt();
+            int userSelect = validate.validateInt();
 
             switch(userSelect){
                 case 1:

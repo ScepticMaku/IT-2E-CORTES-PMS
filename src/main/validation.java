@@ -126,14 +126,14 @@ public class validation extends config {
         return false;
     }*/
     
-    public int checkID(String query, int getID){
+    /*public int checkID(String query, int getID){
         while(getSingleValue(query, getID) == 0){
             System.out.print("Error: ID doesn't exist, try again: ");
             getID = validateInt();
         }
         return getID;
     }
-    
+    */
     public boolean roleValidate(String getRole){
         String[] role = {"admin", "member", "project_manager"};
         

@@ -27,5 +27,16 @@
             <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/ui/manager/team.java</file>
             <file>file:/home/mark/Documents/GitHub%20Repositories/IT-2E-CORTES-PMS/src/ui/admin/project.java</file>
         </group>
+        <group name="Group 20240828-04:24:03">
+            <file>file:/C:/Users/SCC-COLLEGE/Documents/IT-2E-CORTES-PMS/src/ui/admin/users.java</file>
+            <file>file:/C:/Users/SCC-COLLEGE/Documents/IT-2E-CORTES-PMS/src/main/validation.java</file>
+            <file>file:/C:/Users/SCC-COLLEGE/Documents/IT-2E-CORTES-PMS/src/crud/userCRUD.java</file>
+            <file>file:/C:/Users/SCC-COLLEGE/Documents/IT-2E-CORTES-PMS/src/authentication/Register.java</file>
+            <file>file:/C:/Users/SCC-COLLEGE/Documents/IT-2E-CORTES-PMS/src/crud/teamMemberCRUD.java</file>
+            <file>file:/C:/Users/SCC-COLLEGE/Documents/IT-2E-CORTES-PMS/src/crud/projectCRUD.java</file>
+            <file>file:/C:/Users/SCC-COLLEGE/Documents/IT-2E-CORTES-PMS/src/crud/teamCRUD.java</file>
+            <file>file:/C:/Users/SCC-COLLEGE/Documents/IT-2E-CORTES-PMS/src/crud/taskCRUD.java</file>
+            <file>file:/C:/Users/SCC-COLLEGE/Documents/IT-2E-CORTES-PMS/src/main/config.java</file>
+        </group>
     </open-files>
 </project-private>

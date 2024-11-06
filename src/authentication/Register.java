@@ -17,11 +17,11 @@ public class Register extends config{
         String fname = sc.nextLine();
         
         System.out.print("Do you have a middle name? [y/n]: ");
-        String haveMiddle = sc.next();
+        String haveMiddle = sc.nextLine();
         
         if(validate.confirm(haveMiddle)){
             System.out.print("Enter middle name: ");
-            mname = sc.next();
+            mname = sc.nextLine();
         } else{
             mname = "N/A";
         }

@@ -1,5 +1,6 @@
 package crud;
 
+import main.validation;
 import main.config;
 
 import java.sql.PreparedStatement;
@@ -10,6 +11,8 @@ import java.util.Scanner;
 
 public class userCRUD extends config {
     Scanner sc = new Scanner(System.in);
+    
+    validation validate = new validation();
     
     String Query;
     
@@ -35,17 +38,21 @@ public class userCRUD extends config {
     
     public void deleteUser(){
         System.out.print("\nEnter ID: ");
-        int userID = sc.nextInt();
+        int userID = validate.validateInt();
+        
+        while(getSingleValue("SELECT user_id FROM user WHERE user_id = ?", userID) == 0){
+            System.out.print("Error: ID doesn't exist, try again: ");
+            userID = validate.validateInt();
+        }
         
         System.out.println("--------------------------------------------------------------------------------");
         searchUser(userID);
         
         System.out.print("Confirm delete? [y/n]: ");
-        String confirm = sc.next();
+        String confirm = sc.nextLine();
         
-        if(confirm.equals("y")){
-            Query = "DELETE FROM user WHERE user_id = ?";
-            deleteRecord(Query, userID);
+        if(validate.confirm(confirm)){
+            deleteRecord("DELETE FROM user WHERE user_id = ?", userID);
         } else{
             System.out.println("Deletion cancelled.");
         }
@@ -81,7 +88,12 @@ public class userCRUD extends config {
     
     public void editUser(){
             System.out.print("\nEnter ID you want to edit: ");
-            int userID = sc.nextInt();
+            int userID = validate.validateInt();
+            
+            while(getSingleValue("SELECT user_id FROM user WHERE user_id = ?", userID) == 0){
+                System.out.print("Error: ID doesn't exist, try again: ");
+                userID = validate.validateInt();
+            }
 
             System.out.println("--------------------------------------------------------------------------------");
             searchUser(userID);
@@ -95,59 +107,77 @@ public class userCRUD extends config {
                     + "\n6. Last Name"
                     + "\n7. Back"
                     + "\nEnter selection: ");
-            int select = sc.nextInt();
+            int select = validate.validateInt();
 
             switch(select){
                 case 1:
                     System.out.print("\nEnter new password: ");
-                    String newPass = sc.next();
+                    String newPass = sc.nextLine();
                     
-                    Query = "UPDATE user SET password = ? WHERE user_id = ?";
-                    updateRecord(Query, newPass, userID);
+                    while(validate.spaceValidate(newPass)){
+                        newPass = sc.nextLine();
+                    }
+                    
+                    updateRecord("UPDATE user SET password = ? WHERE user_id = ?", newPass, userID);
                     break;
                 case 2:
                     System.out.print("\nEnter new Role [admin/member/project manager]: ");
-                    sc.nextLine();
                     String newRole = sc.nextLine();
+                    
+                    while(roleValidate(newRole)){
+                        newRole = sc.nextLine();
+                    }
                     
                     Query = "UPDATE user SET role = ? WHERE user_id = ?";
                     updateRecord(Query, newRole, userID);
                     break;
                 case 3:
                     System.out.print("\nEnter new email address: ");
-                    String newEmail = sc.next();
+                    String newEmail = sc.nextLine();
                     
-                    Query = "UPDATE user SET email = ? WHERE user_id = ?";
-                    updateRecord(Query, newEmail, userID);
+                    while(validate.emailValidate(newEmail)){
+                        newEmail = sc.nextLine();
+                    }
+                    
+                    updateRecord("UPDATE user SET email = ? WHERE user_id = ?", newEmail, userID);
                     break;
                 case 4:
                     System.out.print("\nEnter new first name: ");
                     sc.nextLine();
                     String newFname = sc.nextLine();
                     
-                    Query = "UPDATE user SET first_name = ? WHERE user_id = ?";
-                    updateRecord(Query, newFname, userID);
+                    updateRecord("UPDATE user SET first_name = ? WHERE user_id = ?", newFname, userID);
                     break;
                 case 5:
                     System.out.print("\nEnter new middle name: ");
                     sc.nextLine();
                     String newMname = sc.nextLine();
                     
-                    Query = "UPDATE user SET middle_name = ? WHERE user_id = ?";
-                    updateRecord(Query, newMname, userID);
+                    updateRecord("UPDATE user SET middle_name = ? WHERE user_id = ?", newMname, userID);
                     break;
                 case 6:
                     System.out.print("\nEnter new last name: ");
                     sc.nextLine();
                     String newLname = sc.nextLine();
                     
-                    Query = "UPDATE user SET middle_name = ? WHERE user_id = ?";
-                    updateRecord(Query, newLname, userID);
+                    updateRecord("UPDATE user SET middle_name = ? WHERE user_id = ?", newLname, userID);
                     break;
                 case 7:
                     break;
                 default: System.out.println("Error: Invalid selection.");
             }
+    }
+    
+    private boolean roleValidate(String getRole){
+        String[] role = {"admin", "member", "project manager"};
+        
+        for(String i : role){
+            if(getRole.equals(i)){
+                return false;
+            }
+        }
+        System.out.print("Error: Role must be (admin/member/project manager) try again: ");
+        return true;
     }
     
     public void viewUserFiltered(String getColumn, String getQuery){
