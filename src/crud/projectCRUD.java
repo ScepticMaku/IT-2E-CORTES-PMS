@@ -95,13 +95,11 @@ public class projectCRUD extends config {
             switch(selectEdit){
                 case 1:
                     System.out.print("\nEnter new project name: ");
-                    sc.nextLine();
                     String newName = sc.nextLine();
                     updateRecord("UPDATE project SET project_name = ? WHERE project_id = ?", newName, id);
                     break;
                 case 2:
                     System.out.print("\nEnter new project description: ");
-                    sc.nextLine();
                     String newDesc = sc.nextLine();
                     
                     updateRecord("UPDATE project SET description = ? WHERE project_id = ?", newDesc, id);
@@ -261,7 +259,6 @@ public class projectCRUD extends config {
                         System.out.println("Project "+projectName+" is passed due date, status updated to Overdue.");
                 }
             }
-            
             result.close();
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());

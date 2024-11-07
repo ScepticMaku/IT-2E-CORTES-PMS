@@ -10,13 +10,8 @@ import ui.admin.team;
 import ui.admin.team_members;
 
 import java.io.IOException;
-import java.util.Scanner;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class Admin extends config {
-    Scanner sc = new Scanner(System.in);
     
     validation validate = new validation();
     team_members tmm = new team_members();

@@ -70,12 +70,11 @@ public class teamCRUD extends config {
                 + "\n2. Change assigned project"
                 + "\n3. Cancel"
                 + "\nEnter selection: ");
-        int editSelect = sc.nextInt();
+        int editSelect = validate.validateInt();
         
         switch(editSelect){
             case 1:
                 System.out.print("Enter new name: ");
-                sc.nextLine();
                 String newName = sc.nextLine();
                 
                 updateRecord("UPDATE team SET team_name = ? WHERE team_id = ?", newName, teamID);
