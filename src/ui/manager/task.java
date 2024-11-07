@@ -25,6 +25,7 @@ public class task extends config{
                     + "\n5. View Task Info"
                     + "\n6. Filter By"
                     + "\n7. Back"
+                    + "\n0. Exit"
                     + "\nEnter selection: ");
             int choice = validate.validateInt();
 
@@ -49,6 +50,9 @@ public class task extends config{
                     break;
                 case 7:
                     isSelected = true;
+                    break;
+                case 0:
+                    exitMessage();
                     break;
                 default:
                     System.out.println("Error: Invalid selection.");

@@ -27,6 +27,7 @@ public class team extends config {
                     + "\n4. View team info"
                     + "\n5. Filter by"
                     + "\n6. Back"
+                    + "\n0. Exit"
                     + "\nEnter selection: ");
             int choice = validate.validateInt();
 
@@ -48,6 +49,9 @@ public class team extends config {
                     break;
                 case 6:
                     isSelected = true;
+                    break;
+                case 0:
+                    exitMessage();
                     break;
                 default:
                     System.out.println("Error: Invalid Selection.");

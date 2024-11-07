@@ -26,6 +26,7 @@ public class users extends config {
                     + "\n3. Delete user"
                     + "\n4. View full info"
                     + "\n5. Back"
+                    + "\n0. Exit"
                     + "\nEnter selection: ");
             int userSelect = validate.validateInt();
 
@@ -52,6 +53,9 @@ public class users extends config {
                     break;
                 case 5:
                     isSelected = true;
+                    break;
+                case 0:
+                    exitMessage();
                     break;
                 default:
                     System.out.println("Error: Invalid selection");
