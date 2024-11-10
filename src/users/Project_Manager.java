@@ -1,5 +1,6 @@
 package users;
 
+import main.validation;
 import main.config;
 import crud.userCRUD;
 import ui.manager.project;
@@ -9,11 +10,9 @@ import ui.manager.team_members;
 
 import java.io.IOException;
 
-import java.util.Scanner;
-
 public class Project_Manager extends config {
-    Scanner sc = new Scanner(System.in);
     
+    validation validate = new validation();
     userCRUD u = new userCRUD();
     project proj = new project();
     task tl = new task();
@@ -38,7 +37,7 @@ public class Project_Manager extends config {
                     + "6. Logout\n"
                     + "0. Exit\n"
                     + "Enter selection: ");
-            int select = sc.nextInt();
+            int select = validate.validateInt();
             
             switch(select){
                 case 1:

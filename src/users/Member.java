@@ -1,16 +1,16 @@
 package users;
 
+import main.validation;
 import main.config;
 import crud.userCRUD;
 import crud.taskCRUD;
 import crud.teamMemberCRUD;
 
 import java.io.IOException;
-import java.util.Scanner;
 
 public class Member extends config {
-    Scanner sc = new Scanner(System.in);
     
+    validation validate = new validation();
     userCRUD u = new userCRUD();
     taskCRUD tsk = new taskCRUD();
     teamMemberCRUD tm = new teamMemberCRUD();
@@ -33,7 +33,7 @@ public class Member extends config {
                     + "\n4. Logout"
                     + "\n0. Exit"
                     + "\nEnter selection: ");
-            int mainSelect = sc.nextInt();
+            int mainSelect = validate.validateInt();
             
             switch(mainSelect){
                 case 1:

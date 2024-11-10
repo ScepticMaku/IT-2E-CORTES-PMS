@@ -143,21 +143,18 @@ public class userCRUD extends config {
                     break;
                 case 4:
                     System.out.print("\nEnter new first name: ");
-                    sc.nextLine();
                     String newFname = sc.nextLine();
                     
                     updateRecord("UPDATE user SET first_name = ? WHERE user_id = ?", newFname, userID);
                     break;
                 case 5:
                     System.out.print("\nEnter new middle name: ");
-                    sc.nextLine();
                     String newMname = sc.nextLine();
                     
                     updateRecord("UPDATE user SET middle_name = ? WHERE user_id = ?", newMname, userID);
                     break;
                 case 6:
                     System.out.print("\nEnter new last name: ");
-                    sc.nextLine();
                     String newLname = sc.nextLine();
                     
                     updateRecord("UPDATE user SET middle_name = ? WHERE user_id = ?", newLname, userID);

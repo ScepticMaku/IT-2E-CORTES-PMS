@@ -5,10 +5,8 @@ import main.config;
 import crud.teamCRUD;
 
 import java.io.IOException;
-import java.util.Scanner;
 
 public class team extends config {
-    Scanner sc = new Scanner(System.in);
     
     validation validate = new validation();
     

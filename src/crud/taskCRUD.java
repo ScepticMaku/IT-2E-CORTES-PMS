@@ -102,14 +102,12 @@ public class taskCRUD extends config {
             switch(selectEdit){
                 case 1:
                     System.out.print("\nEnter new task name: ");
-                    sc.nextLine();
                     String newName = sc.nextLine();
                     
                     updateRecord("UPDATE task SET task_name = ? WHERE task_id = ?", newName, taskID);
                     break;
                 case 2:
                     System.out.println("\nEnter new task description: ");
-                    sc.nextLine();
                     String newDesc = sc.nextLine();
                     
                     updateRecord("UPDATE task SET description = ? WHERE task_id = ?", newDesc, taskID);
@@ -293,12 +291,11 @@ public class taskCRUD extends config {
                     + "\n2. Status"
                     + "\n3. Back"
                     + "\nEnter selection: ");
-            int filterSelect = sc.nextInt();
+            int filterSelect = validate.validateInt();
 
             switch(filterSelect){
                 case 1:
                     System.out.print("Enter due date [YYYY-MM-DD]: ");
-                    sc.nextLine();
                     String getDate = sc.nextLine();
                     
                     while(validate.spaceValidate(getDate)){
@@ -319,7 +316,6 @@ public class taskCRUD extends config {
                     break;
                 case 2:
                     System.out.print("Enter status [Not Started/In-Progress/Completed/Overdue]: ");
-                    sc.nextLine();
                     String getStatus = sc.nextLine();
 
                     while(statusValidate(getStatus)){
