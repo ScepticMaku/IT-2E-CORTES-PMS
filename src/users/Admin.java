@@ -10,13 +10,8 @@ import ui.admin.team;
 import ui.admin.team_members;
 
 import java.io.IOException;
-import java.util.Scanner;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class Admin extends config {
-    Scanner sc = new Scanner(System.in);
     
     validation validate = new validation();
     team_members tmm = new team_members();
@@ -30,7 +25,7 @@ public class Admin extends config {
             
     public void displayInterface(int uid, String user_role, String first_name) throws IOException {
         String[] name = first_name.split(" ");
-        System.out.printf("\nSuccessfully Logged in as: %s, welcome %s!", user_role, name[0]);
+        System.out.printf("\nSuccessfully Logged in as: %s, welcome %s! uid: %d", user_role, name[0], uid);
         
         do{
             System.out.print("\n================================================================================================================================================================");

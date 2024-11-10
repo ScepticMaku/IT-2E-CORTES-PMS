@@ -188,58 +188,86 @@ public class taskCRUD extends config {
         teamMemberCRUD tm = new teamMemberCRUD();
          
         System.out.println("");
-        t.viewTeam();
         
-        System.out.print("Enter team ID: ");
-        int tid = validate.validateInt();
-        
-        while(getSingleValue("SELECT team_id FROM team WHERE team_id = ?", tid) == 0){
-            System.out.print("Error: ID doesn't exist, try again: ");
-            tid = validate.validateInt();
-        }
-        
-        System.out.println("\nTeam members: ");
-        sql = "SELECT team_member_id, member_name, team_member.team_id, t.team_name "
-                + "FROM team_member "
-                + "INNER JOIN team t ON team_member.team_id = t.team_id "
-                + "WHERE team_member.team_id = ?";
-        tm.viewTeamMemberFiltered(sql, tid);  
-        
-        System.out.print("Enter member ID: ");
-        int mid = validate.validateInt();
-        
-        while(getSingleValue("SELECT team_member_id FROM team_member WHERE team_member_id = ? AND team_id = ?", mid, tid) == 0){
-            System.out.print("Error: ID doesn't exist, try again: ");
-            mid = validate.validateInt();
-        }
-        
-        System.out.println("--------------------------------------------------------------------------------");
-        tm.searchMember(mid);
-        
-        sql = "SELECT t.task_id, t.task_name, t.due_date, p.manager_name, tm.member_name, p.project_name, t.status FROM task t "
-                + "JOIN team_member tm ON t.assigned_to = tm.team_member_id "
-                + "JOIN project p ON t.project_id = p.project_id "
-                + "WHERE tm.member_name = ?";
-        viewTaskFiltered("None", sql);
-        
-        System.out.print("Enter task ID: ");
-        int task = validate.validateInt();
-        
-        while(getSingleValue("SELECT task_id FROM task WHERE task_id = ?", task) == 0){
-            System.out.print("ERROR: ID doesn't exist, try again: ");
-            task = validate.validateInt();
-        }
-        
-        getTaskInfo(task);
-        
-        System.out.print("Confirm assign member? [y/n]: ");
-        String confirm = sc.nextLine();
-        
-        if(validate.confirm(confirm)){
-            sql = "UPDATE task SET assigned_to = ? WHERE task_id = ?";
-            updateRecord(sql, mid, task);
-        } else{
-            System.out.print("Assign cancelled.");
+        try{
+            PreparedStatement findRow = connectDB().prepareStatement("SELECT team_id FROM team");
+            
+            try(ResultSet result = findRow.executeQuery()){
+                if(!result.next()){
+                    System.out.println("Team table is empty.");
+                } else{
+                    result.close();
+                    t.viewTeam();
+                    
+                    System.out.print("Enter team ID: ");
+                    int tid = validate.validateInt();
+
+                    while(getSingleValue("SELECT team_id FROM team WHERE team_id = ?", tid) == 0){
+                        System.out.print("Error: ID doesn't exist, try again: ");
+                        tid = validate.validateInt();
+                    }
+
+                    sql = "SELECT team_member_id, member_name, team_member.team_id, t.team_name "
+                            + "FROM team_member "
+                            + "INNER JOIN team t ON team_member.team_id = t.team_id "
+                            + "WHERE team_member.team_id = ?";
+
+                    try{
+                        PreparedStatement findTeamMembers = connectDB().prepareStatement(sql);
+                        findTeamMembers.setInt(1, tid);
+                        try(ResultSet getTeamMembers = findTeamMembers.executeQuery()){
+                            if(!getTeamMembers.next()){
+                                System.out.println("Team member list empty.");
+                            } else{
+                                getTeamMembers.close();
+                                System.out.println("\nTeam members: ");
+                                tm.viewTeamMemberFiltered(sql, tid);  
+                                
+                                System.out.print("Enter member ID: ");
+                                int mid = validate.validateInt();
+
+                                while(getSingleValue("SELECT team_member_id FROM team_member WHERE team_member_id = ? AND team_id = ?", mid, tid) == 0){
+                                    System.out.print("Error: ID doesn't exist, try again: ");
+                                    mid = validate.validateInt();
+                                }
+
+                                System.out.println("--------------------------------------------------------------------------------");
+                                tm.searchMember(mid);
+
+                                sql = "SELECT t.task_id, t.task_name, t.due_date, p.manager_name, tm.member_name, p.project_name, t.status FROM task t "
+                                        + "JOIN team_member tm ON t.assigned_to = tm.team_member_id "
+                                        + "JOIN project p ON t.project_id = p.project_id "
+                                        + "WHERE tm.member_name = ?";
+                                viewTaskFiltered("None", sql);
+
+                                System.out.print("Enter task ID: ");
+                                int task = validate.validateInt();
+
+                                while(getSingleValue("SELECT task_id FROM task INNER JOIN team_member tm ON assigned_to = tm.team_member_id WHERE task_id = ? AND tm.member_name = ?", task, "None") == 0){
+                                    System.out.print("ERROR: ID doesn't exist, try again: ");
+                                    task = validate.validateInt();
+                                }
+
+                                getTaskInfo(task);
+
+                                System.out.print("Confirm assign member? [y/n]: ");
+                                String confirm = sc.nextLine();
+
+                                if(validate.confirm(confirm)){
+                                    sql = "UPDATE task SET assigned_to = ? WHERE task_id = ?";
+                                    updateRecord(sql, mid, task);
+                                } else{
+                                    System.out.print("Assign cancelled.");
+                                }
+                            }
+                        }
+                    } catch(SQLException e){
+                        System.out.println("Error: "+e.getMessage());
+                    }
+                }
+            }
+        } catch(SQLException e){
+            System.out.println("Error: "+e.getMessage());
         }
     }
     
