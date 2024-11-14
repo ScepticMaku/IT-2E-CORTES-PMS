@@ -184,7 +184,7 @@ public class userCRUD extends config {
             
             try(ResultSet checkRow = filter.executeQuery()){
                 System.out.println("--------------------------------------------------------------------------------");
-                System.out.printf("%-20s %-20s %-20s\n", "ID", "Name", "Role");
+                System.out.printf("%-20s %-20s %-20s\n", "User ID", "Name", "Role");
                 while(checkRow.next()){
                     String[] name = checkRow.getString("first_name").split(" ");
                     int id = checkRow.getInt("user_id");

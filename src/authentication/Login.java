@@ -19,7 +19,6 @@ public class Login extends config {
     int id;
     String user, pass, fname;
     String locatedUser, locatedPass, locatedRole;
-    boolean userDetected = false;
     
     public void loginCredentials() throws IOException{
         
@@ -42,6 +41,8 @@ public class Login extends config {
     }
     
     public void locateUser(String username, String password) throws IOException{
+        boolean userLocated = false;
+        
         try{
             PreparedStatement state = connectDB().prepareStatement("SELECT user_id, first_name, username, password, role FROM user");
             
@@ -53,18 +54,14 @@ public class Login extends config {
                     fname = result.getString("first_name");
                     id= result.getInt("user_id");
                     
-                    if(username.equalsIgnoreCase(locatedUser) && password.equals(locatedPass)){
-                        userDetected = true;
-                        result.close();
+                    if(username.equals(locatedUser) && password.equals(locatedPass)){
+                        userLocated = true;
                         break;
                     }
                 }
+                result.close();
                 
-                if(!userDetected){
-                    System.out.println("\nUser not found.");
-                } 
-                
-                else{
+                if(userLocated){
                     switch (locatedRole) {
                         case "admin":
                             admin.displayInterface(id, locatedRole, fname);
@@ -78,6 +75,9 @@ public class Login extends config {
                         default: System.out.println("Error: Role not found.");
                             break;
                     }
+                }
+                else{
+                    System.out.println("\nUser not found.");
                 }
             }
         } catch(SQLException e){

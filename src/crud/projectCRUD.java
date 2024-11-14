@@ -295,8 +295,6 @@ public class projectCRUD extends config {
     private void viewList(int pid) throws IOException{
         taskCRUD tsk = new taskCRUD();
         teamCRUD tm = new teamCRUD();
-        
-        boolean isSelected = false;
         try{
             PreparedStatement search = connectDB().prepareStatement("SELECT p.project_name, p.description, p.date_created, p.due_date, u.first_name, p.status FROM project p "
                     + "INNER JOIN user u ON project_manager_id = u.user_id "
@@ -304,40 +302,26 @@ public class projectCRUD extends config {
             search.setInt(1, pid);
             
             try(ResultSet result = search.executeQuery()){
-                do{
-                    System.out.print("1. Show team list"
-                            + "\n2. Show task list"
-                            + "\n3. Back"
-                            + "\nEnter selection: ");
-                    int showSelect = validate.validateInt();
+                
+                System.out.println("\nTeam list:");
+                sql = "SELECT t.team_id, t.team_name, p.project_name "
+                        + "FROM team t "
+                        + "INNER JOIN project p ON t.project_id = p.project_id "
+                        + "WHERE p.project_name = ?";
+                System.out.println("List of teams working on this project: ");
+                
+                tm.viewTeamFiltered(result.getString("project_name"), sql);
 
-                    switch(showSelect){
-                        case 1:
-                            System.out.println("\nTeam list:");
-                            sql = "SELECT t.team_id, t.team_name, p.project_name "
-                                    + "FROM team t "
-                                    + "INNER JOIN project p ON t.project_id = p.project_id "
-                                    + "WHERE p.project_name = ?";
-                            System.out.println("List of teams working on this project: ");
-                            
-                            tm.viewTeamFiltered(result.getString("project_name"), sql);
-                            break;
-                        case 2:
-                            System.out.println("\nTask list:");
-                            sql = "SELECT t.task_id, t.task_name, t.due_date, u.first_name, p.project_name, t.status "
-                                    + "FROM task t "
-                                    + "INNER JOIN user u ON t.assigned_to = u.user_id "
-                                    + "INNER JOIN project p ON t.project_id = p.project_id "
-                                    + "WHERE p.project_name = ?";
-                            tsk.viewTaskFiltered(result.getString("project_name"), sql);
-                            break;
-                        case 3:
-                            isSelected = true;
-                            break;
-                        default: System.out.println("Error: Invalid selection");
-                    }
-                } while(!isSelected);
+                System.out.println("\nTask list:");
+                sql = "SELECT t.task_id, t.task_name, t.due_date, u.first_name, p.project_name, t.status "
+                        + "FROM task t "
+                        + "INNER JOIN user u ON t.assigned_to = u.user_id "
+                        + "INNER JOIN project p ON t.project_id = p.project_id "
+                        + "WHERE p.project_name = ?";
+                
+                tsk.viewTaskFiltered(result.getString("project_name"), sql);
             }
+            pause();
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
         }
