@@ -67,17 +67,19 @@ public class userCRUD extends config {
             state.setInt(1, userID);
             
             try (ResultSet result = state.executeQuery()) {
-                System.out.println("\nFull Information: "
-                        + "\n--------------------------------------------------------------------------------"
-                        + "\nUser ID:           | "+result.getInt("user_id")
-                        + "\nFirst Name:        | "+result.getString("first_name")
-                        + "\nMiddle Name:       | "+result.getString("middle_name")
-                        + "\nLast Name:         | "+result.getString("last_name")
-                        + "\nEmail Address:     | "+result.getString("email")
-                        + "\nUsername:          | "+result.getString("username")
-                        + "\nPassword:          | "+result.getString("password")
-                        + "\nRole:              | "+result.getString("role"));
-                System.out.println("--------------------------------------------------------------------------------");
+                System.out.println("\n"
+                        + "╒===============================================================================╕\n"
+                        + "│ Full Information                                                              │\n"
+                        + "├--------------------┬---------------------------------------------------------┘"
+                        + "\n│ User ID:           │ "+result.getInt("user_id")
+                        + "\n│ First Name:        │ "+result.getString("first_name")
+                        + "\n│ Middle Name:       │ "+result.getString("middle_name")
+                        + "\n│ Last Name:         │ "+result.getString("last_name")
+                        + "\n│ Email Address:     │ "+result.getString("email")
+                        + "\n│ Username:          │ "+result.getString("username")
+                        + "\n│ Password:          │ "+result.getString("password")
+                        + "\n│ Role:              │ "+result.getString("role")
+                        + "\n└--------------------┴----------------------------------------------------------");
                 System.out.print("Press any key to continue...");
                 System.in.read();
             }

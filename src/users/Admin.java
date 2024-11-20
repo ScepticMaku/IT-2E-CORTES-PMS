@@ -30,16 +30,20 @@ public class Admin extends config {
         do{
             System.out.print("\n================================================================================================================================================================");
             System.out.print("\nDate: "+date.toString()
-                    + "\n\nMain menu: \n"
-                    + "1. Profile\n"
-                    + "2. Projects\n"
-                    + "3. Tasks\n"
-                    + "4. Teams\n"
-                    + "5. Team Members\n"
-                    + "6. Users\n"
-                    + "7. Logout\n"
-                    + "0. Exit\n"
-                    + "Enter selection: ");
+                    + "\n\n"
+                    + "╒===================╕\n"
+                    + "│ Main menu         │\n"
+                    + "├-------------------┤\n"
+                    + "│[1]| Profile       │ \n"
+                    + "│[2]| Projects      │\n"
+                    + "│[3]| Tasks         │\n"
+                    + "│[4]| Teams         │\n"
+                    + "│[5]| Team Members  │\n"
+                    + "│[6]| Users         │\n"
+                    + "│[7]| Logout        │\n"
+                    + "│[0]| Exit          │\n"
+                    + "└-------------------┘\n"
+                    + "\n|Enter selection: ");
             int select = validate.validateInt();
             
             switch(select){
