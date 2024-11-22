@@ -32,7 +32,10 @@ public class taskCRUD extends config {
                 if(!checkTable.next()){
                     System.out.println("Task Empty.");
                 } else{
-                    System.out.println("List of Tasks: ");
+                    System.out.println(""
+                            + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                            + "│ List of Tasks                                                                 │\n"
+                            + "└───────────────────────────────────────────────────────────────────────────────┘");
                     viewTaskList(sql);
                 }
             }
@@ -43,13 +46,13 @@ public class taskCRUD extends config {
     
     public void addTask(int id){
         System.out.println("--------------------------------------------------------------------------------");
-        System.out.print("Enter task name: ");
+        System.out.print("| Enter task name: ");
         String Tname = sc.nextLine();
 
-        System.out.print("Enter task description: ");
+        System.out.print("| Enter task description: ");
         String desc = sc.nextLine();
 
-        System.out.print("Enter due date [FORMAT: YYYY-MM-DD]: ");
+        System.out.print("| Enter due date [FORMAT: YYYY-MM-DD]: ");
         String dueDate = sc.nextLine();
         
         String dateCreated = date.toString();
@@ -62,7 +65,7 @@ public class taskCRUD extends config {
             dueDate = sc.nextLine();
         }
         
-        System.out.print("Enter project ID to assign: ");
+        System.out.print("| Enter project ID to assign: ");
         int pid = validate.validateInt();
         
         while(getSingleValue("SELECT project_id FROM project WHERE project_id = ?", pid) == 0){
@@ -80,7 +83,7 @@ public class taskCRUD extends config {
     public void editTask(){
         boolean Selected = false;
         
-        System.out.print("\nEnter ID: ");
+        System.out.print("| Enter ID: ");
         int taskID = validate.validateInt();
         
         while(getSingleValue("SELECT task_id FROM task WHERE task_id = ?", taskID) == 0){
@@ -91,30 +94,35 @@ public class taskCRUD extends config {
         getTaskInfo(taskID);
         
         do{
-            System.out.print("1. Change task name"
-                    + "\n2. Change task description"
-                    + "\n3. Change due date"
-                    + "\n4. Change status"
-                    + "\n5. Remove asignee"
-                    + "\n6. Back"
-                    + "\nEnter selection: ");
+            System.out.print(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Choose what you want to do                                                    │\n"
+                    + "├───────────────────────────────────────────────────────────────────────────────┤\n"
+                    + "│[1]| Change task name                                                          │\n"
+                    + "│[2]| Change task description                                                   │\n"
+                    + "│[3]| Change due date                                                           │\n"
+                    + "│[4]| Change status                                                             │\n"
+                    + "│[5]| Remove asignee                                                            │\n"
+                    + "│[6]| Back                                                                      │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘\n"
+                    + "| Enter selection: ");
             int selectEdit = validate.validateInt();
             
             switch(selectEdit){
                 case 1:
-                    System.out.print("\nEnter new task name: ");
+                    System.out.print("\n| Enter new task name: ");
                     String newName = sc.nextLine();
                     
                     updateRecord("UPDATE task SET task_name = ? WHERE task_id = ?", newName, taskID);
                     break;
                 case 2:
-                    System.out.println("\nEnter new task description: ");
+                    System.out.println("\n| Enter new task description: ");
                     String newDesc = sc.nextLine();
                     
                     updateRecord("UPDATE task SET description = ? WHERE task_id = ?", newDesc, taskID);
                     break;
                 case 3:
-                    System.out.print("\nEnter new due date [FORMAT: YYYY-MM-DD]: ");
+                    System.out.print("\n| Enter new due date [FORMAT: YYYY-MM-DD]: ");
                     String newDate = sc.nextLine();
                     
                     while(validate.spaceValidate(newDate)){
@@ -128,7 +136,7 @@ public class taskCRUD extends config {
                     updateRecord("UPDATE task SET due_date = ? WHERE task_id = ?", newDate, taskID);
                     break;
                 case 4:
-                    System.out.print("\nEnter new status [Not Started/In Progress/Completed/Overdue]: ");
+                    System.out.print("\n| Enter new status [Not Started/In Progress/Completed/Overdue]: ");
                     String newStatus = sc.nextLine();
 
                     while(statusValidate(newStatus)){
@@ -139,13 +147,13 @@ public class taskCRUD extends config {
                     break;
                 case 5:
                     if(checkAsignee(taskID)){
-                        System.out.println("Error: This task isn't assigned to any member, removal cancelled.");
+                        System.out.println("| Error: This task isn't assigned to any member, removal cancelled.");
                     }
                     else if(getSingleValue("SELECT task_id FROM task WHERE task_id = ? AND status = 'In-Progress'", taskID) != 0){
-                        System.out.println("Error: Member is working on this task, removal cancelled.");
+                        System.out.println("| Error: Member is working on this task, removal cancelled.");
                     } 
                     else{
-                        System.out.print("Confirm remove? [y/n]: ");
+                        System.out.print("| Confirm remove? [y/n]: ");
                         String confirm = sc.nextLine();
 
                         if(validate.confirm(confirm)){
@@ -165,7 +173,7 @@ public class taskCRUD extends config {
     }
     
     public void deleteTask(){
-        System.out.print("\nEnter ID: ");
+        System.out.print("| Enter ID: ");
         int taskID = validate.validateInt();
         
         while(getSingleValue("SELECT task_id FROM task WHERE task_id = ?", taskID) == 0){
@@ -175,7 +183,7 @@ public class taskCRUD extends config {
         
         getTaskInfo(taskID);
         
-        System.out.print("Confirm delete? [y/n]: ");
+        System.out.print("| Confirm delete? [y/n]: ");
         String confirm = sc.next();
         
         if(validate.confirm(confirm)){
@@ -187,7 +195,6 @@ public class taskCRUD extends config {
     }
     
     public void assignMember(){
-        System.out.println("");
         
         try{
             PreparedStatement findRow = connectDB().prepareStatement("SELECT team_id FROM team");
@@ -209,13 +216,17 @@ public class taskCRUD extends config {
         teamCRUD t = new teamCRUD();
         teamMemberCRUD tm = new teamMemberCRUD();
         
+        System.out.println(""
+            + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+            + "│ Team list                                                                     │\n"
+            + "└───────────────────────────────────────────────────────────────────────────────┘");
         t.viewTeam();
                     
-        System.out.print("Enter team ID: ");
+        System.out.print("| Enter team ID: ");
         int tid = validate.validateInt();
 
         while(getSingleValue("SELECT team_id FROM team WHERE team_id = ?", tid) == 0){
-            System.out.print("Error: ID doesn't exist, try again: ");
+            System.out.print("| Error: ID doesn't exist, try again: ");
             tid = validate.validateInt();
         }
 
@@ -232,10 +243,13 @@ public class taskCRUD extends config {
                     System.out.println("Team member list empty.");
                 } else{
                     getTeamMembers.close();
-                    System.out.println("\nTeam members: ");
+                    System.out.println(""
+                            + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                            + "│ Team members                                                                  │\n"
+                            + "└───────────────────────────────────────────────────────────────────────────────┘");
                     tm.viewTeamMemberFiltered(sql, tid);  
 
-                    System.out.print("Enter member ID: ");
+                    System.out.print("| Enter member ID: ");
                     int mid = validate.validateInt();
 
                     while(getSingleValue("SELECT team_member_id FROM team_member WHERE team_member_id = ? AND team_id = ?", mid, tid) == 0){
@@ -268,17 +282,17 @@ public class taskCRUD extends config {
             System.out.println("Available tasks: ");
             viewTaskFiltered("None", sql);
 
-            System.out.print("Enter task ID: ");
+            System.out.print("| Enter task ID: ");
             int task = validate.validateInt();
 
             while(getSingleValue("SELECT task_id FROM task INNER JOIN team_member tm ON assigned_to = tm.team_member_id WHERE task_id = ? AND tm.member_name = ?", task, "None") == 0){
-                System.out.print("ERROR: ID doesn't exist, try again: ");
+                System.out.print("| ERROR: ID doesn't exist, try again: ");
                 task = validate.validateInt();
             }
 
             getTaskInfo(task);
 
-            System.out.print("Confirm assign member? [y/n]: ");
+            System.out.print("| Confirm assign member? [y/n]: ");
             String confirm = sc.nextLine();
 
             if(validate.confirm(confirm)){
@@ -291,7 +305,7 @@ public class taskCRUD extends config {
     }
     
     public void viewInfo() throws IOException{
-        System.out.print("\nEnter ID: ");
+        System.out.print("| Enter ID: ");
         int taskID = validate.validateInt();
         
         while(getSingleValue("SELECT task_id FROM task WHERE task_id = ?", taskID) == 0){
@@ -307,16 +321,20 @@ public class taskCRUD extends config {
     public void filterBy(){
         boolean isBack = false;
         do{
-            System.out.print("\nFilter by: "
-                    + "\n1. Due date"
-                    + "\n2. Status"
-                    + "\n3. Back"
-                    + "\nEnter selection: ");
+            System.out.print(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Filter by                                                                     │\n"
+                    + "├───────────────────────────────────────────────────────────────────────────────┤\n"
+                    + "│[1]| Due date                                                                  │\n"
+                    + "│[2]| Status                                                                    │\n"
+                    + "│[3]| Back                                                                      │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘\n"
+                    + "| Enter selection: ");
             int filterSelect = validate.validateInt();
 
             switch(filterSelect){
                 case 1:
-                    System.out.print("Enter due date [YYYY-MM-DD]: ");
+                    System.out.print("| Enter due date [YYYY-MM-DD]: ");
                     String getDate = sc.nextLine();
                     
                     while(validate.spaceValidate(getDate)){
@@ -327,7 +345,10 @@ public class taskCRUD extends config {
                         getDate = sc.nextLine();
                     }
 
-                    System.out.println("Task list filtered by: Date");
+                    System.out.println(""
+                        + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                        + "│ Task list filtered by date:                                                   │\n"
+                        + "└───────────────────────────────────────────────────────────────────────────────┘");
                     sql = "SELECT task.task_id, task.task_name, task.due_date, tm.member_name, p.project_name, task.status "
                             + "FROM task "
                             + "INNER JOIN team_member tm ON task.assigned_to = tm.team_member_id "
@@ -336,14 +357,17 @@ public class taskCRUD extends config {
                     viewTaskFiltered(getDate, sql);
                     break;
                 case 2:
-                    System.out.print("Enter status [Not Started/In-Progress/Completed]: ");
+                    System.out.print("| Enter status [Not Started/In-Progress/Completed]: ");
                     String getStatus = sc.nextLine();
 
                     while(statusValidate(getStatus)){
                         getStatus = sc.nextLine();
                     }
 
-                    System.out.println("Task list fileted by: Status");
+                    System.out.println(""
+                        + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                        + "│ Task list filtered by status:                                                 │\n"
+                        + "└───────────────────────────────────────────────────────────────────────────────┘");
                     sql = "SELECT task.task_id, task.task_name, task.due_date, tm.member_name, p.project_name, task.status "
                             + "FROM task "
                             + "INNER JOIN team_member tm ON task.assigned_to = tm.team_member_id "
@@ -399,18 +423,19 @@ public class taskCRUD extends config {
             search.setInt(1, id);
             
             try (ResultSet result = search.executeQuery()) {
-                System.out.println("--------------------------------------------------------------------------------"
-                        + "\nSelected task:     | "+result.getString("task_name")
-                        + "\n-------------------+"
-                        + "\nTask ID:           | "+result.getInt("task_id")
-                        + "\nDescription:       | "+result.getString("description")
-                        + "\nDate created:      | "+result.getString("date_created")
-                        + "\nDue date:          | "+result.getString("due_date")
-                        + "\nCreated By:        | "+result.getString("manager_name")
-                        + "\nAssigned to:       | "+result.getString("member_name")
-                        + "\nFrom project:      | "+result.getString("project_name")
-                        + "\nStatus:            | "+result.getString("status")
-                        + "\n--------------------------------------------------------------------------------");
+                System.out.println(""
+                          + "╒════════════════════╕"
+                        + "\n│ Selected task   :  │ "+result.getString("task_name")
+                        + "\n├────────────────────┤"
+                        + "\n│ Task ID:           │ "+result.getInt("task_id")
+                        + "\n│ Description:       │ "+result.getString("description")
+                        + "\n│ Date Created:      │ "+result.getString("date_created")
+                        + "\n│ Due Date:          │ "+result.getString("due_date")
+                        + "\n│ Created by         │ "+result.getString("manager_name")
+                        + "\n│ Assigned to:       │ "+result.getString("member_name")
+                        + "\n│ From project:      │ "+result.getString("project_name")
+                        + "\n│ Status:            │ "+result.getString("status")
+                        + "\n└────────────────────┘ ");
             }
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
@@ -425,7 +450,7 @@ public class taskCRUD extends config {
                 return false;
             }
         }
-        System.out.print("Error: Status must be (Not Started/In-Progress/Completed/Overdue), try again: ");
+        System.out.print("| Error: Status must be (Not Started/In-Progress/Completed/Overdue), try again: ");
         return true;
     }
     
@@ -480,7 +505,7 @@ public class taskCRUD extends config {
             LocalDate.parse(getDate, format);
             return true;
         } catch(DateTimeParseException e){
-            System.out.print("Error: Date is incorrect, try again: ");
+            System.out.print("| Error: Date is incorrect, try again: ");
         }
         return false;
     }

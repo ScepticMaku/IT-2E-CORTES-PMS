@@ -21,7 +21,7 @@ public class validation extends config {
                     getNum = sc.nextInt();
                     break;
             } catch(InputMismatchException e) {
-                System.out.print("Invalid Input: Must only be a number, try again: ");
+                System.out.print("| Invalid Input: Must only be a number, try again: ");
                 sc.next();
             }
         }
@@ -37,7 +37,7 @@ public class validation extends config {
         
         for(String i : domain){
             if(getEmail.equals(i)){
-                System.out.print("Error: Email must not be the domain name only, try again: ");
+                System.out.print("| Error: Email must not be the domain name only, try again: ");
                 return true;
             }
             else if(getEmail.contains(i)){
@@ -49,7 +49,7 @@ public class validation extends config {
                         String email = result.getString("email");
                         
                         if(getEmail.equals(email)){
-                            System.out.print("Error: Email is already registered, try again: ");
+                            System.out.print("| Error: Email is already registered, try again: ");
                             return true;
                         }
                     }
@@ -59,7 +59,7 @@ public class validation extends config {
                 }
             }
         }
-        System.out.print("Error: Email must have supported domain name (@gmail.com, @yahoo.com, @outlook.com), try again: ");
+        System.out.print("| Error: Email must have supported domain name (@gmail.com, @yahoo.com, @outlook.com), try again: ");
         return true;
     }
     
@@ -72,7 +72,7 @@ public class validation extends config {
                 String user = result.getString("username");
                 
                 if(getUser.equalsIgnoreCase(user)){
-                    System.out.print("Error: Must not have duplicated usernames, try again: ");
+                    System.out.print("| Error: Must not have duplicated usernames, try again: ");
                     return true;
                 }
             }
@@ -84,7 +84,7 @@ public class validation extends config {
     
     public boolean spaceValidate(String getString){
         if(getString.contains(" ")){
-            System.out.print("Error: Must not have a space, try again: ");
+            System.out.print("| Error: Must not have a space, try again: ");
             return true;
         }
         return false;
@@ -99,12 +99,12 @@ public class validation extends config {
             String remDays = String.valueOf(remain);
 
             if(Integer.parseInt(remDays) < 0){
-                System.out.print("Error: Due date must not be from the past, try again: ");
+                System.out.print("| Error: Due date must not be from the past, try again: ");
                 return false;
             }
             return true;
         } catch(DateTimeParseException e){
-            System.out.print("Error: Date is incorrect, try again: ");
+            System.out.print("| Error: Date is incorrect, try again: ");
         }
         return false;
     }
@@ -142,7 +142,7 @@ public class validation extends config {
                 return true;
             }
         }
-        System.out.print("Error: Invalid role, try again: ");
+        System.out.print("| Error: Invalid role, try again: ");
         return false;
     }
     

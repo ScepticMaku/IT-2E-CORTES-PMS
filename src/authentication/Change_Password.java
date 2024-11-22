@@ -17,7 +17,7 @@ public class Change_Password extends config {
     
     public void changeCredentials(){
         do{
-            System.out.print("\nEnter email: ");
+            System.out.print("\n| Enter email: ");
             String email = sc.nextLine();
             
             while(validate.spaceValidate(email)){
@@ -60,7 +60,7 @@ public class Change_Password extends config {
     
     private void setPassword(String userEmail, String userPassword){
         
-        System.out.print("\nEnter new password: ");
+        System.out.print("\n| Enter new password: ");
         String newPassword = sc.nextLine();
         
         while(validate.spaceValidate(newPassword)){
@@ -68,7 +68,7 @@ public class Change_Password extends config {
         }
         
         while(newPassword.equals(userPassword)){
-            System.out.print("Error: Must not be an old password, try again: ");
+            System.out.print("| Error: Must not be an old password, try again: ");
             newPassword = sc.nextLine();
             
             while(validate.spaceValidate(newPassword)){
@@ -76,7 +76,7 @@ public class Change_Password extends config {
             }
         }
 
-        System.out.print("Confirm password: ");
+        System.out.print("| Confirm password: ");
         String confirmPass = sc.nextLine();
         
         while(validate.spaceValidate(confirmPass)){
@@ -87,7 +87,7 @@ public class Change_Password extends config {
             System.out.println("Passwords don't match.");
         }
         else{
-            System.out.print("Confirm credentials? [y/n]: ");
+            System.out.print("| Confirm credentials? [y/n]: ");
             String confirm = sc.nextLine();
 
             if(validate.confirm(confirm)){

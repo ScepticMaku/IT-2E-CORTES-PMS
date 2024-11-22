@@ -13,23 +13,23 @@ public class Register extends config{
     public void registerCredentials(){
         Scanner sc = new Scanner(System.in);
         System.out.println("================================================================================================================================================================");
-        System.out.print("Enter first name: ");
+        System.out.print("| Enter first name: ");
         String fname = sc.nextLine();
         
-        System.out.print("Do you have a middle name? [y/n]: ");
+        System.out.print("| Do you have a middle name? [y/n]: ");
         String haveMiddle = sc.nextLine();
         
         if(validate.confirm(haveMiddle)){
-            System.out.print("Enter middle name: ");
+            System.out.print("| Enter middle name: ");
             mname = sc.nextLine();
         } else{
             mname = "N/A";
         }
         
-        System.out.print("Enter last name: ");
+        System.out.print("| Enter last name: ");
         String lname = sc.nextLine();
         
-        System.out.print("Enter username: ");
+        System.out.print("| Enter username: ");
         String username = sc.nextLine();
         
         while(validate.spaceValidate(username)){
@@ -40,21 +40,21 @@ public class Register extends config{
             username = sc.nextLine();
         }
         
-        System.out.print("Enter email address: ");
+        System.out.print("| Enter email address: ");
         String email = sc.nextLine();
         
         while(validate.emailValidate(email)){
             email = sc.nextLine();
         }
         
-        System.out.print("Enter password: ");
+        System.out.print("| Enter password: ");
         String password = sc.nextLine();
         
         while(validate.spaceValidate(password)){
             password = sc.nextLine();
         }
         
-        System.out.print("Confirm password: ");
+        System.out.print("| Confirm password: ");
         confirmPass = sc.nextLine();
         
         while(validate.spaceValidate(confirmPass)){
@@ -62,7 +62,7 @@ public class Register extends config{
         }
         
         while(!confirmPass.equals(password)){
-            System.out.print("Passwords don't match, try again: ");
+            System.out.print("| Passwords don't match, try again: ");
             confirmPass = sc.nextLine();
             
             while(validate.spaceValidate(confirmPass)){
@@ -70,7 +70,7 @@ public class Register extends config{
             }
         }
         
-        System.out.print("Confirm registration? [y/n]: ");
+        System.out.print("| Confirm registration? [y/n]: ");
         String confirm = sc.nextLine();
         
         if(confirm.equals("y")){

@@ -25,25 +25,25 @@ public class Admin extends config {
             
     public void displayInterface(int uid, String user_role, String first_name) throws IOException {
         String[] name = first_name.split(" ");
-        System.out.printf("\nSuccessfully Logged in as: %s, welcome %s! uid: %d", user_role, name[0], uid);
+        System.out.printf("\nSuccessfully Logged in as: %s, welcome %s! uid: %d\n", user_role, name[0], uid);
         
         do{
-            System.out.print("\n================================================================================================================================================================");
-            System.out.print("\nDate: "+date.toString()
-                    + "\n\n"
-                    + "╒===================╕\n"
+            System.out.print("================================================================================================================================================================");
+            System.out.print("\n| Date: "+date.toString()
+                    + "\n"
+                    + "╒═══════════════════╕\n"
                     + "│ Main menu         │\n"
-                    + "├-------------------┤\n"
-                    + "│[1]| Profile       │ \n"
-                    + "│[2]| Projects      │\n"
-                    + "│[3]| Tasks         │\n"
-                    + "│[4]| Teams         │\n"
-                    + "│[5]| Team Members  │\n"
-                    + "│[6]| Users         │\n"
-                    + "│[7]| Logout        │\n"
-                    + "│[0]| Exit          │\n"
-                    + "└-------------------┘\n"
-                    + "\n|Enter selection: ");
+                    + "├───┬───────────────┤\n"
+                    + "│[1]│ Profile       │\n"
+                    + "│[2]│ Projects      │\n"
+                    + "│[3]│ Tasks         │\n"
+                    + "│[4]│ Teams         │\n"
+                    + "│[5]│ Team Members  │\n"
+                    + "│[6]│ Users         │\n"
+                    + "│[7]│ Logout        │\n"
+                    + "│[0]│ Exit          │\n"
+                    + "└───┴───────────────┘\n"
+                    + "\n| Enter selection: ");
             int select = validate.validateInt();
             
             switch(select){

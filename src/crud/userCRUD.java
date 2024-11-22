@@ -68,9 +68,9 @@ public class userCRUD extends config {
             
             try (ResultSet result = state.executeQuery()) {
                 System.out.println("\n"
-                        + "╒===============================================================================╕\n"
-                        + "│ Full Information                                                              │\n"
-                        + "├--------------------┬---------------------------------------------------------┘"
+                          + "╒════════════════════╕\n"
+                          + "│ Full Information   │\n"
+                          + "├────────────────────┤"
                         + "\n│ User ID:           │ "+result.getInt("user_id")
                         + "\n│ First Name:        │ "+result.getString("first_name")
                         + "\n│ Middle Name:       │ "+result.getString("middle_name")
@@ -79,9 +79,8 @@ public class userCRUD extends config {
                         + "\n│ Username:          │ "+result.getString("username")
                         + "\n│ Password:          │ "+result.getString("password")
                         + "\n│ Role:              │ "+result.getString("role")
-                        + "\n└--------------------┴----------------------------------------------------------");
-                System.out.print("Press any key to continue...");
-                System.in.read();
+                        + "\n└────────────────────┘");
+                
             }
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
@@ -208,9 +207,12 @@ public class userCRUD extends config {
         do{
             viewUserInfo(uid);
 
-            System.out.print("1. Edit Info\n"
-                    + "2. Back\n"
-                    + "Enter selection: ");
+            System.out.print(""
+                    + "╒════════════════════╕\n"
+                    + "│ [1] | Edit Info    │\n"
+                    + "│ [2] | Back         │\n"
+                    + "└────────────────────┘\n"
+                    + "| Enter selection: ");
             int editSelect = validate.validateInt();
 
             switch(editSelect){

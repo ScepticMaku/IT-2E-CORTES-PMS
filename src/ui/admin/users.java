@@ -50,6 +50,7 @@ public class users extends config {
                     }
                     
                     u.viewUserInfo(uid);
+                    pause();
                     break;
                 case 5:
                     isSelected = true;

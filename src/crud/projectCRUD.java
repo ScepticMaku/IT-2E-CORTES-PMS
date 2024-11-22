@@ -21,7 +21,10 @@ public class projectCRUD extends config {
     String sql;
     
     public void viewProject(){
-        System.out.println("List of Projects: ");
+        System.out.println(""
+                + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                + "│ List of Projects                                                              │\n"
+                + "└───────────────────────────────────────────────────────────────────────────────┘");
         
         String projectQuery = "SELECT * FROM project";
         String[] projectHeaders = {"ID", "Name", "Due Date", "Status"};
@@ -45,13 +48,13 @@ public class projectCRUD extends config {
     
     public void addProject(int uid, String mname){
         System.out.println("--------------------------------------------------------------------------------");
-        System.out.print("Enter project name: ");
+        System.out.print("| Enter project name: ");
         String name = sc.nextLine();
 
-        System.out.println("Enter description: ");
+        System.out.println("| Enter description: ");
         String desc = sc.nextLine();
 
-        System.out.print("Enter due date [FORMAT: YYYY-MM-DD]: ");
+        System.out.print("| Enter due date [FORMAT: YYYY-MM-DD]: ");
         String dueDate = sc.nextLine();
         
         while(validate.spaceValidate(dueDate)){
@@ -72,7 +75,7 @@ public class projectCRUD extends config {
     public void editProject(){
         boolean isSelected = false;
         
-        System.out.print("Enter project ID: ");
+        System.out.print("| Enter project ID: ");
         int id = validate.validateInt();
         
         while(getSingleValue("SELECT project_id FROM project WHERE project_id = ?", id) == 0){
@@ -83,29 +86,33 @@ public class projectCRUD extends config {
         getProjectInfo(id);
         
         do{
-            System.out.print("Choose what you want to do:"
-                    + "\n1. Change project name\n"
-                    + "2. Change project description\n"
-                    + "3. Change due date\n"
-                    + "4. Change status\n"
-                    + "5. Back\n"
-                    + "Enter selection: ");
+            System.out.print(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Choose what you want to do                                                    │\n"
+                    + "├───────────────────────────────────────────────────────────────────────────────┤\n"
+                    + "│[1]| Change project name                                                       │\n"
+                    + "│[2]| Change project description                                                │\n"
+                    + "│[3]| Change due date                                                           │\n"
+                    + "│[4]| Change status                                                             │\n"
+                    + "│[5]| Back                                                                      │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘\n"
+                    + "| Enter selection: ");
             int selectEdit = validate.validateInt();
 
             switch(selectEdit){
                 case 1:
-                    System.out.print("\nEnter new project name: ");
+                    System.out.print("\n| Enter new project name: ");
                     String newName = sc.nextLine();
                     updateRecord("UPDATE project SET project_name = ? WHERE project_id = ?", newName, id);
                     break;
                 case 2:
-                    System.out.print("\nEnter new project description: ");
+                    System.out.print("\n| Enter new project description: ");
                     String newDesc = sc.nextLine();
                     
                     updateRecord("UPDATE project SET description = ? WHERE project_id = ?", newDesc, id);
                     break;
                 case 3:
-                    System.out.print("\nEnter new due date [FORMAT: YYYY-MM-DD]: ");
+                    System.out.print("\n| Enter new due date [FORMAT: YYYY-MM-DD]: ");
                     String newDate = sc.nextLine();
 
                     while(validate.spaceValidate(newDate)){
@@ -119,7 +126,7 @@ public class projectCRUD extends config {
                     updateRecord("UPDATE project SET due_date = ? WHERE project_id = ?", newDate, id);
                     break;
                 case 4:
-                System.out.print("\nEnter new status[Planned/In-Progress/Completed/Overdue]: ");
+                System.out.print("\n| Enter new status [Planned/In-Progress/Completed/Overdue]: ");
                 String newStatus = sc.nextLine();
 
                 while(validate.spaceValidate(newStatus)){
@@ -137,22 +144,21 @@ public class projectCRUD extends config {
                     break;
                 default: System.out.println("Error: Invalid selection.");
             }
-            System.out.println("");
         } while(!isSelected);
     }
     
     public void deleteProject(){
-        System.out.print("Enter project ID: ");
+        System.out.print("| Enter project ID: ");
         int id = validate.validateInt();
         
         while(getSingleValue("SELECT project_id FROM project WHERE project_id = ?", id) == 0){
-            System.out.print("Error: ID doesn't exist, try again: ");
+            System.out.print("| Error: ID doesn't exist, try again: ");
             id = validate.validateInt();
         }
         
         getProjectInfo(id);
         
-        System.out.print("Confirm Delete? [y/n]: ");
+        System.out.print("| Confirm Delete? [y/n]: ");
         String confirm = sc.nextLine();
 
         while(validate.spaceValidate(confirm)){
@@ -170,16 +176,20 @@ public class projectCRUD extends config {
     public void FilterBy() throws IOException{
         boolean isBack = false;
         do{
-            System.out.print("\nFilter by: "
-                    + "\n1. Due date"
-                    + "\n2. Status"
-                    + "\n3. Back"
-                    + "\nEnter selection: ");
+            System.out.printf(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Filter by                                                                     │\n"
+                    + "├───────────────────────────────────────────────────────────────────────────────┤\n"
+                    + "│[1]| Due date                                                                  │\n"
+                    + "│[2]| Status                                                                    │\n"
+                    + "│[3]| Back                                                                      │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘\n"
+                    + "| Enter selection: ");
             int filterSelect = validate.validateInt();
 
             switch(filterSelect){
                 case 1:
-                    System.out.print("Enter due date [YYYY-MM-DD]: ");
+                    System.out.print("| Enter due date [YYYY-MM-DD]: ");
                     String getDate = sc.nextLine();
                     
                     while(validate.spaceValidate(getDate)){
@@ -190,11 +200,14 @@ public class projectCRUD extends config {
                         getDate = sc.nextLine();
                     }
 
-                    System.out.println("\nTask list fileted by: Date");
+                    System.out.println(""
+                        + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                        + "│ Task list filtered by date:                                                   │\n"
+                        + "└───────────────────────────────────────────────────────────────────────────────┘");
                     viewProjectFiltered(getDate,"SELECT * FROM project WHERE due_date = ?");
                     break;
                 case 2:
-                    System.out.print("Enter status [Planned/In-Progress/Completed/Overdue]: ");
+                    System.out.print("| Enter status [Planned/In-Progress/Completed/Overdue]: ");
                     String getStatus = sc.nextLine();
                     
                     while(validate.spaceValidate(getStatus)){
@@ -209,7 +222,10 @@ public class projectCRUD extends config {
                         }
                     }
 
-                    System.out.println("\nTask list fileted by: Status");
+                    System.out.println(""
+                        + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                        + "│ Task list filtered by status:                                                 │\n"
+                        + "└───────────────────────────────────────────────────────────────────────────────┘");
                     viewProjectFiltered(getStatus, "SELECT * FROM project WHERE status = ?");
                     break;
                 case 3:
@@ -221,7 +237,8 @@ public class projectCRUD extends config {
     }
     
     public void viewProjectInfo() throws IOException{
-        System.out.print("Enter project ID: ");
+        System.out.println("--------------------------------------------------------------------------------");
+        System.out.print("| Enter project ID: ");
         int id = validate.validateInt();
         
         while(getSingleValue("SELECT project_id FROM project WHERE project_id = ?", id) == 0){
@@ -276,16 +293,17 @@ public class projectCRUD extends config {
             
             try (ResultSet result = findRow.executeQuery()) {
                 
-                System.out.println("--------------------------------------------------------------------------------"
-                        + "\nSelected project:  | "+result.getString("project_name")
-                        + "\n-------------------+ "
-                        + "\nProject ID:        | "+result.getInt("project_id")
-                        + "\nDescription:       | "+result.getString("description")
-                        + "\nDate Created:      | "+result.getString("date_created")
-                        + "\nDue Date:          | "+result.getString("due_date")
-                        + "\nProject Manager:   | "+result.getString("manager_name")
-                        + "\nStatus:            | "+result.getString("status")
-                        + "\n--------------------------------------------------------------------------------");
+                System.out.println(""
+                          + "╒════════════════════╕"
+                        + "\n│ Selected project:  │ "+result.getString("project_name")
+                        + "\n├────────────────────┤"
+                        + "\n│ Project ID:        │ "+result.getInt("project_id")
+                        + "\n│ Description:       │ "+result.getString("description")
+                        + "\n│ Date Created:      │ "+result.getString("date_created")
+                        + "\n│ Due Date:          │ "+result.getString("due_date")
+                        + "\n│ Project Manager:   │ "+result.getString("manager_name")
+                        + "\n│ Status:            │ "+result.getString("status")
+                        + "\n└────────────────────┘ ");
             }
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
@@ -303,16 +321,21 @@ public class projectCRUD extends config {
             
             try(ResultSet result = search.executeQuery()){
                 
-                System.out.println("\nTeam list:");
+                System.out.println(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Team list                                                                     │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘");
                 sql = "SELECT t.team_id, t.team_name, p.project_name "
                         + "FROM team t "
                         + "INNER JOIN project p ON t.project_id = p.project_id "
                         + "WHERE p.project_name = ?";
-                System.out.println("List of teams working on this project: ");
                 
                 tm.viewTeamFiltered(result.getString("project_name"), sql);
 
-                System.out.println("\nTask list:");
+                System.out.println(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Task list                                                                     │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘");
                 sql = "SELECT t.task_id, t.task_name, t.due_date, u.first_name, p.project_name, t.status "
                         + "FROM task t "
                         + "INNER JOIN user u ON t.assigned_to = u.user_id "
@@ -325,7 +348,6 @@ public class projectCRUD extends config {
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
         }
-        System.out.println("\nTeam list: ");
     }
     
     private void viewProjectFiltered (String getColumn, String query) throws IOException{
@@ -395,7 +417,7 @@ public class projectCRUD extends config {
             LocalDate.parse(getDate, format);
             return true;
         } catch(DateTimeParseException e){
-            System.out.print("Error: Date is incorrect, try again: ");
+            System.out.print("| Error: Date is incorrect, try again: ");
         }
         return false;
     }

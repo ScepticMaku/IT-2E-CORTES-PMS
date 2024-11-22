@@ -22,15 +22,18 @@ public class Login extends config {
     
     public void loginCredentials() throws IOException{
         
-            System.out.println("Login:");
-            System.out.print("Enter username: ");
+            System.out.println(
+                        "╒════════════════════╕"
+                    + "\n│ Login              │"
+                    + "\n└────────────────────┘");
+            System.out.print("| Enter username: ");
             user = sc.nextLine();
             
             while(validate.spaceValidate(user)){
                 user = sc.nextLine();
             }
 
-            System.out.print("Enter password: ");
+            System.out.print("| Enter password: ");
             pass = sc.nextLine();
             
             while(validate.spaceValidate(pass)){
