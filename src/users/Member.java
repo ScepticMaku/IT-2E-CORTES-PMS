@@ -29,15 +29,19 @@ public class Member extends config {
         boolean isSelected = false;
         
         do{
-            System.out.print("\n================================================================================================================================================================"
-                    + "\nDate: "+date.toString()
-                    + "\n\nMain Menu:"
-                    + "\n1. Profile"
-                    + "\n2. Tasks"
-                    + "\n3. Teams"
-                    + "\n4. Logout"
-                    + "\n0. Exit"
-                    + "\nEnter selection: ");
+            System.out.print("\n================================================================================================================================================================");
+            System.out.print("\n| Date: "+date.toString()
+                    + "\n"
+                    + "╒═══════════════════╕\n"
+                    + "│ Main menu         │\n"
+                    + "├───┬───────────────┤\n"
+                    + "│[1]│ Profile       │\n"
+                    + "│[2]│ Tasks         │\n"
+                    + "│[3]│ Teams         │\n"
+                    + "│[4]│ Logout        │\n"
+                    + "│[0]│ Exit          │\n"
+                    + "└───┴───────────────┘\n"
+                    + "| Enter selection: ");
             int mainSelect = validate.validateInt();
             
             switch(mainSelect){
@@ -48,7 +52,10 @@ public class Member extends config {
                     Tasks(first_name, uid);
                     break;
                 case 3:
-                    System.out.println("\nAssigned teams:");
+                    System.out.println(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Assigned teams                                                                │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘");
                     sql = "SELECT t.team_id, t.team_name, tm.member_name "
                             + "FROM team_member tm "
                             + "INNER JOIN team t ON tm.team_id = t.team_id "
@@ -108,7 +115,10 @@ public class Member extends config {
         boolean taskSelected = false;
                     
         do{
-            System.out.println("\nAssigned tasks:");
+            System.out.println(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Assigned tasks                                                                │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘");
              sql = "SELECT task.task_id, task.task_name, task.due_date, tm.member_name, p.project_name, task.status "
                      + "FROM task "
                      + "INNER JOIN team_member tm ON task.assigned_to = tm.team_member_id "
@@ -117,13 +127,18 @@ public class Member extends config {
 
              if(!tableValidate(sql, first_name)){
                  tsk.viewTaskFiltered(first_name, sql);
-                 System.out.print("1. View full info"
-                         + "\n2. Start a task"
-                         + "\n3. Finish task"
-                         + "\n4. Cancel task"
-                         + "\n5. View completed tasks"
-                         + "\n6. Back"
-                         + "\nEnter selection: ");
+                 System.out.print(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Choose what you want to do                                                    │\n"
+                    + "├───────────────────────────────────────────────────────────────────────────────┤\n"
+                    + "│[1]| View full info                                                            │\n"
+                    + "│[2]| Start a task                                                              │\n"
+                    + "│[3]| Finish task                                                               │\n"
+                    + "│[4]| Cancel task                                                               │\n"
+                    + "│[5]| View completed tasks                                                      │\n"
+                    + "│[6]| Back                                                                      │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘\n"
+                    + "| Enter selection: ");
                  int taskSelect = validate.validateInt();
 
                  switch(taskSelect){
@@ -134,10 +149,13 @@ public class Member extends config {
                                  + "INNER JOIN project p ON task.project_id = p.project_id "
                                  + "WHERE tm.member_name = ?";
 
-                         System.out.println("\nAssigned tasks:");
+                         System.out.println(""
+                                + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                                + "│ Assigned tasks                                                                │\n"
+                                + "└───────────────────────────────────────────────────────────────────────────────┘");
                          tsk.viewTaskFiltered(first_name, sql);
 
-                         System.out.print("Enter task ID: ");
+                         System.out.print("| Enter task ID: ");
                          int taskID = validate.validateInt();
 
                          while(getSingleValue("SELECT task.task_id, task.task_name, task.due_date, tm.member_name, p.project_name, task.status "
@@ -146,7 +164,7 @@ public class Member extends config {
                                  + "INNER JOIN project p ON task.project_id = p.project_id "
                                  + "WHERE tm.member_name = ? AND task_id = ?", first_name, taskID) == 0)
                          {
-                             System.out.print("Error: Task not on the list, try again: ");
+                             System.out.print("| Error: Task not on the list, try again: ");
                              taskID = validate.validateInt();
                          }
                          tsk.getTaskInfo(taskID);
@@ -158,10 +176,13 @@ public class Member extends config {
                              System.out.println("Error: You already started a task.");
                          }
                          else{
-                             System.out.println("\nAssigned tasks:");
+                             System.out.println(""
+                                + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                                + "│ Assigned tasks                                                                │\n"
+                                + "└───────────────────────────────────────────────────────────────────────────────┘");
                              tsk.viewTaskFiltered(first_name, sql);
 
-                             System.out.print("Enter task ID: ");
+                             System.out.print("| Enter task ID: ");
                              taskID = validate.validateInt();
 
                              while(getSingleValue("SELECT task.task_id, task.task_name, task.due_date, tm.member_name, p.project_name, task.status "
@@ -170,13 +191,13 @@ public class Member extends config {
                                      + "INNER JOIN project p ON task.project_id = p.project_id "
                                      + "WHERE tm.member_name = ? AND task_id = ? AND task.status = 'Not Started' OR task.status = 'In-Progress'", first_name, taskID) == 0)
                              {
-                                 System.out.print("Error: Task not on the list, try again: ");
+                                 System.out.print("| Error: Task not on the list, try again: ");
                                  taskID = validate.validateInt();
                              }
 
                              tsk.getTaskInfo(taskID);
 
-                             System.out.print("Start task? [y/n]: ");
+                             System.out.print("| Start task? [y/n]: ");
                              confirm = sc.next();
 
                              if(validate.confirm(confirm)){
@@ -196,10 +217,13 @@ public class Member extends config {
                          else{
                              int tid = getTaskID(first_name);
 
-                             System.out.println("\nAssigned task:");
+                             System.out.println(""
+                                + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                                + "│ Assigned tasks                                                                │\n"
+                                + "└───────────────────────────────────────────────────────────────────────────────┘");
                              tsk.getTaskInfo(tid);
 
-                             System.out.print("Finish task? [y/n]: ");
+                             System.out.print("| Finish task? [y/n]: ");
                              confirm = sc.next();
 
                              if(validate.confirm(confirm)){
@@ -220,10 +244,13 @@ public class Member extends config {
                          else{
                              int tid = getTaskID(first_name);
 
-                             System.out.println("\nAssigned task:");
+                             System.out.println(""
+                                + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                                + "│ Assigned tasks                                                                │\n"
+                                + "└───────────────────────────────────────────────────────────────────────────────┘");
                              tsk.getTaskInfo(tid);
 
-                             System.out.print("Cancel task? [y/n]: ");
+                             System.out.print("| Cancel task? [y/n]: ");
                              confirm = sc.next();
 
                              if(validate.confirm(confirm)){

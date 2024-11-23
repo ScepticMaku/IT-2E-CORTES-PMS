@@ -14,6 +14,7 @@ public class teamCRUD extends config {
     
     validation validate = new validation();
     teamMemberCRUD tm = new teamMemberCRUD();
+    projectCRUD p = new projectCRUD();
     
     String sql;
     
@@ -39,14 +40,14 @@ public class teamCRUD extends config {
     
     public void addTeam(){
        
-        System.out.print("\nEnter team name: ");
+        System.out.print("| Enter team name: ");
         String team_name = sc.nextLine();
 
-        System.out.print("Enter project ID to assign: ");
+        System.out.print("| Enter project ID to assign: ");
         int pid = validate.validateInt();
         
         while(getSingleValue("SELECT project_id FROM project WHERE project_id = ?", pid) == 0){
-            System.out.print("Error: ID doesn't exist, try again: ");
+            System.out.print("| Error: ID doesn't exist, try again: ");
             pid = validate.validateInt();
         }
         
@@ -56,35 +57,40 @@ public class teamCRUD extends config {
     }
     
     public void editTeam(){
-        System.out.print("\nEnter ID to edit: ");
+        System.out.print("| Enter ID to edit: ");
         int teamID = validate.validateInt();
         
         while(getSingleValue("SELECT team_id FROM team WHERE team_id = ?", teamID) == 0){
-            System.out.print("Error: ID doesn't exist, try again: ");
+            System.out.print("| Error: ID doesn't exist, try again: ");
             teamID = validate.validateInt();
         }
         
         getTeamInfo(teamID);
-        
-        System.out.print("1. Change Name"
-                + "\n2. Change assigned project"
-                + "\n3. Cancel"
-                + "\nEnter selection: ");
+        System.out.print(""
+                + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                + "│ Choose what you want to do                                                    │\n"
+                + "├───────────────────────────────────────────────────────────────────────────────┤\n"
+                + "│[1]| Change team name                                                          │\n"
+                + "│[2]| Change assigned project                                                   │\n"
+                + "│[3]| Cancel                                                                    │\n"
+                + "└───────────────────────────────────────────────────────────────────────────────┘\n"
+                + "| Enter selection: ");
         int editSelect = validate.validateInt();
         
         switch(editSelect){
             case 1:
-                System.out.print("Enter new name: ");
+                System.out.print("| Enter new name: ");
                 String newName = sc.nextLine();
                 
                 updateRecord("UPDATE team SET team_name = ? WHERE team_id = ?", newName, teamID);
                 break;
             case 2:
-                System.out.print("Enter project ID to assign: ");
+                p.viewProject();
+                System.out.print("| Enter project ID to assign: ");
                 int newID = validate.validateInt();
                 
                 while(getSingleValue("SELECT project_id FROM project WHERE project_id = ?", newID) == 0){
-                    System.out.print("Error: ID doesn't exist, try again: ");
+                    System.out.print("| Error: ID doesn't exist, try again: ");
                     newID = validate.validateInt();
                 }
 
@@ -98,17 +104,17 @@ public class teamCRUD extends config {
     }
     
     public void deleteTeam(){
-        System.out.print("\nEnter ID to delete: ");
+        System.out.print("| Enter ID to delete: ");
         int teamID = validate.validateInt();
         
         while(getSingleValue("SELECT team_id FROM team WHERE team_id = ?", teamID) == 0){
-            System.out.print("Error: ID doesn't exist, try again: ");
+            System.out.print("| Error: ID doesn't exist, try again: ");
             teamID = validate.validateInt();
         }
         
         getTeamInfo(teamID);
         
-        System.out.print("Confirm delete? [y/n]: ");
+        System.out.print("| Confirm delete? [y/n]: ");
         String confirm = sc.nextLine();
         
         if(validate.confirm(confirm)){
@@ -119,11 +125,11 @@ public class teamCRUD extends config {
     }
     
     public void viewInfo() throws IOException{
-        System.out.print("Enter ID: ");
+        System.out.print("| Enter ID: ");
         int teamID = validate.validateInt();
         
         while(getSingleValue("SELECT team_id FROM team WHERE team_id = ?", teamID) == 0){
-            System.out.print("Error: ID doesn't exist, try again: ");
+            System.out.print("| Error: ID doesn't exist, try again: ");
             teamID = validate.validateInt();
         }
         
@@ -133,7 +139,10 @@ public class teamCRUD extends config {
                 + "FROM team_member tm "
                 + "INNER JOIN team t ON tm.team_id = t.team_id "
                 + "WHERE tm.team_id = ?";
-        System.out.println("\nTeam Members: ");
+        System.out.println(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Team members                                                                  │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘");
         tm.viewTeamMemberFiltered(sql, teamID);
         
         System.out.print("Press any key to continue...");
@@ -144,23 +153,26 @@ public class teamCRUD extends config {
         boolean isBack = false;
         
         do{
-            System.out.print("\nFilter by:"
-                    + "\n1. Project"
-                    + "\n2. Back"
-                    + "\nEnter selection: ");
+            System.out.print(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Filter by                                                                     │\n"
+                    + "├───────────────────────────────────────────────────────────────────────────────┤\n"
+                    + "│[1]| Project                                                                   │\n"
+                    + "│[2]| Back                                                                      │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘\n"
+                    + "| Enter selection: ");
             int filterSelect = validate.validateInt();
 
             switch(filterSelect){
                 case 1:
-                    System.out.print("Enter project ID: ");
+                    System.out.print("| Enter project ID: ");
                     int getProject = validate.validateInt();
                     
                     while(getSingleValue("SELECT project_id FROM project WHERE project_id = ?", getProject) == 0){
-                        System.out.print("Error: ID doesn't exist, try again: ");
+                        System.out.print("| Error: ID doesn't exist, try again: ");
                         getProject = validate.validateInt();
                     }
-
-                    System.out.println("\nTeam list filtered by:");
+                    
                     System.out.println("--------------------------------------------------------------------------------");
                     try{
                         PreparedStatement state = connectDB().prepareStatement("SELECT p.project_name "
@@ -175,8 +187,10 @@ public class teamCRUD extends config {
                                     + "FROM team t "
                                     + "INNER JOIN project p ON t.project_id = p.project_id "
                                     + "WHERE p.project_name = ?";
-                            System.out.println(result.getString("project_name"));
-
+                            System.out.println(""
+                                          + "╒════════════════════════╕\n"
+                                          + "│ Team list filtered by: │ "+result.getString("project_name")
+                                        + "\n└────────────────────────┘");
                             viewTeamFiltered(result.getString("project_name"), sql);
                         }
                     } catch(SQLException e){
@@ -229,12 +243,13 @@ public class teamCRUD extends config {
             search.setInt(1,id);
             
             try (ResultSet result = search.executeQuery()) {
-                System.out.println("--------------------------------------------------------------------------------"
-                        + "\nSelected team:     | "+result.getString("team_name")
-                        + "\n-------------------+"
-                        + "\nTeam ID:           | "+result.getInt("team_id")
-                        + "\nFrom project:      | "+result.getString("project_name")
-                        + "\n--------------------------------------------------------------------------------");
+                System.out.println(""
+                          + "╒════════════════════╕"
+                        + "\n│ Selected team:     │ "+result.getString("team_name")
+                        + "\n├────────────────────┤"
+                        + "\n│ Team ID:           │ "+result.getInt("team_id")
+                        + "\n│ From project:      │ "+result.getString("project_name")
+                        + "\n└────────────────────┘ ");
             }
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());

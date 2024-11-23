@@ -18,15 +18,18 @@ public class task extends config{
             System.out.println("================================================================================================================================================================");
             tsk.viewTask();
             
-            System.out.print("1. Add Task"
-                    + "\n2. Edit Task"
-                    + "\n3. Delete Task"
-                    + "\n4. Assign a member"
-                    + "\n5. View Task Info"
-                    + "\n6. Filter By"
-                    + "\n7. Back"
-                    + "\n0. Exit"
-                    + "\nEnter selection: ");
+            System.out.print(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│[1]| Add task                                                                  │\n"
+                    + "│[2]| Edit task                                                                 │\n"
+                    + "│[3]| Delete task                                                               │\n"
+                    + "│[4]| Assign member                                                             │\n"
+                    + "│[5]| View task info                                                            │\n"
+                    + "│[6]| Filter by                                                                 │\n"
+                    + "│[7]| Back                                                                      │\n"
+                    + "│[0]| Exit                                                                      │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘\n"
+                    + "| Enter selection: ");
             int choice = validate.validateInt();
 
             switch(choice){

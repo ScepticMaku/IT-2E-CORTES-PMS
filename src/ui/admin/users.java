@@ -18,16 +18,22 @@ public class users extends config {
     public void userInterface() throws IOException{
         do{
             System.out.println("================================================================================================================================================================");
-            System.out.println("List of users: ");
+            System.out.println(""
+                        + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                        + "│ List of users                                                                 │\n"
+                        + "└───────────────────────────────────────────────────────────────────────────────┘");
             u.viewUser();
-        
-            System.out.print("1. Register a user"
-                    + "\n2. Edit user"
-                    + "\n3. Delete user"
-                    + "\n4. View full info"
-                    + "\n5. Back"
-                    + "\n0. Exit"
-                    + "\nEnter selection: ");
+            
+            System.out.print(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│[1]| Register a user                                                           │\n"
+                    + "│[2]| Edit user                                                                 │\n"
+                    + "│[3]| Delete user                                                               │\n"
+                    + "│[4]| View user info                                                            │\n"
+                    + "│[5]| Back                                                                      │\n"
+                    + "│[0]| Exit                                                                      │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘\n"
+                    + "| Enter selection: ");
             int userSelect = validate.validateInt();
 
             switch(userSelect){
@@ -41,11 +47,11 @@ public class users extends config {
                     u.deleteUser();
                     break;
                 case 4:
-                    System.out.print("\nEnter ID: ");
+                    System.out.print("| Enter ID: ");
                     int uid = validate.validateInt();
                     
                     while(getSingleValue("SELECT user_id FROM user WHERE user_id = ?", uid) == 0){
-                        System.out.print("Error: ID doesn't exist, try again: ");
+                        System.out.print("| Error: ID doesn't exist, try again: ");
                         uid = validate.validateInt();
                     }
                     

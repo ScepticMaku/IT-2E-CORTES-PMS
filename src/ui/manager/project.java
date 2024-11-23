@@ -21,14 +21,17 @@ public class project extends config {
             System.out.println("");
             proj.viewProject();
             
-            System.out.print("1. Add Project"
-                    + "\n2. Edit Project"
-                    + "\n3. Delete Project"
-                    + "\n4. View Info"
-                    + "\n5. Filter by"
-                    + "\n6. Back"
-                    + "\n0. Exit"
-                    + "\nEnter choice: ");
+            System.out.print(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│[1]| Add Project                                                               │\n"
+                    + "│[2]| Edit Project                                                              │\n"
+                    + "│[3]| Delete Project                                                            │\n"
+                    + "│[4]| View Info                                                                 │\n"
+                    + "│[5]| Filter by                                                                 │\n"
+                    + "│[6]| Back                                                                      │\n"
+                    + "│[0]| Exit                                                                      │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘\n"
+                    + "| Enter selection: ");
             int choice = validate.validateInt();
             
             switch(choice){

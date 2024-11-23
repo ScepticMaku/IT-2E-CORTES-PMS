@@ -19,14 +19,17 @@ public class team_members extends config{
             System.out.println("================================================================================================================================================================");
             tm.viewTeam();
             
-            System.out.print("1. Add member"
-                    + "\n2. Replace member"
-                    + "\n3. Remove member"
-                    + "\n4. Select member"
-                    + "\n5. Filter by"
-                    + "\n6. Back"
-                    + "\n0. Exit"
-                    + "\nEnter selection: ");
+            System.out.print(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│[1]| Add member                                                                │\n"
+                    + "│[2]| Replace member                                                            │\n"
+                    + "│[3]| Remove member                                                             │\n"
+                    + "│[4]| View member info                                                          │\n"
+                    + "│[5]| Filter by                                                                 │\n"
+                    + "│[6]| Back                                                                      │\n"
+                    + "│[0]| Exit                                                                      │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘\n"
+                    + "| Enter selection: ");
             choice = validate.validateInt();
             
             switch(choice){

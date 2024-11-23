@@ -31,7 +31,10 @@ public class teamMemberCRUD extends config {
                 if(!checkTable.next()){
                     System.out.println("Member List Empty");
                 } else{
-                    System.out.println("List of Members: ");
+                    System.out.println(""
+                        + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                        + "│ List of members                                                               │\n"
+                        + "└───────────────────────────────────────────────────────────────────────────────┘");
                     viewMemberList(sqlQuery);
                 }
             }
@@ -45,37 +48,43 @@ public class teamMemberCRUD extends config {
         try{
             PreparedStatement state = connectDB().prepareStatement("SELECT first_name FROM user WHERE user_id = ?");
             
-            System.out.println("\nTeam List: ");
+            System.out.println(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Team list                                                                     │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘");
             t.viewTeam();
             
-            System.out.print("Enter team ID to assign: ");
+            System.out.print("| Enter team ID to assign: ");
             int teamID = validate.validateInt();
             
             while(getSingleValue("SELECT team_id FROM team WHERE team_id = ?", teamID) == 0){
-                System.out.print("Error: ID doesn't exist, try again: ");
+                System.out.print("| Error: ID doesn't exist, try again: ");
                 teamID = validate.validateInt();
             }
             
-            System.out.println("Member List:");
+            System.out.println(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Member list                                                                   │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘");
             u.viewUserFiltered("member", "SELECT * FROM user WHERE role = ?");
             
-            System.out.print("Enter user ID: ");
+            System.out.print("| Enter user ID: ");
             int userID = validate.validateInt();
             
             while(getSingleValue("SELECT user_id FROM user WHERE user_id = ? AND role = 'member'", userID) == 0){
-                System.out.print("Error: ID doesn't exist, try again: ");
+                System.out.print("| Error: ID doesn't exist, try again: ");
                 userID = validate.validateInt();
             }
             
             while(getSingleValue("SELECT user_id FROM team_member WHERE user_id = ?", userID) != 0){
-                System.out.print("Error: ID is already assigned to a team, try again: ");
+                System.out.print("| Error: ID is already assigned to a team, try again: ");
                 userID = validate.validateInt();
             }
             
             state.setInt(1, userID);
             u.searchUser(userID);
             
-            System.out.print("Confirm add? [y/n]: ");
+            System.out.print("| Confirm add? [y/n]: ");
             String confirm = sc.nextLine();
             
             try(ResultSet result = state.executeQuery()){
@@ -100,14 +109,17 @@ public class teamMemberCRUD extends config {
     public void replaceMember(){
         teamCRUD t = new teamCRUD();
         
-        System.out.println("\nTeam List: ");
+        System.out.println(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Team list                                                                     │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘");
         t.viewTeam();
 
-        System.out.print("Enter team ID to assign: ");
+        System.out.print("| Enter team ID to assign: ");
         int teamID = validate.validateInt();
 
         while(getSingleValue("SELECT team_id FROM team WHERE team_id = ?", teamID) == 0){
-            System.out.print("Error: ID doesn't exist, try again: ");
+            System.out.print("| Error: ID doesn't exist, try again: ");
             teamID = validate.validateInt();
         }
         
@@ -115,54 +127,60 @@ public class teamMemberCRUD extends config {
                 + "FROM team_member  "
                 + "INNER JOIN team t ON team_member.team_id = t.team_id WHERE team_member.team_id = ?";
         
-        System.out.println("List of Members:");
+        System.out.println(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Member list                                                                   │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘");
         viewTeamMemberFiltered(sqlQuery, teamID);
         
-        System.out.print("Enter member ID to replace: ");
+        System.out.print("| Enter member ID to replace: ");
         int targetMemberID = validate.validateInt();
         
         while(getSingleValue("SELECT team_member_id FROM team_member WHERE team_member_id = ? AND team_id = ?", targetMemberID, teamID) == 0){
-            System.out.print("Error: ID is not on the team, try again: ");
+            System.out.print("| Error: ID is not on the team, try again: ");
             targetMemberID = validate.validateInt();
         }
         
         if(getSingleValue("SELECT team_member_id FROM team_member WHERE status = ? AND team_member_id = ?", "Available", targetMemberID) == 0){
-            System.out.print("Error: Member is busy.\n");
+            System.out.println("Error: Member is busy.");
         }
         else{
             searchMember(targetMemberID);
         
-            System.out.println("\nMember List:");
+            System.out.println(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Member list                                                                   │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘");
             u.viewUserFiltered("member", "SELECT * FROM user WHERE role = ?");
 
-            System.out.print("Enter user ID to insert: ");
+            System.out.print("| Enter user ID to insert: ");
             int userID = validate.validateInt();
 
             while(getSingleValue("SELECT user_id FROM user WHERE user_id = ? AND role = 'member'", userID) == 0){
-                System.out.print("Error: ID doesn't exist, try again: ");
+                System.out.print("| Error: ID doesn't exist, try again: ");
                 userID = validate.validateInt();
             }
 
-            while(getSingleValue("SELECT user_id FROM team_member WHERE user_id = ?", userID) == 0){
-                System.out.print("Error: ID isn't assigned to a team yet, try again: ");
+            /*while(getSingleValue("SELECT user_id FROM team_member WHERE user_id = ?", userID) == 0){
+                System.out.print("| Error: ID isn't assigned to a team yet, try again: ");
                 userID = validate.validateInt();
-            }
+            }*/
 
             while(getSingleValue("SELECT user_id FROM team_member WHERE team_id = ? AND user_id = ?", teamID, userID) != 0){
-                System.out.print("Error: ID is already assigned to this team, try again: ");
+                System.out.print("| Error: ID is already assigned to this team, try again: ");
                 userID = validate.validateInt();
             }
 
-            if(getSingleValue("SELECT user_id FROM team_member WHERE status = ? AND user_id = ?", "Available", userID) == 0){
+            if(getSingleValue("SELECT user_id FROM team_member WHERE status = ? AND user_id = ?", "Available", userID) != 0){
                 System.out.print("Error: Member is busy.\n");
             }
             else{
-                System.out.print("Confirm replace? [y/n]: ");
+                System.out.print("| Confirm replace? [y/n]: ");
                 String confirm = sc.nextLine();
 
                 if(validate.confirm(confirm)){
-                    updateRecord("UPDATE team_member SET user_id = ? "
-                            + "WHERE team_member_id = ? AND team_id = ?", userID, targetMemberID, teamID);
+                    updateRecord("UPDATE team_member SET user_id = ?, member_name = ?"
+                            + "WHERE team_member_id = ? AND team_id = ?", userID, getUserName(userID), targetMemberID, teamID);
                 } else{
                     System.out.println("Replacement Cancelled.");
                 }
@@ -173,14 +191,17 @@ public class teamMemberCRUD extends config {
     public void removeMember(){
         teamCRUD t = new teamCRUD();
         
-        System.out.println("\nTeam List: ");
+        System.out.println(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Team list                                                                     │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘");
         t.viewTeam();
 
-        System.out.print("Enter team ID: ");
+        System.out.print("| Enter team ID: ");
         int teamID = validate.validateInt();
 
         while(getSingleValue("SELECT team_id FROM team WHERE team_id = ?", teamID) == 0){
-            System.out.print("Error: ID doesn't exist, try again: ");
+            System.out.print("| Error: ID doesn't exist, try again: ");
             teamID = validate.validateInt();
         }
         
@@ -188,14 +209,17 @@ public class teamMemberCRUD extends config {
                 + "FROM team_member  "
                 + "INNER JOIN team t ON team_member.team_id = t.team_id WHERE team_member.team_id = ?";
         
-        System.out.println("List of Members:");
+        System.out.println(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Member list                                                                   │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘");
         viewTeamMemberFiltered(sqlQuery, teamID);
         
-        System.out.print("\nEnter member ID: ");
+        System.out.print("| Enter member ID: ");
         int memberID = validate.validateInt();
         
         while(getSingleValue("SELECT team_member_id FROM team_member WHERE team_member_id = ? AND team_id = ?", memberID, teamID) == 0){
-            System.out.print("Error: ID is not on the team, try again: ");
+            System.out.print("| Error: ID is not on the team, try again: ");
             memberID = validate.validateInt();
         }
         
@@ -204,7 +228,7 @@ public class teamMemberCRUD extends config {
         }
         else{
             searchMember(memberID);
-            System.out.print("Confirm delete? [y/n]: ");
+            System.out.print("| Confirm delete? [y/n]: ");
             String confirm = sc.nextLine();
 
             if(validate.confirm(confirm)){
@@ -217,11 +241,11 @@ public class teamMemberCRUD extends config {
     }
     
     public void selectMember() throws IOException {
-        System.out.print("\nEnter member ID: ");
+        System.out.print("| Enter member ID: ");
         int memberID = validate.validateInt();
         
         while(getSingleValue("SELECT team_member_id FROM team_member WHERE team_member_id = ?", memberID) == 0){
-            System.out.print("Error: ID doesn't exist, try again: ");
+            System.out.print("| Error: ID doesn't exist, try again: ");
             memberID = validate.validateInt();
         }
         
@@ -234,11 +258,14 @@ public class teamMemberCRUD extends config {
             search.setInt(1, memberID);
             try(ResultSet result = search.executeQuery()){    
                 
-                System.out.println("Selected User:      | "+result.getString("member_name")
-                        + "\nMember ID:          | "+result.getInt("team_member_id")
-                        + "\nTeam:               | "+result.getString("team_name")
-                        + "\nStatus:             | "+result.getString("status")
-                        + "\n--------------------------------------------------------------------------------");
+                System.out.println(""
+                          + "╒════════════════════╕"
+                        + "\n│ Selected Member:   │ "+result.getString("member_name")
+                        + "\n├────────────────────┤"
+                        + "\n│ Member ID:         │ "+result.getInt("team_member_id")
+                        + "\n│ Team:              │ "+result.getString("team_name")
+                        + "\n│ Status:            │ "+result.getString("status")
+                        + "\n└────────────────────┘ ");
                 viewAssignedTasks(result.getString("member_name"));
             }
             pause();
@@ -250,18 +277,25 @@ public class teamMemberCRUD extends config {
     public void filterBy(){
         boolean isBack = false;
         do{
-            System.out.print("\nFilter by:"
-                    + "\n1. Team"
-                    + "\n2. Back"
-                    + "\nEnter selection: ");
+            System.out.print(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Filter by                                                                     │\n"
+                    + "├───────────────────────────────────────────────────────────────────────────────┤\n"
+                    + "│[1]| Team                                                                      │\n"
+                    + "│[2]| Back                                                                      │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘\n"
+                    + "| Enter selection: ");
             int filterSelect = validate.validateInt();
 
             switch(filterSelect){
                 case 1:
-                    System.out.print("Enter team ID: ");
+                    System.out.print("| Enter team ID: ");
                     int teamID = validate.validateInt();
 
-                    System.out.println("\nTeam list filtered by team:");
+                    System.out.println(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Member list filtered by: Team                                                 │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘");
                     sql = "SELECT team_member_id, member_name, team_member.team_id, t.team_name, status "
                             + "FROM team_member "
                             + "INNER JOIN team t ON team_member.team_id = t.team_id "
@@ -333,7 +367,10 @@ public class teamMemberCRUD extends config {
     
     private void viewAssignedTasks(String getMember){
         
-        System.out.println("\nAssigned tasks:");
+        System.out.println(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Assigned tasks                                                                │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘");
         tsk.viewTaskFiltered(getMember, "SELECT task_id, task_name, task.due_date, p.project_name, task.status "
                 + "FROM task "
                 + "INNER JOIN team_member tm ON task.assigned_to = tm.team_member_id "
@@ -394,5 +431,19 @@ public class teamMemberCRUD extends config {
             System.out.println("Error: "+e.getMessage());
         }
         return "None";
+    }
+    
+    private String getUserName(int getID){
+        try{
+            PreparedStatement findMember = connectDB().prepareStatement("SELECT first_name FROM user WHERE user_id = ?");
+            findMember.setInt(1, getID);
+            
+            try(ResultSet result = findMember.executeQuery()){
+                return result.getString("first_name");
+            }
+        } catch(SQLException e){
+            System.out.println("Error: "+e.getMessage());
+        }
+        return null;
     }
 }

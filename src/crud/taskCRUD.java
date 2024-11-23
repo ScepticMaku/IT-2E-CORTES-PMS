@@ -425,7 +425,7 @@ public class taskCRUD extends config {
             try (ResultSet result = search.executeQuery()) {
                 System.out.println(""
                           + "╒════════════════════╕"
-                        + "\n│ Selected task   :  │ "+result.getString("task_name")
+                        + "\n│ Selected task:     │ "+result.getString("task_name")
                         + "\n├────────────────────┤"
                         + "\n│ Task ID:           │ "+result.getInt("task_id")
                         + "\n│ Description:       │ "+result.getString("description")

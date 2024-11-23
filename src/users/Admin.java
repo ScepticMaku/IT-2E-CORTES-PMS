@@ -43,7 +43,7 @@ public class Admin extends config {
                     + "│[7]│ Logout        │\n"
                     + "│[0]│ Exit          │\n"
                     + "└───┴───────────────┘\n"
-                    + "\n| Enter selection: ");
+                    + "| Enter selection: ");
             int select = validate.validateInt();
             
             switch(select){

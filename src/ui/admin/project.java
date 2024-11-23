@@ -31,7 +31,7 @@ public class project extends config {
                     + "│[6]| Back                                                                      │\n"
                     + "│[0]| Exit                                                                      │\n"
                     + "└───────────────────────────────────────────────────────────────────────────────┘\n"
-                    + "| Enter choice: ");
+                    + "| Enter selection: ");
             int choice = validate.validateInt();
             
             switch(choice){

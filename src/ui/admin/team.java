@@ -17,17 +17,23 @@ public class team extends config {
         
         do{
             System.out.println("================================================================================================================================================================");
-            System.out.println("Team List: ");
+            System.out.println(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│ Team list                                                                     │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘");
             t.viewTeam();
             
-            System.out.print("1. Add team"
-                    + "\n2. Edit team"
-                    + "\n3. Delete team"
-                    + "\n4. View team info"
-                    + "\n5. Filter by"
-                    + "\n6. Back"
-                    + "\n0. Exit"
-                    + "\nEnter selection: ");
+            System.out.print(""
+                    + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                    + "│[1]| Add team                                                                  │\n"
+                    + "│[2]| Edit team                                                                 │\n"
+                    + "│[3]| Delete team                                                               │\n"
+                    + "│[4]| View team info                                                            │\n"
+                    + "│[5]| Filter by                                                                 │\n"
+                    + "│[6]| Back                                                                      │\n"
+                    + "│[0]| Exit                                                                      │\n"
+                    + "└───────────────────────────────────────────────────────────────────────────────┘\n"
+                    + "| Enter selection: ");
             int choice = validate.validateInt();
 
             switch(choice){

@@ -219,7 +219,7 @@ public class config {
         Scanner sc = new Scanner(System.in);
         validation validate = new validation();
         
-        System.out.print("Confirm exit? [y/n]: ");
+        System.out.print("| Confirm exit? [y/n]: ");
         String confirm = sc.nextLine();
         
         if(validate.confirm(confirm)){

@@ -37,18 +37,18 @@ public class userCRUD extends config {
     }
     
     public void deleteUser(){
-        System.out.print("\nEnter ID: ");
+        System.out.print("| Enter ID: ");
         int userID = validate.validateInt();
         
         while(getSingleValue("SELECT user_id FROM user WHERE user_id = ?", userID) == 0){
-            System.out.print("Error: ID doesn't exist, try again: ");
+            System.out.print("| Error: ID doesn't exist, try again: ");
             userID = validate.validateInt();
         }
         
         System.out.println("--------------------------------------------------------------------------------");
         searchUser(userID);
         
-        System.out.print("Confirm delete? [y/n]: ");
+        System.out.print("| Confirm delete? [y/n]: ");
         String confirm = sc.nextLine();
         
         if(validate.confirm(confirm)){
@@ -67,7 +67,7 @@ public class userCRUD extends config {
             state.setInt(1, userID);
             
             try (ResultSet result = state.executeQuery()) {
-                System.out.println("\n"
+                System.out.println(""
                           + "╒════════════════════╕\n"
                           + "│ Full Information   │\n"
                           + "├────────────────────┤"
@@ -88,26 +88,30 @@ public class userCRUD extends config {
     }
     
     public void editUser(){
-            System.out.print("\nEnter ID you want to edit: ");
+            System.out.print("| Enter ID you want to edit: ");
             int userID = validate.validateInt();
             
             while(getSingleValue("SELECT user_id FROM user WHERE user_id = ?", userID) == 0){
-                System.out.print("Error: ID doesn't exist, try again: ");
+                System.out.print("| Error: ID doesn't exist, try again: ");
                 userID = validate.validateInt();
             }
 
             System.out.println("--------------------------------------------------------------------------------");
             searchUser(userID);
 
-            System.out.print("Select what you want to edit:"
-                    + "\n1. Password"
-                    + "\n2. Role"
-                    + "\n3. Email Address"
-                    + "\n4. First Name"
-                    + "\n5. Middle Name"
-                    + "\n6. Last Name"
-                    + "\n7. Back"
-                    + "\nEnter selection: ");
+            System.out.print(""
+                + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                + "│ Choose what you want to edit                                                  │\n"
+                + "├───────────────────────────────────────────────────────────────────────────────┤\n"
+                + "│[1]| Password                                                                  │\n"
+                + "│[2]| Role                                                                      │\n"
+                + "│[3]| Email Address                                                             │\n"
+                + "│[4]| First Name                                                                │\n"
+                + "│[5]| Middle Name                                                               │\n"
+                + "│[6]| Last Name                                                                 │\n"
+                + "│[7]| Back                                                                      │\n"
+                + "└───────────────────────────────────────────────────────────────────────────────┘\n"
+                + "| Enter selection: ");
             int select = validate.validateInt();
 
             switch(select){
@@ -228,22 +232,26 @@ public class userCRUD extends config {
     }
     
     public void editInfo(int userID){
-        String Query;
+//        String Query;
         
-        System.out.print("\nSelect what you want to edit:"
-                + "\n1. Password"
-                + "\n2. Role"
-                + "\n3. Email Address"
-                + "\n4. First Name"
-                + "\n5. Middle Name"
-                + "\n6. Last Name"
-                + "\n7. Back"
-                + "\nEnter selection: ");
+        System.out.print(""
+                + "╒═══════════════════════════════════════════════════════════════════════════════╕\n"
+                + "│ Choose what you want to edit                                                  │\n"
+                + "├───────────────────────────────────────────────────────────────────────────────┤\n"
+                + "│[1]| Password                                                                  │\n"
+                + "│[2]| Role                                                                      │\n"
+                + "│[3]| Email Address                                                             │\n"
+                + "│[4]| First Name                                                                │\n"
+                + "│[5]| Middle Name                                                               │\n"
+                + "│[6]| Last Name                                                                 │\n"
+                + "│[7]| Back                                                                      │\n"
+                + "└───────────────────────────────────────────────────────────────────────────────┘\n"
+                + "| Enter selection: ");
         int select = validate.validateInt();
 
         switch(select){
             case 1:
-                System.out.print("\nEnter new password: ");
+                System.out.print("| Enter new password: ");
                 String newPassword = sc.nextLine();
 
                 while(validate.spaceValidate(newPassword)){
@@ -251,7 +259,7 @@ public class userCRUD extends config {
                 }
 
                 while(validatePassword(userID, newPassword)){
-                    System.out.print("Error: Must not be an old password, try again: ");
+                    System.out.print("| Error: Must not be an old password, try again: ");
                     newPassword = sc.nextLine();
 
                     while(validate.spaceValidate(newPassword)){
@@ -263,7 +271,7 @@ public class userCRUD extends config {
                 updateRecord(Query, newPassword, userID);
                 break;
             case 2:
-                System.out.print("\nEnter new Role [admin/member/project manager]: ");
+                System.out.print("| Enter new Role [admin/member/project manager]: ");
                 String newRole = sc.nextLine();
                 
                 while(validate.spaceValidate(newRole)){
@@ -278,7 +286,7 @@ public class userCRUD extends config {
                 updateRecord(Query, newRole, userID);
                 break;
             case 3:
-                System.out.print("\nEnter new email address: ");
+                System.out.print("| Enter new email address: ");
                 String newEmail = sc.nextLine();
                 
                 while(validate.spaceValidate(newEmail)){
@@ -293,21 +301,21 @@ public class userCRUD extends config {
                 updateRecord(Query, newEmail, userID);
                 break;
             case 4:
-                System.out.print("\nEnter new first name: ");
+                System.out.print("| Enter new first name: ");
                 String newFname = sc.nextLine();
 
                 Query = "UPDATE user SET first_name = ? WHERE user_id = ?";
                 updateRecord(Query, newFname, userID);
                 break;
             case 5:
-                System.out.print("\nEnter new middle name: ");
+                System.out.print("| Enter new middle name: ");
                 String newMname = sc.nextLine();
 
                 Query = "UPDATE user SET middle_name = ? WHERE user_id = ?";
                 updateRecord(Query, newMname, userID);
                 break;
             case 6:
-                System.out.print("\nEnter new last name: ");
+                System.out.print("| Enter new last name: ");
                 String newLname = sc.nextLine();
 
                 Query = "UPDATE user SET middle_name = ? WHERE user_id = ?";
@@ -344,7 +352,10 @@ public class userCRUD extends config {
             try (ResultSet result = search.executeQuery()) {
                 String[] selectedName = result.getString("first_name").split(" ");
                 
-                System.out.println("Selected user: "+selectedName[0]);
+                System.out.println(""
+                          + "╒════════════════════╕\n"
+                          + "│ Selected User:     │ "+selectedName[0]
+                        + "\n└────────────────────┘");
             }
         } catch(SQLException e){
             System.out.println("Error: "+e.getMessage());
